@@ -20,7 +20,7 @@ jobs:
             IMAGE_TAG=${CIRCLE_BUILD_NUM}  # Use the CircleCI build number as the image tag
             docker build -t reneboy/docility:${IMAGE_TAG} .
 
-      - run:
+      - run:  
           name: Push Docker Image
           command: |
             IMAGE_TAG=${CIRCLE_BUILD_NUM}
