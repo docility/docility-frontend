@@ -31,7 +31,7 @@ pipeline {
         }
 
         stage('Push Docker Image') {
-            steps {
+            steps {    
                 script {
                     echo "Pushing Docker image ${IMAGE_NAME}:${IMAGE_TAG}..."
                     sh 'echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin'
