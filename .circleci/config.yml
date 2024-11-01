@@ -11,8 +11,7 @@ jobs:
     executor: docker-executor
     steps:
       - checkout # Check out the code from your repository
-      - setup_remote_docker: # Enables Docker in Docker
-          version: 20.10.7
+      - setup_remote_docker: # Enables Docker in Docker without versioning
           docker_layer_caching: true # Optional, speeds up builds
       - run:
           name: Build Docker image
