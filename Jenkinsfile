@@ -1,26 +1,46 @@
 pipeline {
-    agent any // Use any available agent
+    agent any
 
     stages {
-        stage('Build') {
+        stage('Checkout') {
             steps {
-                echo 'Building the project...'
-                // Add build commands here
+                script {
+                    echo 'Checking out the code...'
+                }
+                checkout scm
             }
         }
-
-        stage('Test') {
+        stage('Docker Build') {
             steps {
-                echo 'Running tests...'
-                // Add test commands here
+                script {
+                    echo 'Building Docker image...'
+                    def imageTag = "${env.BRANCH_NAME}-${env.BUILD_NUMBER}" // Create a unique tag
+                    sh "docker build -t yourdockerhubusername/yourimage:${imageTag} ."
+                }
             }
         }
-
-        stage('Deploy') {
+        stage('Docker Push') {
             steps {
-                echo 'Deploying the project...'
-                // Add deployment commands here
+                script {
+                    echo 'Pushing Docker image...'
+                    sh "echo '${DOCKER_PASSWORD}' | docker login -u '${DOCKER_USERNAME}' --password-stdin"
+                    sh "docker push yourdockerhubusername/yourimage:${imageTag}"
+                }
             }
         }
+    }
+    post {
+        always {
+            echo 'This will always run after all stages, regardless of success or failure.'
+        }
+        success {
+            echo 'Pipeline completed successfully!'
+        }
+        failure {
+            echo 'Pipeline failed.'
+        }
+        unstable {
+            echo 'Pipeline was unstable.'
+        }        
     }
 }
