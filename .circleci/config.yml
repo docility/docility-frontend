@@ -17,13 +17,13 @@ jobs:
       - run:
           name: Build Docker Image
           command: |
-            IMAGE_TAG=${CIRCLE_SHA1:0:7} # Get the first 7 characters of the commit SHA
+            IMAGE_TAG=${CIRCLE_BUILD_NUM}  # Use the CircleCI build number as the image tag
             docker build -t reneboy/docility:${IMAGE_TAG} .
 
       - run:
           name: Push Docker Image
           command: |
-            IMAGE_TAG=${CIRCLE_SHA1:0:7}
+            IMAGE_TAG=${CIRCLE_BUILD_NUM}
             echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
             docker push reneboy/docility:${IMAGE_TAG}
 
