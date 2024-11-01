@@ -1,5 +1,5 @@
 # Use the official Node.js image to build the app
-FROM node:16 AS builder
+FROM node:latest AS builder
 
 # Set the working directory
 WORKDIR /docility
