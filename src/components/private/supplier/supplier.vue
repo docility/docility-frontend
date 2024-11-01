@@ -4,7 +4,7 @@
     <div class="relative shadow-md sm:rounded-lg">
      
       <div class="pb-4 bg-white flex p-2 justify-between flex-row-reverse">
-        <button @click="addNewSupplier()" class="bg-primary text-text-primary hover:bg-secondary-alternate hover:text-secondary-text py-2 px-4 rounded">Add Supplier</button>
+        <button @click="addNewSupplier()" class="bg-primary text-text-primary hover:bg-secondary-alternate hover:text-secondary-text py-2 px-4 rounded">Add Supplier</button>  
           <label for="table-search" class="sr-only">Search</label>
           <div class="relative mt-1">
               <div class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
