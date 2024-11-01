@@ -41,6 +41,6 @@ pipeline {
         }
         unstable {
             echo 'Pipeline was unstable.'
-        }
+        }  
     }
 }
