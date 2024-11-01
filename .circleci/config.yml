@@ -3,7 +3,7 @@ version: 2.1
 executors:
   docker-executor:
     docker:
-      - image: circleci/python:3.8  # Change to an image that suits your needs
+      - image: circleci/python:3.8  # Use an appropriate base image for your build
 
 jobs:
   build:
@@ -12,8 +12,7 @@ jobs:
       - checkout
 
       - setup_remote_docker:
-          version: 20.10.7  # Use a compatible Docker version
-          docker_layer_caching: true
+          docker_layer_caching: true  # Enable layer caching for faster builds
 
       - run:
           name: Build Docker Image
