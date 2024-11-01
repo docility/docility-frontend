@@ -1,29 +1,29 @@
-# Use the official Node.js image as a parent image
-FROM node:16
+# Use the official Node.js image to build the app
+FROM node:16 AS builder
 
-# Set the working directory in the container
-WORKDIR /app
+# Set the working directory
+WORKDIR /docility
 
-# Copy the package.json and package-lock.json files
+# Copy package.json and package-lock.json
 COPY package*.json ./
 
 # Install dependencies
 RUN npm install
 
-# Copy the rest of your application code
+# Copy the rest of the application code
 COPY . .
 
-# Build the Vue.js application
+# Build the app for production
 RUN npm run build
 
-# Install NGINX to serve the built app
-RUN apt-get update && apt-get install -y nginx
+# Use Nginx to serve the app
+FROM nginx:alpine
 
-# Copy the built app to NGINX's public folder
-COPY dist /usr/share/nginx/html
+# Copy built assets from the builder stage
+COPY --from=builder /docility/dist /usr/share/nginx/html
 
-# Expose the port NGINX is listening on
+# Expose port 80
 EXPOSE 80
 
-# Start NGINX when the container launches
+# Start Nginx
 CMD ["nginx", "-g", "daemon off;"]
