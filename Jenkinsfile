@@ -15,7 +15,7 @@ pipeline {
 
         stage('Setup Docker Environment') {
             steps {
-                script {
+                script { 
                     echo 'Setting up Docker environment...'
                 }
             }
