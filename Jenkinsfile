@@ -25,7 +25,7 @@ pipeline {
             steps {
                 script {
                     echo "Building Docker image ${IMAGE_NAME}:${IMAGE_TAG}..."
-                    sh "docker build --force-rm -t ${IMAGE_NAME}:${IMAGE_TAG} ."
+                    sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ."
                 }
             }
         }
@@ -35,7 +35,7 @@ pipeline {
                 script {
                     echo "Pushing Docker image ${IMAGE_NAME}:${IMAGE_TAG}..."
                     sh 'echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin'
-                    sh "docker push ${IMAGE_NAME}:${IMAGE_TAG} --force"
+                    sh "docker push ${IMAGE_NAME}:${IMAGE_TAG}"
                 }
             }
         }
