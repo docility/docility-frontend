@@ -1,10 +1,5 @@
 pipeline {
-    agent {
-        docker {
-            image 'python:3.8' // Use the appropriate Docker image
-            args '-u root' // Run as root if needed for permissions in Docker
-        }
-    }
+    agent any
 
     environment {
         IMAGE_NAME = "reneboy/docility"
