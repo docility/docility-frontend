@@ -27,7 +27,7 @@ pipeline {
                     echo "Building Docker image ${IMAGE_NAME}:${IMAGE_TAG}..."
                     sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ."
                 }
-            }
+            }    
         }
 
         stage('Push Docker Image') {
