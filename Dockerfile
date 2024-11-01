@@ -1,29 +1,29 @@
-# Use the official Node.js image to build the Vue.js app
-FROM node:16 AS build-stage
+# Use the official Node.js image as a parent image
+FROM node:16
 
-# Set the working directory
+# Set the working directory in the container
 WORKDIR /app
 
-# Copy package.json and package-lock.json
+# Copy the package.json and package-lock.json files
 COPY package*.json ./
 
 # Install dependencies
 RUN npm install
 
-# Copy the rest of the application code
+# Copy the rest of your application code
 COPY . .
 
 # Build the Vue.js application
 RUN npm run build
 
-# Use Nginx to serve the built app
-FROM nginx:alpine
+# Install NGINX to serve the built app
+RUN apt-get update && apt-get install -y nginx
 
-# Copy the build output to the Nginx server
-COPY --from=build-stage /app/dist /usr/share/nginx/html
+# Copy the built app to NGINX's public folder
+COPY dist /usr/share/nginx/html
 
-# Expose port 80
+# Expose the port NGINX is listening on
 EXPOSE 80
 
-# Start Nginx
+# Start NGINX when the container launches
 CMD ["nginx", "-g", "daemon off;"]
