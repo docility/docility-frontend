@@ -41,7 +41,7 @@ pipeline {
         }
     }
 
-    post {
+    post {   
         always {
             echo 'Cleaning up Docker resources...'
             sh "docker rmi ${IMAGE_NAME}:${IMAGE_TAG}" // Remove the image after build
