@@ -17,7 +17,7 @@ COPY . .
 RUN npm run build
 
 # Use Nginx to serve the app
-FROM nginx:alpine
+FROM nginx:alpine   
 
 # Copy built assets from the builder stage
 COPY --from=builder /docility/dist /usr/share/nginx/html
