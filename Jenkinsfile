@@ -9,7 +9,7 @@ pipeline {
                 }
                 checkout scm
             }
-        }
+        }   
         stage('Docker Build') {
             steps {
                 script {
