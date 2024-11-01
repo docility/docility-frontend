@@ -17,7 +17,7 @@ pipeline {
                     def imageTag = "${env.BRANCH_NAME}-${env.BUILD_NUMBER}" // Create a unique tag
                     sh "docker build -t yourdockerhubusername/yourimage:${imageTag} ."
                 }
-            }
+            }   
         }
         stage('Docker Push') {
             steps {
