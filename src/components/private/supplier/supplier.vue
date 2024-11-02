@@ -2,7 +2,6 @@
   <div class="supplier-component ">
     
     <div class="relative shadow-md sm:rounded-lg">
-     
       <div class="pb-4 bg-white flex p-2 justify-between flex-row-reverse">
         <button @click="addNewSupplier()" class="bg-primary text-text-primary hover:bg-secondary-alternate hover:text-secondary-text py-2 px-4 rounded">Add Supplier</button>  
           <label for="table-search" class="sr-only">Search</label>
@@ -14,7 +13,6 @@
               </div>
               <input v-model="searchQuery" type="text" id="table-search" onchange="computed" class="block pt-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 " placeholder="Search for items">
           </div>
-          
       </div>
       
       <!-- Scrollable container with fixed header -->
