@@ -2,8 +2,11 @@ pipeline {
     agent any
 
     environment {
+        // Check that BRANCH_NAME is set; if not, provide a default for testing
+        BRANCH_NAME = env.BRANCH_NAME ?: 'feature/default-branch'
+
         // Extract the branch type (e.g., 'feature') from the branch name
-        BRANCH_TYPE = "${env.BRANCH_NAME.split('/')[0]}"
+        BRANCH_TYPE = "${BRANCH_NAME.split('/')[0]}"
         IMAGE_NAME = "reneboy/docility-${BRANCH_TYPE}"
         IMAGE_TAG = "${env.BUILD_NUMBER}" // Use Jenkins build number as the image tag
 
@@ -15,15 +18,6 @@ pipeline {
         stage('Checkout') {
             steps {
                 checkout scm
-            }
-        }
-
-        stage('Prepare Folder') {
-            steps {
-                script {
-                    echo "Creating folder: ${FOLDER_PATH}"
-                    sh "mkdir -p ${FOLDER_PATH}" // Create the folder if it doesn't exist
-                }
             }
         }
 
@@ -40,7 +34,9 @@ pipeline {
             steps {
                 script {
                     echo "Pushing Docker image ${IMAGE_NAME}:${IMAGE_TAG}..."
-                    sh 'echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin'
+                    withCredentials([usernamePassword(credentialsId: 'docker-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                        sh 'echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin'
+                    }
                     sh "docker push ${IMAGE_NAME}:${IMAGE_TAG}"
                 }
             }
