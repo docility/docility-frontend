@@ -2,22 +2,30 @@ pipeline {
     agent any
 
     environment {
-        // Check that BRANCH_NAME is set; if not, provide a default for testing
-        BRANCH_NAME = env.BRANCH_NAME ?: 'feature/default-branch'
-
         // Extract the branch type (e.g., 'feature') from the branch name
-        BRANCH_TYPE = "${BRANCH_NAME.split('/')[0]}"
-        IMAGE_NAME = "reneboy/docility-${BRANCH_TYPE}"
+        IMAGE_NAME = "reneboy/docility-${env.BRANCH_NAME.split('/')[0]}"
         IMAGE_TAG = "${env.BUILD_NUMBER}" // Use Jenkins build number as the image tag
 
         // Define a folder path based on the branch type
-        FOLDER_PATH = "${BRANCH_TYPE}/build-output"
+        FOLDER_PATH = "${env.BRANCH_NAME.split('/')[0]}/build-output"
     }
 
     stages {
         stage('Checkout') {
             steps {
                 checkout scm
+            }
+        }
+
+        stage('Set Branch Variables') {
+            steps {
+                script {
+                    // Check if BRANCH_NAME is set; if not, provide a default for testing
+                    if (!env.BRANCH_NAME) {
+                        env.BRANCH_NAME = 'feature/default-branch'
+                    }
+                    echo "Using branch name: ${env.BRANCH_NAME}"
+                }
             }
         }
 
