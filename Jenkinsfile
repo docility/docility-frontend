@@ -47,15 +47,6 @@ pipeline {
                 }
             }
         }
-
-        stage('Save Build Output') {
-            steps {
-                script {
-                    echo "Saving build output to folder: ${FOLDER_PATH}"
-                    sh "cp -r dist/* ${FOLDER_PATH}/" // Copy build artifacts to the folder
-                }
-            }
-        }
     }
 
     post {
