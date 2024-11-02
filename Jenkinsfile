@@ -1,5 +1,5 @@
 pipeline {
-    agent docility
+    agent { label 'docility' }
 
     environment {
         // Extract the branch type (e.g., 'feature') from the branch name
