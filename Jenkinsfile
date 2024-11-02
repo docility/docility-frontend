@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent docility
 
     environment {
         // Extract the branch type (e.g., 'feature') from the branch name
