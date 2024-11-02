@@ -16,7 +16,7 @@ pipeline {
                 checkout scm   
             }
         }
-
+   
         stage('Set Branch Variables') {
             steps {
                 script {
