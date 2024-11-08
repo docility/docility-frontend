@@ -8,8 +8,7 @@ import Home from '@/components/private/Home.vue';
 import RiskAssessment from '@/components/private/riskAssessment/risk-assessment.vue';
 // Define your routes
 const routes = [
-  { path: '/signin', name: 'signin', component: UserLogin },
-   
+  { path: '/signin', name: 'signin', component: UserLogin }, 
   // { path: '/view-grades', name: 'view-grades', component: ViewGrades },
   {
     path: '/dashboard',
