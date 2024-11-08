@@ -1,4 +1,4 @@
-# Use the official Node.js image to build the app
+# Stage 1: Build the Vue.js application
 FROM node:18 AS builder
 
 # Set the working directory
@@ -16,19 +16,20 @@ COPY .env ./
 # Copy the rest of the application code
 COPY . .
 
-# Make sure to set the environment variables before running the build
-# You can pass environment variables directly into the Dockerfile build process or use the .env file
-# Ensure Vue.js recognizes the env variables with "VUE_APP_" prefix
+# Build the application for production
 RUN npm run build
 
-# Use Nginx to serve the app
-FROM nginx:alpine   
+# Stage 2: Serve the app with Nginx
+FROM nginx:alpine
 
 # Copy built assets from the builder stage
 COPY --from=builder /docility/dist /usr/share/nginx/html
 
+# Copy custom Nginx configuration for routing
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
 # Expose port 80
 EXPOSE 80
-        
-# Start Nginx   
+
+# Start Nginx
 CMD ["nginx", "-g", "daemon off;"]
