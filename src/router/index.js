@@ -5,6 +5,7 @@ import Dashboard from '@/components/Dashboard.vue';
 
 import NotFound from '@/components/NotFound.vue';
 import Home from '@/components/private/Home.vue';
+import RiskAssessment from '@/components/private/riskAssessment/risk-assessment.vue';
 // Define your routes
 const routes = [
   { path: '/signin', name: 'signin', component: UserLogin },
@@ -18,6 +19,7 @@ const routes = [
       { path: '', redirect: '/dashboard/home' }, // Redirect root dashboard to home
       { path: 'home', name: 'home', component: Home },
       { path: 'supplier', name: 'supplier', component: Supplier },
+      { path: 'risk-assessment', name: 'risk assessment', component: RiskAssessment },
       { path: '/:catchAll(.*)', name: 'NotFound', component: NotFound }
     ]
   },

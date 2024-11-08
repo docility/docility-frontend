@@ -34,6 +34,17 @@
               Supplier
             </router-link>
           </li>
+          <li>
+            <router-link
+              to="/dashboard/risk-assessment"
+              :class="[
+                'block px-4 py-2 rounded',
+                isActive('/dashboard/risk-assessment') ? 'bg-background-light text-secondary-text' : 'text-secondary-text hover:bg-secondary-alternate',
+              ]"
+            >
+              Risk Assessment
+            </router-link>
+          </li>
         </ul>
         <button
           @click="showLogoutModal = true"
