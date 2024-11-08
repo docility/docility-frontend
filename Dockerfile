@@ -16,7 +16,9 @@ COPY .env ./
 # Copy the rest of the application code
 COPY . .
 
-# Build the app for production
+# Make sure to set the environment variables before running the build
+# You can pass environment variables directly into the Dockerfile build process or use the .env file
+# Ensure Vue.js recognizes the env variables with "VUE_APP_" prefix
 RUN npm run build
 
 # Use Nginx to serve the app
@@ -24,10 +26,6 @@ FROM nginx:alpine
 
 # Copy built assets from the builder stage
 COPY --from=builder /docility/dist /usr/share/nginx/html
-
-# Copy the .env file to the Nginx container if needed
-# This is optional, depending on how you want to use the .env
-# COPY --from=builder /docility/.env /usr/share/nginx/html/
 
 # Expose port 80
 EXPOSE 80
