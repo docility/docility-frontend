@@ -16,7 +16,7 @@ export default {
   name: 'NotFound',
   methods: {
     goBack() {
-      this.$router.push("dashboard/home");
+      this.$router.back(-1);
     }
   }
 }

@@ -67,8 +67,8 @@
     <!-- Main Content -->
     <main class="flex-1 flex flex-col h-full overflow-auto mt-20 md:mt-0">
       <bread-crumb />
-      <div class="flex-1 flex justify-center p-6 overflow-x-auto">
-        <div class="w-full min-w-full h-full min-h-[90%]">
+      <div class="flex-1 flex justify-center p-2 overflow-x-auto bg-slate-100">
+        <div class="w-full min-w-full h-full min-h-[100%]">
           <router-view></router-view>
         </div>
       </div>
