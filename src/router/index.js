@@ -12,6 +12,7 @@ import CreateInformationAsset from "@/components/private/riskAssessment/menu/cre
 import CreateRiskCategory from "@/components/private/riskAssessment/menu/create-risk-category.vue";
 import CreateTemplate from "@/components/private/riskAssessment/menu/create-template.vue";
 import RiskRegistered from "@/components/private/riskAssessment/menu/risk-registered.vue";
+import NewAssessmentChecklist from "@/components/private/riskAssessment/menu/assessment-checklist/new-assessment-checklist.vue";
 
 // Define your routes
 const routes = [
@@ -38,6 +39,11 @@ const routes = [
         path: "risk-assessment/create-control-assessment",
         name: "Control Assessment",
         component: CreateControllAssessment,
+      },  
+      {
+        path: "risk-assessment/create-control-assessment/new-control-assessment",
+        name: "New Assessment Checklist",
+        component: NewAssessmentChecklist,
       },  
       {
         path: "risk-assessment/create-information-asset",

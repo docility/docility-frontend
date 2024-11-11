@@ -4,7 +4,7 @@
       class="grid gap-2 grid-cols-4 w-[100%] p-1 items-center justify-center"
     >
       <router-link
-        to="create-control-assessment/new-assessment-template"
+        to="create-control-assessment/new-control-assessment"
         type="submit"
         class="w-full bg-primary-text mt-4 text-secondary-text font-semibold py-2 rounded hover:shadow-lg shadow-slate-300 hover:scale-2 buttons flex items-center justify-end gap-8 flex-col"
       >
