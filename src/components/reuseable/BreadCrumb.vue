@@ -24,7 +24,7 @@ export default {
 
       return pathArray.map((path, index) => {
         return {
-          name: path.charAt(0).toUpperCase() + path.slice(1),
+          name: (path.charAt(0).toUpperCase() + path.slice(1)).replaceAll("-", " "),
           path: '/' + pathArray.slice(0, index + 1).join('/')
         };
       });

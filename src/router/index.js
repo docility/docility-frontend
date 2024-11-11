@@ -5,7 +5,7 @@ import Dashboard from "@/components/Dashboard.vue";
 import NotFound from "@/components/NotFound.vue";
 import Home from "@/components/private/Home.vue";
 import RiskAssessment from "@/components/private/riskAssessment/risk-assessment.vue";
-import CreateRisk from "@/components/private/riskAssessment/menu/create-risk-category.vue"; // Import your actual component here
+import CreateRisk from "@/components/private/riskAssessment/menu/create-risk.vue"; // Import your actual component here
 import CreateControl from "@/components/private/riskAssessment/menu/create-control.vue";
 import CreateControllAssessment from "@/components/private/riskAssessment/menu/create-controll-assessment.vue";
 import CreateInformationAsset from "@/components/private/riskAssessment/menu/create-information-asset.vue";
@@ -26,7 +26,7 @@ const routes = [
       { path: "supplier", name: "supplier", component: Supplier },
       {
         path: "risk-assessment",
-        name: "risk-assessment",
+        name: "Risk Assessment",
         component: RiskAssessment,
       },
       {
@@ -45,8 +45,8 @@ const routes = [
         component: CreateInformationAsset,
       },  
       {
-        path: "risk-assessment/create-risk",
-        name: "create-risk",
+        path: "risk-assessment/risk",
+        name: "Risk",
         component: CreateRisk,
       },  
       {
@@ -55,13 +55,13 @@ const routes = [
         component: CreateRiskCategory,
       },  
       {
-        path: "risk-assessment/create-risk-template",
-        name: "Risk template",
+        path: "risk-assessment/create-risk-treatment",
+        name: "Risk Treatment",
         component: CreateTemplate,
       },  
       {
         path: "risk-assessment/risk-register",
-        name: "Risks",
+        name: "Risks List",
         component: RiskRegistered,
       },  
       { path: "/:catchAll(.*)", name: "NotFound", component: NotFound },
