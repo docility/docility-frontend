@@ -6,13 +6,14 @@ import NotFound from "@/components/NotFound.vue";
 import Home from "@/components/private/Home.vue";
 import RiskAssessment from "@/components/private/riskAssessment/risk-assessment.vue";
 import CreateRisk from "@/components/private/riskAssessment/menu/create-risk.vue"; // Import your actual component here
-import CreateControl from "@/components/private/riskAssessment/menu/create-control.vue";
+// import CreateControl from "@/components/private/riskAssessment/menu/create-control.vue";
 import CreateControllAssessment from "@/components/private/riskAssessment/menu/create-controll-assessment.vue";
 import CreateInformationAsset from "@/components/private/riskAssessment/menu/create-information-asset.vue";
 import CreateRiskCategory from "@/components/private/riskAssessment/menu/create-risk-category.vue";
 import CreateTemplate from "@/components/private/riskAssessment/menu/create-template.vue";
 import RiskRegistered from "@/components/private/riskAssessment/menu/risk-registered.vue";
 import NewAssessmentChecklist from "@/components/private/riskAssessment/menu/assessment-checklist/new-assessment-checklist.vue";
+import CustomerManagement from "@/components/private/customerManagement/customer-management.vue";
 
 // Define your routes
 const routes = [
@@ -30,18 +31,18 @@ const routes = [
         name: "Risk Assessment",
         component: RiskAssessment,
       },
+      // {
+      //   path: "risk-assessment/create-control",
+      //   name: "Create Control",
+      //   component: CreateControl,
+      // },  
       {
         path: "risk-assessment/create-control",
-        name: "Create Control",
-        component: CreateControl,
-      },  
-      {
-        path: "risk-assessment/create-control-assessment",
         name: "Control Assessment",
         component: CreateControllAssessment,
       },  
       {
-        path: "risk-assessment/create-control-assessment/new-control-assessment",
+        path: "risk-assessment/create-control/new-control",
         name: "New Assessment Checklist",
         component: NewAssessmentChecklist,
       },  
@@ -70,6 +71,7 @@ const routes = [
         name: "Risks List",
         component: RiskRegistered,
       },  
+      { path: "customer-management", name: "Customer management", component: CustomerManagement },
       { path: "/:catchAll(.*)", name: "NotFound", component: NotFound },
     ],
   },

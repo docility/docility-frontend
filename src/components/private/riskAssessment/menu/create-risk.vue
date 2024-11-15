@@ -1,6 +1,26 @@
 <template>
   <div class="container flex flex-col w-full h-full overflow-hidden">
     <HeaderButton title="Risk" :onClick="goBack" />
+    <!-- Modal -->
+    <!-- <div v-if="isModalOpen" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50">
+      <div class="bg-white p-6 rounded-md w-1/3 gap-2 flex flex-col">
+        <h2 class="text-xl font-semibold mb-4 border-b-2 uppercase">{{ selectedRiskCategory.category_domain }}</h2>  
+        <p class="font-semibold">Risk Type: <small class="text-wrap font-normal text-sm">{{ selectedRiskCategory.categoryType }}</small></p>
+        <p class="font-semibold">Description: <small class="text-wrap font-normal text-sm">{{ selectedRiskCategory.description }}</small></p>
+        <button @click="closeModal" class="bg-red-500 text-white px-4 py-2 rounded mt-1 self-end">Close</button>
+      </div>
+    </div> -->
+
+    <div v-if="isModalOpen" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50">
+      <div class="bg-white p-6 rounded-md w-1/3 gap-2 flex flex-col">
+        <h2 class="text-xl font-semibold mb-4 border-b-2 uppercase">{{ selectedRiskTreatment.treatmentOption }}</h2>  
+        <p class="font-semibold">When To Use: <small class="text-wrap font-normal text-sm">{{ selectedRiskTreatment.whenToUse }}</small></p>
+        <p class="font-semibold">Description: <small class="text-wrap font-normal text-sm">{{ selectedRiskTreatment.description }}</small></p>
+        <button @click="closeModal" class="bg-red-500 text-white px-4 py-2 rounded mt-1 self-end">Close</button>
+      </div>
+    </div>
+
+
     <form v-if="fetchData == false" @submit="submit" class="flex flex-col h-[90%]">
       <div class="grid gap-2 grid-cols-1 w-[100%] p-2 items-center justify-center mt-5 bg-primary-text overflow-scroll">
         <div class="mb-4">
@@ -19,7 +39,7 @@
           <label class="block text-lg font-medium text-gray-700">Risk Category / Domain   </label>
           <select required v-model="riskCategory" class="mt-1 block w-full p-2 border border-gray-300 rounded">
             <option v-for="category in riskCategoryList" :key="category.id" :value="category.id">
-              {{ category.attributes.description }}
+              {{ category.attributes.category_domain }}
             </option>
           </select>
         </div>  
@@ -79,7 +99,7 @@
          <div v-if="riskAcceptable == 'NO'">
           <div class="mb-4">
             <label class="block text-lg font-medium text-gray-700">Risk treatment option     </label>
-            <select required v-model="riskTreatment" class="mt-1 block w-full p-2 border border-gray-300 rounded">
+            <select @change="openModal"  v-model="riskTreatment" class="mt-1 block w-full p-2 border border-gray-300 rounded">
               <option v-for="option in riskTreatmentListOptions" :key="option.id" :value="option.id">
                 {{ option.attributes.treatmentOption }}
               </option>
@@ -208,6 +228,7 @@ import { toast } from 'vue3-toastify';
     },
     data() {
       return {
+        isModalOpen: false,
         dateCreated: '',
         riskOwner: '',
         riskCategory: '',
@@ -248,7 +269,7 @@ import { toast } from 'vue3-toastify';
         residualLikelihoodOptions: [],
         impactOptions: [],
         residualImpactOptions: [],
-        
+        selectedRiskTreatment: null,
 
         fetchData: false,
         updateRisk: false,
@@ -262,6 +283,17 @@ import { toast } from 'vue3-toastify';
       reset() {
         this.treatmentOption = '';
         this.description = '';
+      },
+      openModal() { 
+        if (this.riskTreatment && this.riskTreatmentListOptions) {
+          this.selectedRiskTreatment = this.riskTreatmentListOptions.filter(f => f.id == this.riskTreatment)[0].attributes
+ 
+          this.isModalOpen = true;
+        }
+      },
+      closeModal() {
+        // Close the modal
+        this.isModalOpen = false;
       },
       calculateNextReviewDate() {
         const date = new Date(this.residualTreatmentApprovalDate);
@@ -499,3 +531,18 @@ import { toast } from 'vue3-toastify';
     }
   }
 </script>
+
+<style>
+.fixed {
+  position: fixed;
+}
+.bg-gray-600 {
+  background-color: rgba(0, 0, 0, 0.6);
+}
+.bg-opacity-50 {
+  background-opacity: 0.5;
+}
+.z-50 {
+  z-index: 50;
+}
+</style>

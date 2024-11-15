@@ -38,7 +38,7 @@
         <p>Create New Risk</p>
       </router-link>
       <router-link
-        to="risk-assessment/create-control-assessment"
+        to="risk-assessment/create-control"
         type="submit"
         class="w-full bg-primary-text mt-4 text-secondary-text font-semibold py-2 rounded hover:shadow-lg shadow-slate-300 hover:scale-2 buttons flex items-center justify-end gap-8 flex-col"
         >

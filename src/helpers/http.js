@@ -12,8 +12,14 @@ http.interceptors.request.use(
   (config) => { 
     // For example, add token from local storage if needed
     const token = sessionStorage.getItem('jwt');
+    const profile = JSON.parse(sessionStorage.getItem('profile'));
     if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+      config.headers.Authorization = `Bearer ${token}`; 
+    }
+
+    console.log(profile)
+    if (profile && profile.id) {
+      config.headers.userId = profile.id; // Add the user ID to the headers
     }
     return config;
   },

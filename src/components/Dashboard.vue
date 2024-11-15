@@ -45,6 +45,17 @@
               Risk Assessment
             </router-link>
           </li>
+          <li>
+            <router-link
+              to="/dashboard/customer-management"
+              :class="[
+                'block px-4 py-2 rounded',
+                isActive('/dashboard/customer-management') ? 'bg-background-light text-secondary-text' : 'text-secondary-text hover:bg-secondary-alternate',
+              ]"
+            >
+              Customer Management
+            </router-link>
+          </li>
         </ul>
         <button
           @click="showLogoutModal = true"
@@ -102,6 +113,9 @@
 
 <script>
 import BreadCrumb from './reuseable/BreadCrumb.vue';
+import { listenToBackendMessage } from "@/helpers/socket";
+import { toast } from "vue3-toastify";
+
 export default {
   components: { BreadCrumb },
   name: 'DashBoard',
@@ -123,8 +137,12 @@ export default {
       sessionStorage.removeItem('jwt');
       this.$router.push('/signin');
     },
+    handleMessageSocket(data) { 
+      toast[data.type](`${data.message}`);
+    },
   },
   mounted() {
+    listenToBackendMessage(this.handleMessageSocket);
     this.role = sessionStorage.getItem('role');
   },
 };
