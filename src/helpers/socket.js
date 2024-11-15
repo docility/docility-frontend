@@ -4,8 +4,8 @@ import { io } from "socket.io-client";
 // Establish a connection to the Socket.IO server
 
 const profileId = JSON.parse(sessionStorage.getItem("profile")).id
-
-const socket = io("http://localhost:1337", {
+console.log(process.env.VUE_APP_ENVI == 'production' ? process.env.VUE_APP_API_URL_PROD : process.env.VUE_APP_API_URL)
+const socket = io(process.env.VUE_APP_ENVI == 'production' ? process.env.VUE_APP_API_URL_PROD : process.env.VUE_APP_API_URL, {
   autoConnect: false, // Manually connect when needed
   auth: {
     userId: profileId, // Pass the JWT during connection
