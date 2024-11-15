@@ -6,6 +6,11 @@ import { io } from "socket.io-client";
 const profile = sessionStorage.getItem("profile")
 let profileId = ''
 
+if (profile) { 
+  profileId = JSON.parse(profile)?.id 
+  console.log(profileId)
+}
+
   console.log(process.env.VUE_APP_ENVI == 'production' ? process.env.VUE_APP_API_URL_PROD : process.env.VUE_APP_API_URL)
   const socket = io(process.env.VUE_APP_ENVI == 'production' ? process.env.VUE_APP_API_URL_PROD : process.env.VUE_APP_API_URL, {
     autoConnect: false, // Manually connect when needed
@@ -28,10 +33,6 @@ let profileId = ''
     console.log("Disconnected from server");
   });
 
-  if (profile) { 
-    profileId = JSON.parse(profile)?.id
-    socket.connect();
-  }
 // Function to listen for backend messages
 export const listenToBackendMessage = (callback) => {
   socket.on("message", (data) => { 

@@ -53,6 +53,7 @@
 
 <script>
 import http from '@/helpers/http';  
+import socket from '@/helpers/socket';
 export default { 
   data() {
     return {
@@ -72,10 +73,11 @@ export default {
           password: this.password,
         });
 
-        const { jwt } = response.data; 
+        const { jwt, user } = response.data; 
 
         sessionStorage.setItem('jwt', jwt); 
-
+        sessionStorage.setItem('profile', JSON.stringify(user)); 
+        socket.connect()
         this.$router.push('/dashboard'); 
       } catch (error) {
         this.errorMessage = 'Login failed. Please try again.';
