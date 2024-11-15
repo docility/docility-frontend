@@ -6,7 +6,7 @@
     <div class="w-full max-w-md p-8 bg-white rounded-lg shadow-lg ">
       <h2 class="text-4xl font-bold text-center mb-6 text-indigo-700 drop-shadow-md">Welcome Back!</h2>
       <p class="text-center text-gray-600 mb-8">Please sign in to your account</p>
-      <form v-if="!grades" @submit.prevent="UserLogin">
+      <form @submit.prevent="UserLogin">
         <div class="mb-6">
           <label for="username" class="block text-sm font-semibold text-gray-800">Username</label>
           <input 
@@ -28,23 +28,19 @@
           />
         </div>
 
-        <Button 
+        <button 
           type="submit" 
           class="w-full bg-indigo-600 text-white py-3 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 font-semibold shadow-lg"
           :disabled="isSubmitting"
         >
           <span v-if="isSubmitting">Logging in...</span>
           <span v-else>Login</span>
-        </Button>
+        </button>
 
         <div class="mt-6 text-center">
           <router-link to="/register" class="text-sm text-indigo-600 hover:underline">Create an Account</router-link>
-        </div>
+        </div> 
 
-        <div class="mt-4 text-center border-t p-2">
-          <router-link to="/view-grades" class="text-sm text-gray-600 hover:underline mt-2">View Grades</router-link>
-        </div>
-        
         <p v-if="errorMessage" class="mt-4 text-red-600 text-center">{{ errorMessage }}</p>
       </form>
     </div>

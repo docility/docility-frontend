@@ -23,7 +23,7 @@ const routes = [
     name: "dashboard",
     component: Dashboard,
     children: [
-      { path: "", redirect: "/dashboard/home" }, // Redirect root dashboard to home
+      { path: "/", redirect: "/dashboard/home" }, // Redirect root dashboard to home
       { path: "home", name: "home", component: Home },
       { path: "supplier", name: "supplier", component: Supplier },
       {
