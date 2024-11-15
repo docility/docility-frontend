@@ -135,6 +135,10 @@ export default {
     },
     handleLogout() {
       sessionStorage.removeItem('jwt');
+      sessionStorage.removeItem('profile');
+      sessionStorage.removeItem('role');
+      sessionStorage.removeItem('headerVisibility');
+      
       this.$router.push('/signin');
     },
     handleMessageSocket(data) { 
