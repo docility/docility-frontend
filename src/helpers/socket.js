@@ -31,13 +31,6 @@ if (profile) {
 
   socket.on("disconnect", () => {
     console.log("Disconnected from server");
-  });
-
-// Function to listen for backend messages
-export const listenToBackendMessage = (callback) => {
-  socket.on("message", (data) => { 
-    callback({type: data.type, message: data.message}); // Pass data to a custom handler
-  });
-};
-
+  }); 
+ 
 export default socket;

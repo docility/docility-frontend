@@ -112,8 +112,7 @@
 </template>
 
 <script>
-import BreadCrumb from './reuseable/BreadCrumb.vue';
-import { listenToBackendMessage } from "@/helpers/socket";
+import BreadCrumb from './reuseable/BreadCrumb.vue'; 
 import { toast } from "vue3-toastify";
 
 export default {
@@ -145,8 +144,7 @@ export default {
       toast[data.type](`${data.message}`);
     },
   },
-  mounted() {
-    listenToBackendMessage(this.handleMessageSocket);
+  mounted() { 
     this.role = sessionStorage.getItem('role');
   },
 };
