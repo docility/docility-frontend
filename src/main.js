@@ -7,6 +7,7 @@ import './assets/tailwind.css';
 import Vue3Toastify from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
 
+console.log(process.env.VUE_APP_ENVI)
 
 const app = createApp(App);
 const toastOptions = {
