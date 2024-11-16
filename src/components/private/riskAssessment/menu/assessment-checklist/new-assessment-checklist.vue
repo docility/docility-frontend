@@ -29,6 +29,7 @@
       <input type="file" @change="onFileChange" />
       Import File
     </label>
+    
     <button @click="exportToExcel" class="export-button ">Export to Excel</button>
 
     <div v-if="isRenameModalVisible" class="rename-modal">
@@ -58,6 +59,7 @@
         class="overflow-auto"
       />
     </div> 
+    <button @click="saveAssessment" class="w-full mt-4 bg-primary text-secondary-text font-semibold py-2 rounded hover:bg-secondary-alternate">Save</button> 
   </div>
 </template>
 
@@ -70,7 +72,10 @@ import "handsontable/dist/handsontable.full.css";
 import { HyperFormula } from "hyperformula";
 import axios from "axios";
 import * as ExcelJS from "exceljs"; 
-// Register Handsontable's modules
+import http from "@/helpers/http";
+import { toast } from "vue3-toastify";
+ 
+
 registerAllModules();
 
 export default defineComponent({
@@ -131,7 +136,69 @@ export default defineComponent({
       saveToExcel();
     };
 
-     
+    const saveAssessment = async () => {
+  try {
+    // Get data from Handsontable instance (hotTableRef)
+    const hotInstance = hotTableRef.value.hotInstance;
+    if (!hotInstance) {
+      console.error("HotTable instance not found.");
+      return;
+    }
+
+    // Get all data from the table
+    const hotData = hotInstance.getData();
+
+    // Convert the table data to JSON format
+    const jsonData = hotData.map((row) => {
+      return row.map((cell) => (cell !== null && cell !== undefined ? cell : '')); // Handle null or undefined cells
+    });
+
+    // Log JSON data for inspection (Optional)
+    console.log("Table data as JSON:", jsonData[0]);
+
+    if (jsonData[0][0] == "Domain" && jsonData[0][1] == "Annex. A Control" && jsonData[0][2] == "Control Heading" && jsonData[0][3] == "Control Description" ) {
+      
+      try {
+          const controls = []
+          for (let x = 1; x < jsonData.length; x++) {
+            controls.push({
+              domain: jsonData[x][0],
+              annexControl: jsonData[x][1],
+              controlHeading: jsonData[x][2],
+              controlDescription: jsonData[x][3]
+            })
+          }
+          console.log(controls)
+          const response = await http.post('/api/create-bulk/assessment-controls', 
+            controls,
+          ); 
+          toast.success(response.data.message); 
+        } catch (error) {
+          console.log(error)
+          toast.error('Error Saving Excel Data: ' + error.response?.data?.error?.message);
+        } finally {
+    // Reset data and loading state
+    const hotInstance = hotTableRef.value.hotInstance;
+
+    if (hotInstance) {
+      hotInstance.loadData([]);  // Reset the Handsontable data
+      hotInstance.updateSettings({ cells: hotSettings.value.cells });
+    }
+    
+    selectedFile.value = null; // Clear selected file
+    loading.value = false; // Stop loading state
+    isRenameModalVisible.value = false; // Close rename modal if open
+  }
+    } else {
+      alert("data is not in valid format")
+    }
+   
+  
+  } catch (error) {
+    console.error("Error in saveAssessment:", error);
+  }
+};
+
 
     const fetchDefaultExcel = async () => {
       try {
@@ -516,6 +583,7 @@ export default defineComponent({
       loadFile, 
       fetchDefaultExcel,
       customCellRenderer,
+      saveAssessment
     };
   },
 });
@@ -565,7 +633,7 @@ export default defineComponent({
 .hot-table {
   transition: transform 0.2s ease; /* Smooth transition for zoom */
   overflow: hidden; /* Allow scrolling for large tables */
-  height: 95%;
+  height: 90%;
 }
 
 /* Loading Modal Styles */
