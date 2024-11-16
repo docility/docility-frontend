@@ -32,7 +32,7 @@
     <div class="max-h-[700px] h-[90%] overflow-x-auto w-full" v-on:click="isDropdownOpen = false">
       <table class="min-w-full text-sm text-left rtl:text-right text-primary dark:text-gray-400">
         <thead class="text-xs uppercase text-text-primary">
-          <tr class="sticky z-10">
+          <tr class="sticky top-0 px-6 py-3 z-10 text-dark-text bg-dark-background-secondary">
             <th scope="col" class="p-4 bg-primary">
               <div class="flex items-center">
                 <input
@@ -48,7 +48,7 @@
               {{ header }}
             </th>
             <!-- Sticky Actions column (Header) -->
-            <th scope="col" class="sticky top-0 right-0 px-6 py-3 z-10 bg-primary border-l-2">
+            <th scope="col" class="">
               Actions
             </th>
           </tr>
@@ -69,7 +69,7 @@
               {{ risk.attributes?.[header] || '-' }}
             </td>
             <!-- Sticky Actions column (Body) -->
-            <td class="px-6 py-4 gap-2 flex sticky top-0 right-0 bg-white z-10 border-l-2">
+            <td class="px-6 py-4 gap-2 flex  top-0 right-0 bg-white z-10 border-l-2">
               <button @click="editRisk(risk.id)" class="text-blue-600 hover:underline">Edit</button>
               <button @click="deleteRisk(risk.id)" class="text-red-600 hover:underline">Delete</button>
             </td>
