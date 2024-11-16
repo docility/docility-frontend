@@ -91,7 +91,7 @@
               :key="category.id"
               :value="category.id"
             >
-              {{ category.attributes.category_domain }}
+             {{ category.attributes.annexCategory }} {{ category.attributes.category_domain }}
             </option>
           </select>
         </div>
@@ -534,7 +534,7 @@
 
         <button
           type="submit"
-          class="w-full mt-4 bg-primary text-secondary-text font-semibold py-2 rounded hover:bg-secondary-alternate"
+          class="w-full button-style"
         >
           {{ updateRisk ? "Update" : "Submit" }}
         </button>

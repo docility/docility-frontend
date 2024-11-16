@@ -4,7 +4,7 @@
       <div class="pb-4 bg-white flex p-2 justify-between flex-row-reverse">
         <button
           @click="addNewSupplier()"
-          class="bg-primary text-text-primary hover:bg-secondary-alternate hover:text-secondary-text py-2 px-4 rounded"
+          class=" py-2 px-4 rounded button-style "
         >
           Add Supplier
         </button>
@@ -45,9 +45,9 @@
         <table
           class="min-w-full text-sm text-left rtl:text-right text-primary dark:text-gray-400"
         >
-          <thead class="text-xs uppercase text-text-primary">
+          <thead class="text-xs uppercase text-text-primary ">
             <tr class="sticky z-10">
-              <th scope="col" class="sticky top-0 p-4 bg-primary z-10">
+              <th scope="col" class="sticky top-0 p-4 bg-dark-background-secondary z-10 text-dark-text">
                 <div class="flex items-center">
                   <input
                     id="checkbox-all-search"
@@ -59,28 +59,28 @@
                   >
                 </div>
               </th>
-              <th scope="col" class="sticky top-0 px-6 py-3 z-10 bg-primary">
+              <th scope="col" class="sticky top-0 px-6 py-3 z-10  bg-dark-background-secondary text-dark-text">
                 Supplier Id
               </th>
-              <th scope="col" class="sticky top-0 px-6 py-3 z-10 bg-primary">
+              <th scope="col" class="sticky top-0 px-6 py-3 z-10 bg-dark-background-secondary text-dark-text">
                 Supplier Name
               </th>
-              <th scope="col" class="sticky top-0 px-6 py-3 z-10 bg-primary">
+              <th scope="col" class="sticky top-0 px-6 py-3 z-10  bg-dark-background-secondary text-dark-text">
                 Supplier Purpose
               </th>
-              <th scope="col" class="sticky top-0 px-6 py-3 z-10 bg-primary">
+              <th scope="col" class="sticky top-0 px-6 py-3 z-10 bg-dark-background-secondary text-dark-text">
                 Supplier Type
               </th>
-              <th scope="col" class="sticky top-0 px-6 py-3 z-10 bg-primary">
+              <th scope="col" class="sticky top-0 px-6 py-3 z-10 bg-dark-background-secondary text-dark-text">
                 Glocal
               </th>
-              <th scope="col" class="sticky top-0 px-6 py-3 z-10 bg-primary">
+              <th scope="col" class="sticky top-0 px-6 py-3 z-10 bg-dark-background-secondary text-dark-text">
                 Country
               </th>
-              <th scope="col" class="sticky top-0 px-6 py-3 z-10 bg-primary">
+              <th scope="col" class="sticky top-0 px-6 py-3 z-10 bg-dark-background-secondary text-dark-text">
                 Assessment Status
               </th>
-              <th scope="col" class="sticky top-0 px-6 py-3 z-10 bg-primary">
+              <th scope="col" class="sticky top-0 px-6 py-3 z-10 text-dark-text bg-dark-background-secondary">
                 Actions
               </th>
             </tr>
@@ -89,7 +89,7 @@
             <tr
               v-for="supplier in filteredSuppliers"
               :key="supplier.id"
-              class="bg-background border-b hover:bg-secondary-alternate text-text-primary"
+              class="bg-background border-b hover:bg-dark-background-primary text-text-primary"
             >
               <td class="w-4 p-4">
                 <div class="flex items-center">
@@ -103,22 +103,22 @@
                   >
                 </div>
               </td>
-              <td class="px-6 py-4">{{ supplier.attributes?.supplier_id }}</td>
-              <td class="px-6 py-4">
+              <td class="px-6 py-4  text-dark-text-primary">{{ supplier.attributes?.supplier_id }}</td>
+              <td class="px-6 py-4 text-dark-text-primary">
                 {{ supplier.attributes?.supplier_name }}
               </td>
-              <td class="px-6 py-4">
+              <td class="px-6 py-4  text-dark-text-primary">
                 {{ supplier.attributes?.supplier_purpose }}
               </td>
-              <td class="px-6 py-4">
+              <td class="px-6 py-4  text-dark-text-primary">
                 {{ supplier.attributes?.supplier_type }}
               </td>
-              <td class="px-6 py-4">{{ supplier.attributes?.glocal }}</td>
-              <td class="px-6 py-4">{{ supplier.attributes?.country }}</td>
-              <td class="px-6 py-4">
+              <td class="px-6 py-4  text-dark-text-primary">{{ supplier.attributes?.glocal }}</td>
+              <td class="px-6 py-4  text-dark-text-primary">{{ supplier.attributes?.country }}</td>
+              <td class="px-6 py-4  text-dark-text-primary">
                 {{ supplier.attributes?.assessment_status }}
               </td>
-              <td class="px-6 py-4 gap-2 flex sticky top-0">
+              <td class="px-6 py-4 gap-2 flex sticky top-0  text-dark-text-primary">
                 <button
                   @click="editSupplier(supplier)"
                   class="text-blue-600 hover:underline"
@@ -979,13 +979,13 @@
           <div>
             <button
               type="submit"
-              class="w-full mt-4 bg-primary text-secondary-text font-semibold py-2 rounded hover:bg-secondary-alternate"
+              class="w-full mt-4 py-2 rounded button-style"
             >
               Submit
             </button>
             <button
               v-on:click="closeModals()"
-              class="w-full mt-4 bg-secondary text-primary-text font-semibold py-2 rounded hover:bg-secondary-alternate"
+              class="w-full mt-4  py-2 rounded cancel-button-style"
             >
               Cancel
             </button>

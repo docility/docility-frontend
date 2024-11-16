@@ -92,7 +92,7 @@
           </div> 
         </div>
       </div>
-      <button type="submit" class="w-full mt-4 bg-primary text-secondary-text font-semibold py-2 rounded hover:bg-secondary-alternate">Submit</button> 
+      <button type="submit" class="w-full mt-4 button-style py-2 rounded">Submit</button> 
     </form> 
   </div>
 </template>

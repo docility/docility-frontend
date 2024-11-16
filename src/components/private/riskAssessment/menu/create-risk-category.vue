@@ -39,7 +39,7 @@
         </div>
       </div>
 
-      <button type="submit" class="w-full mt-4 bg-primary text-secondary-text font-semibold py-2 rounded hover:bg-secondary-alternate">Submit</button> 
+      <button type="submit" class="w-full mt-4 py-2 rounded button-style">Submit</button> 
     </form> 
   </div>
 </template>

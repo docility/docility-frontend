@@ -1,7 +1,7 @@
 <template>
   <div class="flex items-center justify-center min-h-screen bg-gradient-to-r from-purple-200 to-[#42f5e0]">
     <div class="w-full max-w-md p-8 bg-white  shadow-lg ">
-    <img src="@/assets/logo.jpg" alt="Profile Picture" class="w-full h-full border-4 border-white object-cover"/>
+    <img src="@/assets/logo.png" alt="Profile Picture" class="w-full h-full border-4 border-white object-cover"/>
   </div>
     <div class="w-full max-w-md p-8 bg-white rounded-lg shadow-lg ">
       <h2 class="text-4xl font-bold text-center mb-6 text-indigo-700 drop-shadow-md">Welcome Back!</h2>

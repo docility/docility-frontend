@@ -59,7 +59,7 @@
         class="overflow-auto"
       />
     </div> 
-    <button @click="saveAssessment" class="w-full mt-4 bg-primary text-secondary-text font-semibold py-2 rounded hover:bg-secondary-alternate">Save</button> 
+    <button @click="saveAssessment" class="w-full  rounded  button-style">Save</button> 
   </div>
 </template>
 
@@ -686,16 +686,17 @@ export default defineComponent({
   display: inline-block;
   padding: 10px 20px;
   cursor: pointer;
-  background-color: #4caf50;
-  color: white;
+  background-color: #42f5e0;
+  color: rgb(41, 28, 28);
   border-radius: 4px;
   text-align: center;
-  margin-bottom: 10px; /* Add margin for spacing */
+  font: bold;
+  margin: 10px; /* Add margin for spacing */
   transition: background-color 0.2s ease; /* Smooth transition */
+  width: 200px;
 }
-
 .custom-file-upload:hover {
-  background-color: #45a049;
+  background-color: #6cd0c4;
 }
 
 .custom-file-upload input[type="file"] {

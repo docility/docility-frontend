@@ -1,6 +1,6 @@
 <template>
   <div class="excel-upload">
-    <label class="custom-file-upload  save-button">
+    <label class="custom-file-upload">
     <input type="file" @change="handleFileUpload" accept=".xlsx, .xls" />
     {{ title }}
   </label>
@@ -47,7 +47,7 @@ export default {
   display: inline-block;
   padding: 10px 20px;
   cursor: pointer;
-  background-color: #4caf50;
+  background-color: #42f5e0;
   color: white;
   border-radius: 4px;
   text-align: center;
@@ -56,7 +56,7 @@ export default {
   width: 200px;
 }
 .custom-file-upload:hover {
-  background-color: #45a049;
+  background-color: #6cd0c4;
 }
 
 .custom-file-upload input[type="file"] {

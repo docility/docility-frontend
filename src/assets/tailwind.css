@@ -2,3 +2,20 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+.button-style{
+  @apply bg-dark-background-primary text-dark-text-secondary mt-4   py-2  font-semibold rounded hover:bg-dark-select  hover:text-dark-text;
+}
+
+.active-button-style{
+  @apply bg-dark-background-secondary text-dark-text font-semibold;
+}
+
+.cancel-button-style {
+  @apply bg-red-400 hover:bg-red-600 text-dark-text font-semibold;
+}
+
+.button-card {
+  @apply w-full bg-dark-background-primary mt-4  hover:font-semibold py-2 rounded  hover:text-dark-text shadow-slate-300 flex items-center justify-end gap-8 flex-col;
+}
