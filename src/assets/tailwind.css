@@ -8,6 +8,9 @@
   @apply bg-dark-background-primary text-dark-text-secondary mt-4   py-2  font-semibold rounded hover:bg-dark-select  hover:text-dark-text;
 }
 
+.secondary-button-style{
+  @apply  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150  bg-dark-background-primary text-dark-text-secondary mt-4   py-2 rounded-lg   shadow-lg font-semibold   hover:bg-dark-select  hover:text-dark-text;
+}
 .active-button-style{
   @apply bg-dark-background-secondary text-dark-text font-semibold;
 }
@@ -18,4 +21,8 @@
 
 .button-card {
   @apply w-full bg-dark-background-primary mt-4  hover:font-semibold py-2 rounded  hover:text-dark-text shadow-slate-300 flex items-center justify-end gap-8 flex-col;
+}
+
+.text-default {
+  @apply text-dark-text-primary  font-semibold;
 }

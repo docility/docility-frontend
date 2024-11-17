@@ -14,10 +14,12 @@ import CreateTemplate from "@/components/private/riskAssessment/menu/create-temp
 import RiskRegistered from "@/components/private/riskAssessment/menu/risk-registered.vue";
 import NewAssessmentChecklist from "@/components/private/riskAssessment/menu/assessment-checklist/new-assessment-checklist.vue";
 import CustomerManagement from "@/components/private/customerManagement/customer-management.vue";
+import PrivacyPolicy from "@/components/public/PrivacyPolicy.vue";
 
 // Define your routes
 const routes = [
   { path: "/signin", name: "signin", component: UserLogin },
+  { path: "/privacy-policy", name: "privacy-policy", component: PrivacyPolicy },
   {
     path: "/dashboard",
     name: "dashboard",
@@ -91,7 +93,7 @@ router.beforeEach((to, from, next) => {
     to.name !== "signin" &&
     !isAuthenticated &&
     to.name !== "register" &&
-    to.name !== "view-grades"
+    to.name !== "privacy-policy"
   ) {
     next({ name: "signin" });
   } else if (to.name === "signin" && isAuthenticated) {
@@ -100,5 +102,6 @@ router.beforeEach((to, from, next) => {
     next();
   }
 });
+
 
 export default router;

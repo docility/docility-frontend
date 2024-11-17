@@ -1,14 +1,14 @@
 <template>
   <div class="flex items-center justify-center min-h-screen bg-gradient-to-r from-purple-200 to-[#42f5e0]">
-    <div class="w-full max-w-md p-8 bg-white  shadow-lg ">
-    <img src="@/assets/logo.png" alt="Profile Picture" class="w-full h-full border-4 border-white object-cover"/>
-  </div>
-    <div class="w-full max-w-md p-8 bg-white rounded-lg shadow-lg ">
+    <div class="w-full max-w-md p-8 bg-white shadow-lg">
+      <img src="@/assets/logo.png" alt="Profile Picture" class="w-full h-full border-4 border-white object-cover"/>
+    </div>
+    <div class="w-full max-w-md p-8 bg-white rounded-lg shadow-lg">
       <h2 class="text-4xl font-bold text-center mb-6 text-indigo-700 drop-shadow-md">Welcome Back!</h2>
       <p class="text-center text-gray-600 mb-8">Please sign in to your account</p>
       <form @submit.prevent="UserLogin">
         <div class="mb-6">
-          <label for="username" class="block text-sm font-semibold text-gray-800">Username</label>
+          <label for="username" class="text-default">Username</label>
           <input 
             v-model="username" 
             id="username" 
@@ -18,7 +18,7 @@
         </div>
 
         <div class="mb-6">
-          <label for="password" class="block text-sm font-semibold text-gray-800">Password</label>
+          <label for="password" class=" text-default">Password</label>
           <input 
             v-model="password" 
             id="password" 
@@ -30,7 +30,7 @@
 
         <button 
           type="submit" 
-          class="w-full bg-indigo-600 text-white py-3 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 font-semibold shadow-lg"
+          class="w-full secondary-button-style"
           :disabled="isSubmitting"
         >
           <span v-if="isSubmitting">Logging in...</span>
@@ -41,8 +41,33 @@
           <router-link to="/register" class="text-sm text-indigo-600 hover:underline">Create an Account</router-link>
         </div> 
 
+        <div class="mt-6 text-center">
+          <button 
+            @click.prevent="showModal = true" 
+            class="text-sm text-indigo-600 hover:underline focus:outline-none"
+          >
+            View Privacy Policy
+          </button>
+        </div> 
+
         <p v-if="errorMessage" class="mt-4 text-red-600 text-center">{{ errorMessage }}</p>
       </form>
+    </div>
+
+    <!-- Privacy Policy Modal -->
+    <div 
+      v-if="showModal"  
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 scroll-smooth"
+    >
+      <div class="bg-white p-8 rounded-lg shadow-lg w-11/12 max-w-lg h-[700px] overflow-auto flex flex-col"> 
+        <PrivacyPolicy /> 
+        <button 
+          @click="showModal = false" 
+          class="mt-4 px-4 py-2 rounded-lg self-end transition  button-style"
+        >
+          Close
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -50,13 +75,19 @@
 <script>
 import http from '@/helpers/http';  
 import socket from '@/helpers/socket';
+import PrivacyPolicy from './PrivacyPolicy.vue';
+
 export default { 
+  components: {
+    PrivacyPolicy
+  },
   data() {
     return {
       username: '',
       password: '',
       errorMessage: '',
       isSubmitting: false,
+      showModal: false, // To control modal visibility
       apiUrl: process.env.VUE_APP_API_URL,
     };
   },
@@ -73,7 +104,7 @@ export default {
 
         sessionStorage.setItem('jwt', jwt); 
         sessionStorage.setItem('profile', JSON.stringify(user)); 
-        socket.connect()
+        socket.connect();
         this.$router.push('/dashboard'); 
       } catch (error) {
         this.errorMessage = 'Login failed. Please try again.';
@@ -84,25 +115,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-body {
-  font-family: 'Poppins', sans-serif;
-}
-
-h2 {
-  letter-spacing: 1.5px;
-}
-
-input {
-  transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-}
- 
-button {
-  letter-spacing: 0.5px;
-}
-
-a {
-  font-weight: 500;
-}
-</style>
