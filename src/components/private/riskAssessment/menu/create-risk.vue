@@ -700,7 +700,7 @@ export default {
     riskTreatmentDomain() {
       // Group items by a category property
       return this.controlCategoryList.reduce((groups, item) => {
-        const category = item.attributes.domain;
+        const category = item.attributes.annexControl+"|"+item.attributes.domain;
 
         if (groups[category]) return groups;
 
@@ -710,16 +710,20 @@ export default {
         return groups;
       }, {});
     },
-    riskTreatmentControlMapping() {
-      console.log(this.controlDomain);
+    riskTreatmentControlMapping() { 
+      const annexControl = this.controlDomain.split("|")[0]
+      const domain = this.controlDomain.split("|")[1]
       return this.controlCategoryList.filter(
-        (item) => item.attributes.domain == this.controlDomain
+        (item) => item.attributes.domain == domain && item.attributes.annexControl == annexControl
       );
     },
     riskControlMapping() {
-      console.log(this.riskControlDomain);
+      console.log("categorys",this.riskControlDomain);
+      const annexControl = this.riskControlDomain.split("|")[0]
+      const domain = this.riskControlDomain.split("|")[1]
+      console.log(annexControl, domain)
       return this.controlCategoryList.filter(
-        (item) => item.attributes.domain == this.riskControlDomain
+        (item) => item.attributes.domain == domain && item.attributes.annexControl == annexControl
       );
     },
     visibleHeaderKeys() {
