@@ -214,20 +214,36 @@
           </div>
           <div class="mb-4">
             <label class="block text-lg font-medium text-gray-700"
-              >Control Mapping
+              >Control domain
             </label>
             <select
-              v-model="riskControlMap"
+              v-model="riskControlDomain"
               class="mt-1 h-10 block w-full p-2 border border-gray-300 rounded"
             >
-              <optgroup
-                v-for="group in groupedItems"
-                :key="group.controlHeading"
+              <option
+                v-for="group in riskTreatmentDomain"
+                :key="group"
+                :value="group[0]"
               >
-                <option v-for="item in group" :key="item.id" :value="item.id">
-                  {{ item.attributes.controlHeading }}
-                </option>
-              </optgroup>
+                {{ group[0] }}
+              </option>
+            </select>
+          </div>
+          <div class="mb-4">
+            <label class="block text-lg font-medium text-gray-700"
+              >Controls mapped
+            </label>
+            <select
+              v-model="controlMapped"
+              class="mt-1 h-10 block w-full p-2 border border-gray-300 rounded"
+            >
+              <option
+                v-for="group in riskControlMapping"
+                :key="group"
+                :value="group.id"
+              >
+                {{ group.attributes.controlHeading }}
+              </option>
             </select>
           </div>
           <div class="mb-4">
@@ -700,12 +716,19 @@ export default {
         (item) => item.attributes.domain == this.controlDomain
       );
     },
+    riskControlMapping() {
+      console.log(this.riskControlDomain);
+      return this.controlCategoryList.filter(
+        (item) => item.attributes.domain == this.riskControlDomain
+      );
+    },
     visibleHeaderKeys() {
       return this.headers.filter((header) => this.visibleHeaders[header]);
     },
   },
   data() {
     return {
+      riskControlDomain: '',
       headers: [],
       visibleHeaders: {},
       isModalOpen: false,
