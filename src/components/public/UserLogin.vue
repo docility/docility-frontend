@@ -4,7 +4,7 @@
       <img src="@/assets/logo.png" alt="Profile Picture" class="w-full h-full border-4 border-white object-cover"/>
     </div>
     <div class="w-full max-w-md p-8 bg-white rounded-lg shadow-lg">
-      <h2 class="text-4xl font-bold text-center mb-6 text-indigo-700 drop-shadow-md">Welcome Back!</h2>
+      <h2 class="text-4xl  text-default text-center mb-6  drop-shadow-md">Welcome Back!</h2>
       <p class="text-center text-gray-600 mb-8">Please sign in to your account</p>
       <form @submit.prevent="UserLogin">
         <div class="mb-6">
@@ -30,7 +30,7 @@
 
         <button 
           type="submit" 
-          class="w-full secondary-button-style"
+          class="w-full secondary-button-style text-default"
           :disabled="isSubmitting"
         >
           <span v-if="isSubmitting">Logging in...</span>
@@ -38,15 +38,15 @@
         </button>
 
         <div class="mt-6 text-center">
-          <router-link to="/register" class="text-sm text-indigo-600 hover:underline">Create an Account</router-link>
+          <router-link to="/register" class="link-text-primary">Create an Account</router-link>
         </div> 
 
         <div class="mt-6 text-center">
           <button 
             @click.prevent="showModal = true" 
-            class="text-sm text-indigo-600 hover:underline focus:outline-none"
+            class="link-text-secondary"
           >
-            View Privacy Policy
+            Privacy Policy
           </button>
         </div> 
 
