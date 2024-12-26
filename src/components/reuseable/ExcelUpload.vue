@@ -1,39 +1,43 @@
 <template>
-  <div class="excel-upload">
-    <label class="custom-file-upload">
-    <input type="file" @change="handleFileUpload" accept=".xlsx, .xls" />
-    {{ title }}
-  </label>
+  <div class="w-14">
+    <label class="w-4">
+      <img class="cursor-pointer hover:scale-110" src="@/assets/import.svg" alt="My Icon" />
+      <input type="file" @change="handleFileUpload" accept=".xlsx, .xls" ref="fileInput" />
+    </label>
   </div>
 </template>
 
 <script>
-import * as XLSX from 'xlsx';
+import * as XLSX from "xlsx";
 
 export default {
-  name: 'ExcelUpload',
+  name: "ExcelUpload",
   props: {
     title: {
-      type: String
-    }
-  }, 
+      type: String,
+    },
+  },
   methods: {
     handleFileUpload(event) {
       const file = event.target.files[0];
+      console.log("change file", file);
       if (file) {
         const reader = new FileReader();
-        
+
         reader.onload = (e) => {
           const data = new Uint8Array(e.target.result);
-          const workbook = XLSX.read(data, { type: 'array' });
+          const workbook = XLSX.read(data, { type: "array" });
           const sheetName = workbook.SheetNames[0];
           const worksheet = workbook.Sheets[sheetName];
           const jsonData = XLSX.utils.sheet_to_json(worksheet);
 
           // Emit the parsed data
-          this.$emit('file-read', jsonData);
+          this.$emit("file-read", jsonData);
+
+          // Reset file input to trigger change event on re-uploading the same file
+          this.$refs.fileInput.value = '';
         };
-        
+
         reader.readAsArrayBuffer(file);
       }
     },
@@ -42,24 +46,17 @@ export default {
 </script>
 
 <style scoped>
- 
 .custom-file-upload {
-  display: inline-block;
-  padding: 10px 20px;
+  width: 1rem;
+  height: 1rem;
   cursor: pointer;
-  background-color: #42f5e0;
-  color: white;
-  border-radius: 4px;
-  text-align: center;
-  margin: 10px; /* Add margin for spacing */
-  transition: background-color 0.2s ease; /* Smooth transition */
-  width: 200px;
+  transition: transform 0.2s ease-in-out;
 }
 .custom-file-upload:hover {
-  background-color: #6cd0c4;
+  transform: scale(1.1); /* Adds hover effect */
 }
 
-.custom-file-upload input[type="file"] {
+input[type="file"] {
   display: none; /* Hide the default file input */
 }
 </style>

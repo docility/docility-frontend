@@ -672,6 +672,31 @@
         </button>
       </div>
     </form>
+    <div
+      v-if="isImportModalVisible"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+    >
+      <div class="bg-white p-6 rounded-lg shadow-lg w-3/4 max-w-4xl">
+        <!-- Table inside the modal -->
+        <TableComponent :headers="ImportFileHeaders" :data="importData" />
+
+        <!-- Buttons -->
+        <div class="mt-4 flex justify-end space-x-4">
+          <button
+            @click="handleCancelImport"
+            class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400"
+          >
+            Cancel
+          </button>
+          <button
+            @click="handleSubmitImport"
+            class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+          >
+            Submit
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -680,11 +705,13 @@ import HeaderButton from "@/components/reuseable/HeaderButton.vue";
 import http from "@/helpers/http";
 import ExcelUpload from "@/components/reuseable/ExcelUpload.vue";
 import { toast } from "vue3-toastify";
+import TableComponent from "@/components/reuseable/TableComponent.vue";
 
 export default {
   components: {
     HeaderButton,
     ExcelUpload,
+    TableComponent,
   },
   computed: {
     groupedItems() {
@@ -700,7 +727,8 @@ export default {
     riskTreatmentDomain() {
       // Group items by a category property
       return this.controlCategoryList.reduce((groups, item) => {
-        const category = item.attributes.annexControl+"|"+item.attributes.domain;
+        const category =
+          item.attributes.annexControl + "|" + item.attributes.domain;
 
         if (groups[category]) return groups;
 
@@ -710,20 +738,24 @@ export default {
         return groups;
       }, {});
     },
-    riskTreatmentControlMapping() { 
-      const annexControl = this.controlDomain.split("|")[0]
-      const domain = this.controlDomain.split("|")[1]
+    riskTreatmentControlMapping() {
+      const annexControl = this.controlDomain.split("|")[0];
+      const domain = this.controlDomain.split("|")[1];
       return this.controlCategoryList.filter(
-        (item) => item.attributes.domain == domain && item.attributes.annexControl == annexControl
+        (item) =>
+          item.attributes.domain == domain &&
+          item.attributes.annexControl == annexControl
       );
     },
     riskControlMapping() {
-      console.log("categorys",this.riskControlDomain);
-      const annexControl = this.riskControlDomain.split("|")[0]
-      const domain = this.riskControlDomain.split("|")[1]
-      console.log(annexControl, domain)
+      console.log("categorys", this.riskControlDomain);
+      const annexControl = this.riskControlDomain.split("|")[0];
+      const domain = this.riskControlDomain.split("|")[1];
+      console.log(annexControl, domain);
       return this.controlCategoryList.filter(
-        (item) => item.attributes.domain == domain && item.attributes.annexControl == annexControl
+        (item) =>
+          item.attributes.domain == domain &&
+          item.attributes.annexControl == annexControl
       );
     },
     visibleHeaderKeys() {
@@ -732,7 +764,45 @@ export default {
   },
   data() {
     return {
-      riskControlDomain: '',
+      isImportModalVisible: false,
+      importData: null,
+      ImportFileHeaders: [
+        "Date Created",
+        "Risk Owner",
+        "Risk Category / Domain",
+        "Threat",
+        "Vulnerability",
+        "Information Asset category",
+        "CIA Impact",
+        "Matrix to be used for risk assessment",
+        "Initial Likelihood",
+        "Initial Impact",
+        "Current Control In Place",
+        "Current Controls Are Effective",
+        "Control Mapping",
+        "Risk acceptable",
+        "Risk treatment option",
+        "Risk Treatment Plan",
+        "Control domain",
+        "Controls mapped",
+        "Person responsible to implement the Risk Treatment Plan",
+        "Treatment approval date",
+        "Risk Level",
+        "Treatment approval evidence",
+        "Expected treatment completion date",
+        "Treatment status",
+        "Notes",
+        "Residual Likelihood",
+        "Residual Impact",
+        "Residual Risk level/rating",
+        "Residual risk and treatment approval date",
+        "Residual risk and treatment approval evidence",
+        "Risk approval date",
+        "Risk approval evidence",
+        "Risk assessment completed",
+        "Next Review Date",
+      ],
+      riskControlDomain: "",
       headers: [],
       visibleHeaders: {},
       isModalOpen: false,
@@ -805,26 +875,54 @@ export default {
 
     handleExcelData(data) {
       this.excelData = data;
-      console.log(data);
-      this.fileUploaded = true;
+      console.log("handleexcel",data);
       // Dynamically extract headers from the first risk object
       if (this.excelData.length > 0) {
-        this.headers = Object.keys(this.excelData[0]);
-        console.log(this.headers);
-        // Check if sessionStorage contains saved header visibility settings
-        const storedVisibility = sessionStorage.getItem("headerVisibility");
-        if (storedVisibility) {
-          this.visibleHeaders = JSON.parse(storedVisibility);
-        } else {
-          // Set default selection for the first 6 headers
-          this.selectedHeaders = this.headers.slice(0, 6);
-          this.headers.forEach((header, index) => {
-            this.visibleHeaders[header] = index < 6; // First 6 columns are visible by default
-          });
-        }
+        this.importData = this.excelData;
+        this.isImportModalVisible = true;
       }
-
-      console.log(this.visibleHeaders);
+    },
+    async handleSubmitImport() {
+      const mappedData = this.excelData.map(row => ({
+        dateCreated: row["Date Created"],
+        riskOwner: row["Risk Owner"],
+        riskCategory: row["Risk Category / Domain"],
+        threat: row["Threat"],
+        vulnerability: row["Vulnerability"],
+        informationAsset: row["Information Asset category"],
+        ciaImpact: row["CIA Impact"],
+        matrix: row["Matrix to be used for risk assessment"],
+        likelihood: row["Initial Likelihood"],
+        initialImpact: row["Initial Impact"],
+        residualImpact: row["Residual Impact"],
+        residualLikelihood: row["Residual Likelihood"],
+        riskLevel: row["Risk Level"],
+        residualRiskLevel: row["Residual Risk level/rating"],
+        riskAcceptable: row["Risk acceptable"],
+        riskApprovalDate: row["Risk approval date"],
+        riskApprovalEvidence: row["Risk approval evidence"],
+        riskAssessmentCompleted: row["Risk assessment completed"],
+        riskTreatment: row["Risk treatment option"],
+        controlDomain: row["Control domain"],
+        personResponsibleToImplement: row["Person responsible to implement the Risk Treatment Plan"],
+        treatmentApprovalDate: row["Treatment approval date"],
+        treatmentCompletionDate: row["Expected treatment completion date"],
+        residualTreatmentApprovalDate: row["Residual risk and treatment approval date"],
+        approvalEvidence: row["Residual risk and treatment approval evidence"],
+        nextReviewDate: row["Next Review Date"],
+        treatmentStatus: row["Treatment status"],
+        riskControlMap: row["Control Mapping"],
+        currentControlEffective: row["Current Controls Are Effective"],
+        currentControlInPlace: row["Current Control In Place"],
+        riskTreatmentPlan: row["Risk Treatment Plan"],
+        treatmentApprovalEvidence: row["Treatment approval evidence"],
+        controlMapped: row["Controls mapped"],
+        notes: row["Notes"],
+      }));
+      const response = await http.post("/api/create-bulk/risks", mappedData);
+          toast.success(response.data.message);
+          this.reset();
+      console.log(mappedData)
     },
     openModal() {
       if (this.riskTreatment && this.riskTreatmentListOptions) {
@@ -993,57 +1091,61 @@ export default {
         }
       } else {
         try {
-          const risks = []
-          for (const item of this.excelData) { 
-            risks.push({  
+          const risks = [];
+          for (const item of this.excelData) {
+            risks.push({
+              dateCreated: item["Date Created"],
+              riskOwner: item["Risk Owner"],
+              riskCategory: item["Risk Category / Domain"],
+              threat: item["Threat"],
+              vulnerability: item["Vulnerability"],
+              informationAsset: item["Information Asset category"],
+              ciaImpact: item["CIA Impact"],
+              matrix: item["Matrix to be used for risk assessment"],
+              likelihood: item["Initial Likelihood"],
+              initialImpact: item["Initial Impact"],
+              risidualImpact: item["Residual Impact"],
+              residualLikelihood: item["Residual Likelihood"],
+              riskLevel: item["Risk Level"],
+              residualRiskLevel: item["Residual Risk level/rating"],
+              riskAcceptable: item["Risk acceptable"],
+              riskApprovalDate: item["Risk approval date"],
+              riskApprovalEvidence:
+                item["Residual risk and treatment approval evidence"],
+              riskAssessmentCompleted:
+                item["Expected treatment completion date"],
+              riskTreatment: item["Risk treatment option"],
+              controlDomain: item["Control domain"],
+              personResponsibleToImplement:
+                item["Person responsible to implement the Risk Treatment Plan"],
+              treatmentApprovalDate: item["Treatment approval date"],
+              treatmentCompletionDate:
+                item["Expected treatment completion date"],
+              residualTreatmentApprovalDate:
+                item["Residual risk and treatment approval date"],
+              approvalEvidence: item["Treatment approval evidence"],
+              nextReviewDate: item["Next Review Date"],
+              treatmentStatus: item["Treatment status"],
+              riskControlMap: item["Controls mapped"],
+              currentControlEffective: item["Current Controls Are Effective"],
+              currentControlInPlace: item["Current Control In Place"],
 
-              dateCreated: item['Date Created'],
-              riskOwner: item['Risk Owner'],
-              riskCategory:  item['Risk Category / Domain'],
-              threat:  item['Threat'],
-              vulnerability:  item['Vulnerability'],
-              informationAsset:  item['Information Asset category'],
-              ciaImpact:  item['CIA Impact'],
-              matrix: item['Matrix to be used for risk assessment'],
-              likelihood:  item['Initial Likelihood'],
-              initialImpact:  item['Initial Impact'],
-              risidualImpact:  item['Residual Impact'],
-              residualLikelihood: item['Residual Likelihood'],
-              riskLevel:  item['Risk Level'],
-              residualRiskLevel: item['Residual Risk level/rating'],
-              riskAcceptable:  item['Risk acceptable'],
-              riskApprovalDate:  item['Risk approval date'],
-              riskApprovalEvidence:  item['Residual risk and treatment approval evidence'],
-              riskAssessmentCompleted:  item['Expected treatment completion date'],
-              riskTreatment:  item['Risk treatment option'],
-              controlDomain:  item['Control domain'],
-              personResponsibleToImplement:  item['Person responsible to implement the Risk Treatment Plan'],
-              treatmentApprovalDate:  item['Treatment approval date'],
-              treatmentCompletionDate:  item['Expected treatment completion date'],
-              residualTreatmentApprovalDate:  item['Residual risk and treatment approval date'],
-              approvalEvidence:  item['Treatment approval evidence'],
-              nextReviewDate:  item['Next Review Date'],
-              treatmentStatus:  item['Treatment status'],
-              riskControlMap:  item['Controls mapped'],
-              currentControlEffective:  item['Current Controls Are Effective'],
-              currentControlInPlace:  item['Current Control In Place'],
-
-              riskTreatmentPlan:  item['Risk Treatment Plan'],
-              treatmentApprovalEvidence:  item['Risk Owner'],
-              controlMapped: item['Control Mapping'],
-              notes:  item['Notes'],
-            })
+              riskTreatmentPlan: item["Risk Treatment Plan"],
+              treatmentApprovalEvidence: item["Risk Owner"],
+              controlMapped: item["Control Mapping"],
+              notes: item["Notes"],
+            });
           }
-          console.log(risks)
-          const response = await http.post('/api/create-bulk/risks', 
-          risks,
-          ); 
+          console.log(risks);
+          const response = await http.post("/api/create-bulk/risks", risks);
           toast.success(response.data.message);
           this.reset();
         } catch (error) {
-          toast.error('Error Saving Excel Data: ' + error.response?.data?.error?.message);
+          toast.error(
+            "Error Saving Excel Data: " + error.response?.data?.error?.message
+          );
         } finally {
-          this.reset()
+          this.reset();
         }
       }
     },

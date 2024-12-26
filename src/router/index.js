@@ -7,7 +7,7 @@ import Home from "@/components/private/Home.vue";
 import RiskAssessment from "@/components/private/riskAssessment/risk-assessment.vue";
 import CreateRisk from "@/components/private/riskAssessment/menu/create-risk.vue"; // Import your actual component here
 // import CreateControl from "@/components/private/riskAssessment/menu/create-control.vue";
-import CreateControllAssessment from "@/components/private/riskAssessment/menu/create-controll-assessment.vue";
+import CreateControl from "@/components/private/riskAssessment/menu/create-control.vue";
 import CreateInformationAsset from "@/components/private/riskAssessment/menu/create-information-asset.vue";
 import CreateRiskCategory from "@/components/private/riskAssessment/menu/create-risk-category.vue";
 import CreateTemplate from "@/components/private/riskAssessment/menu/create-template.vue";
@@ -15,6 +15,7 @@ import RiskRegistered from "@/components/private/riskAssessment/menu/risk-regist
 import NewAssessmentChecklist from "@/components/private/riskAssessment/menu/assessment-checklist/new-assessment-checklist.vue";
 import CustomerManagement from "@/components/private/customerManagement/customer-management.vue";
 import PrivacyPolicy from "@/components/public/PrivacyPolicy.vue";
+import CreateControlAssessment from "@/components/private/riskAssessment/menu/create-controll-assessment.vue";
 
 // Define your routes
 const routes = [
@@ -41,7 +42,12 @@ const routes = [
       {
         path: "risk-assessment/create-control",
         name: "Control Assessment",
-        component: CreateControllAssessment,
+        component: CreateControl,
+      },  
+      {
+        path: "risk-assessment/create-control-assessment",
+        name: "New Control Assessment",
+        component: CreateControlAssessment,
       },  
       {
         path: "risk-assessment/create-control/new-control",

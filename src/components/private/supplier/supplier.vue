@@ -2,14 +2,7 @@
   <div class="supplier-component">
     <div class="relative shadow-md sm:rounded-lg">
       <div class="pb-4 bg-white flex p-2 justify-between flex-row-reverse">
-        <button
-          @click="addNewSupplier()"
-          class=" py-2 px-4 rounded button-style "
-        >
-          Add Supplier
-        </button>
-        <label for="table-search" class="sr-only">Search</label>
-        <div class="relative mt-1">
+        <div class="relative m-1">
           <div
             class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none"
           >
@@ -34,20 +27,56 @@
             type="text"
             id="table-search"
             onchange="computed"
-            class="block pt-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+            class="block h-10 pt-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
             placeholder="Search for items"
           />
+        </div>
+        <div class="flex justify-center items-center">
+          <ExcelUpload
+            title="Import Risk Category"
+            @file-read="handleExcelData"
+          />
+          <img @click="addNewSupplier()" src="@/assets/add.svg" alt="My Icon" />
+          <!-- Trigger button for the modal -->
         </div>
       </div>
 
       <!-- Scrollable container with fixed header -->
       <div class="max-h-[700px] overflow-y-auto w-full">
+        <div
+          v-if="isImportModalVisible"
+          class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+        >
+          <div class="bg-white p-6 rounded-lg shadow-lg w-3/4 max-w-4xl">
+            <!-- Table inside the modal -->
+            <TableComponent :headers="ImportFileHeaders" :data="importData" />
+
+            <!-- Buttons -->
+            <div class="mt-4 flex justify-end space-x-4">
+              <button
+                @click="handleCancelImport"
+                class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400"
+              >
+                Cancel
+              </button>
+              <button
+                @click="handleSubmitImport"
+                class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+              >
+                Submit
+              </button>
+            </div>
+          </div>
+        </div>
         <table
           class="min-w-full text-sm text-left rtl:text-right text-primary dark:text-gray-400"
         >
-          <thead class="text-xs uppercase text-text-primary ">
+          <thead class="text-xs uppercase text-text-primary">
             <tr class="sticky z-10">
-              <th scope="col" class="sticky top-0 p-4 bg-dark-background-secondary z-10 text-dark-text">
+              <th
+                scope="col"
+                class="sticky top-0 p-4 bg-dark-background-secondary z-10 text-dark-text"
+              >
                 <div class="flex items-center">
                   <input
                     id="checkbox-all-search"
@@ -59,28 +88,52 @@
                   >
                 </div>
               </th>
-              <th scope="col" class="sticky top-0 px-6 py-3 z-10  bg-dark-background-secondary text-dark-text">
+              <th
+                scope="col"
+                class="sticky top-0 px-6 py-3 z-10 bg-dark-background-secondary text-dark-text"
+              >
                 Supplier Id
               </th>
-              <th scope="col" class="sticky top-0 px-6 py-3 z-10 bg-dark-background-secondary text-dark-text">
+              <th
+                scope="col"
+                class="sticky top-0 px-6 py-3 z-10 bg-dark-background-secondary text-dark-text"
+              >
                 Supplier Name
               </th>
-              <th scope="col" class="sticky top-0 px-6 py-3 z-10  bg-dark-background-secondary text-dark-text">
+              <th
+                scope="col"
+                class="sticky top-0 px-6 py-3 z-10 bg-dark-background-secondary text-dark-text"
+              >
                 Supplier Purpose
               </th>
-              <th scope="col" class="sticky top-0 px-6 py-3 z-10 bg-dark-background-secondary text-dark-text">
+              <th
+                scope="col"
+                class="sticky top-0 px-6 py-3 z-10 bg-dark-background-secondary text-dark-text"
+              >
                 Supplier Type
               </th>
-              <th scope="col" class="sticky top-0 px-6 py-3 z-10 bg-dark-background-secondary text-dark-text">
+              <th
+                scope="col"
+                class="sticky top-0 px-6 py-3 z-10 bg-dark-background-secondary text-dark-text"
+              >
                 Glocal
               </th>
-              <th scope="col" class="sticky top-0 px-6 py-3 z-10 bg-dark-background-secondary text-dark-text">
+              <th
+                scope="col"
+                class="sticky top-0 px-6 py-3 z-10 bg-dark-background-secondary text-dark-text"
+              >
                 Country
               </th>
-              <th scope="col" class="sticky top-0 px-6 py-3 z-10 bg-dark-background-secondary text-dark-text">
+              <th
+                scope="col"
+                class="sticky top-0 px-6 py-3 z-10 bg-dark-background-secondary text-dark-text"
+              >
                 Assessment Status
               </th>
-              <th scope="col" class="sticky top-0 px-6 py-3 z-10 text-dark-text bg-dark-background-secondary">
+              <th
+                scope="col"
+                class="sticky top-0 px-6 py-3 z-10 text-dark-text bg-dark-background-secondary"
+              >
                 Actions
               </th>
             </tr>
@@ -94,31 +147,39 @@
               <td class="w-4 p-4">
                 <div class="flex items-center">
                   <input
-                    :id="'checkbox-table-' + supplier.id"
+                    :id="'checkbox-table-' + supplier?.id"
                     type="checkbox"
                     class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                   />
-                  <label :for="'checkbox-table-' + supplier.id" class="sr-only"
+                  <label :for="'checkbox-table-' + supplier?.id" class="sr-only"
                     >checkbox</label
                   >
                 </div>
               </td>
-              <td class="px-6 py-4  text-dark-text-primary">{{ supplier.attributes?.supplier_id }}</td>
               <td class="px-6 py-4 text-dark-text-primary">
-                {{ supplier.attributes?.supplier_name }}
+                {{ supplier?.id }}
               </td>
-              <td class="px-6 py-4  text-dark-text-primary">
-                {{ supplier.attributes?.supplier_purpose }}
+              <td class="px-6 py-4 text-dark-text-primary">
+                {{ supplier?.attributes?.supplier_name }}
               </td>
-              <td class="px-6 py-4  text-dark-text-primary">
-                {{ supplier.attributes?.supplier_type }}
+              <td class="px-6 py-4 text-dark-text-primary">
+                {{ supplier?.attributes?.supplier_purpose }}
               </td>
-              <td class="px-6 py-4  text-dark-text-primary">{{ supplier.attributes?.glocal }}</td>
-              <td class="px-6 py-4  text-dark-text-primary">{{ supplier.attributes?.country }}</td>
-              <td class="px-6 py-4  text-dark-text-primary">
-                {{ supplier.attributes?.assessment_status }}
+              <td class="px-6 py-4 text-dark-text-primary">
+                {{ supplier?.attributes?.supplier_type }}
               </td>
-              <td class="px-6 py-4 gap-2 flex sticky top-0  text-dark-text-primary">
+              <td class="px-6 py-4 text-dark-text-primary">
+                {{ supplier?.attributes?.glocal }}
+              </td>
+              <td class="px-6 py-4 text-dark-text-primary">
+                {{ supplier?.attributes?.country }}
+              </td>
+              <td class="px-6 py-4 text-dark-text-primary">
+                {{ supplier?.attributes?.assessment_status }}
+              </td>
+              <td
+                class="px-6 py-4 gap-2 flex sticky top-0 text-dark-text-primary"
+              >
                 <button
                   @click="editSupplier(supplier)"
                   class="text-blue-600 hover:underline"
@@ -977,15 +1038,12 @@
             </div>
           </div>
           <div>
-            <button
-              type="submit"
-              class="w-full mt-4 py-2 rounded button-style"
-            >
+            <button type="submit" class="w-full mt-4 py-2 rounded button-style">
               Submit
             </button>
             <button
               v-on:click="closeModals()"
-              class="w-full mt-4  py-2 rounded cancel-button-style"
+              class="w-full mt-4 py-2 rounded cancel-button-style"
             >
               Cancel
             </button>
@@ -999,16 +1057,89 @@
 <script>
 import http from "@/helpers/http";
 import { toast } from "vue3-toastify";
+import ExcelUpload from "@/components/reuseable/ExcelUpload.vue";
+import TableComponent from "@/components/reuseable/TableComponent.vue";
 
 export default {
   name: "SupplierComponent",
+  components: {
+    ExcelUpload,
+    TableComponent,
+  },
   data() {
     return {
+      isImportModalVisible: false,
+      excelData: null,
+      fileUploaded: false,
       showModal: false,
       searchQuery: "",
       updateData: false,
       supplierList: [],
       selectedSupplierId: null,
+      ImportFileHeaders: [
+        "Supplier Name",
+        "Supplier Trading As",
+        "ABN No",
+        "CAN No",
+        "Website",
+        "BSB",
+        "Bank Account No",
+        "Bank Account Name",
+        "GLocal",
+        "Supplier Type",
+        "Address",
+        "Country",
+        "State",
+        "SubUrb",
+        "Postal Code",
+        "Contact Person Name",
+        "Contact Person Number",
+        "Contact Person Email",
+        "Support Person Name",
+        "Support Person Number",
+        "Support Person Email",
+        "Payment Term",
+        "Notes",
+        "Supplier Category",
+        "Terms For Use",
+        "Ongoing Management",
+        "Exit Terms",
+        "Supplier Purpose",
+        "Service Provider",
+        "Data Shared",
+        "Department Managing",
+        "Owner",
+        "Is SLA",
+        "SLA Details",
+        "Credit Limit",
+        "Iso 27001",
+        "ISO 9001",
+        "ISO 14001",
+        "ISO 45001",
+        "Modern Slavery Act",
+        "Modern Slavery Statement Date",
+        "Certification",
+        "Other Certification Exists",
+        "Annual Budget",
+        "Contract Commencement Date",
+        "Contract End Date",
+        "CIA Impact",
+        "Threat",
+        "Matrix",
+        "Likelihood",
+        "Impact",
+        "Inherent Risk Level",
+        "Risk Assessment Completed",
+        "Risk Assessment Required",
+        "Assessment Due Date",
+        "Assessment Status",
+        "Assessment Reviewer Person",
+        "Supplier Agreement",
+        "Approval Status",
+        "Date Entered",
+        "Decision Date",
+      ],
+      importData: null,
       createSupplier: {
         supplierId: "",
         supplierName: "",
@@ -1080,12 +1211,103 @@ export default {
     };
   },
   methods: {
+    handleExcelData(data) {
+      this.excelData = data;
+      console.log(data);
+      this.importData = data;
+      this.fileUploaded = true;
+      this.isImportModalVisible = true;
+    },
     addNewSupplier() {
       (this.showModal = true), this.resetData();
     },
     closeModals() {
       this.resetData();
       this.showModal = false;
+    },
+    handleCancelImport() {
+      this.isImportModalVisible = false;
+    },
+    handleSubmitImport() {
+      console.log(this.excelData);
+      const mapped = this.excelData.map((curr) => ({
+        supplier_id: curr["Supplier ID"],
+        supplier_name: curr["Supplier Name"],
+        trading_as: curr["Supplier Trading As"],
+        abn_no: curr["ABN No"],
+        acn_no: curr["CAN No"],
+        website: curr["Website"],
+        bsb: curr["BSB"],
+        bank_acc_no: curr["Bank Account No"],
+        bank_acc_name: curr["Bank Account Name"],
+        glocal: curr["GLocal"],
+        supplier_type: curr["Supplier Type"],
+        address: curr["Address"],
+        country: curr["Country"],
+        state: curr["State"],
+        suburb: curr["SubUrb"],
+        postal_code: curr["Postal Code"],
+        contact_person_name: curr["Contact Person Name"],
+        contact_person_number: curr["Contact Person Number"],
+        contact_person_email: curr["Contact Person Email"],
+        support_person_name: curr["Support Person Name"],
+        support_person_number: curr["Support Person Number"],
+        support_person_email: curr["Support Person Email"],
+        payment_terms: curr["Payment Term"],
+        notes: curr["Notes"],
+        supplier_category: curr["Supplier Category"],
+        terms_for_use: curr["Terms For Use"],
+        ongoing_management: curr["Ongoing Management"],
+        exit_terms: curr["Exit Terms"],
+        supplier_purpose: curr["Supplier Purpose"],
+        service_provider: curr["Service Provider"],
+        data_shared: curr["Data Shared"],
+        department_managing: curr["Department Managing"],
+        owner: curr["Owner"],
+        is_sla: curr["Is SLA"],
+        sla_details: curr["SLA Details"],
+        credit_limit: curr["Credit Limit"],
+        iso_27001: curr["Iso 27001"],
+        iso_9001: curr["ISO 9001"],
+        iso_14001: curr["ISO 14001"],
+        iso_45001: curr["ISO 45001"],
+        modern_slavery_act: curr["Modern Slavery Act"],
+        modern_slavery_statement_date: curr["Modern Slavery Statement Date"],
+        certification: curr["Certification"],
+        other_certification_exists: curr["Other Certification Exists"],
+        annual_budget: curr["Annual Budget"],
+        contract_commencement_date: curr["Contract Commencement Date"],
+        contract_end_date: curr["Contract End Date"],
+        cia_impact: curr["CIA Impact"],
+        threat: curr["Threat"],
+        matrix: curr["Matrix"],
+        likelihood: curr["Likelihood"],
+        impact: curr["Impact"],
+        inherent_risk_level: curr["Inherent Risk Level"],
+        risk_assessment_completed: curr["Risk Assessment Completed"],
+        risk_assessment_required: curr["Risk Assessment Required"],
+        assessment_due_date: curr["Assessment Due Date"],
+        assessment_status: curr["Assessment Status"],
+        assessment_reviewer_person: curr["Assessment Reviewer Person"],
+        supplier_agreement: curr["Supplier Agreement"],
+        approval_status: curr["Approval Status"],
+        date_entered: curr["Date Entered"],
+        decision_date: curr["Decision Date"],
+      }));
+      console.log(mapped)
+      // Assuming you want to send this data to the server
+      http
+        .post("/api/create-bulk/supplier", mapped )
+        .then((response) => {
+          toast.success("Suppliers imported successfully");
+          this.isImportModalVisible = false;
+          console.log(response)
+          this.fetchSupplier();
+        })
+        .catch((error) => {
+          console.error(error);
+          toast.error("Error importing suppliers");
+        });
     },
     resetData() {
       (this.selectedSupplierId = null), (this.updateData = false);
@@ -1408,27 +1630,37 @@ export default {
     this.fetchSupplier();
   },
   computed: {
-    filteredSuppliers() {
-      console.log("filtere", this.supplierList.data);
-      try {
-        return this.supplierList.data.filter((supplier) => {
-          return (
-            supplier.attributes?.supplier_name
-              .toLowerCase()
-              .includes(this.searchQuery.toLowerCase()) ||
-            supplier.attributes?.supplier_purpose
-              .toLowerCase()
-              .includes(this.searchQuery.toLowerCase()) ||
-            supplier.attributes?.country
-              .toLowerCase()
-              .includes(this.searchQuery.toLowerCase())
-          );
-        });
-      } catch (error) {
-        return null;
+  filteredSuppliers() {
+    try {
+      if (!this.supplierList || !this.supplierList.data) {
+      return [];
+    }
+    const query = this.searchQuery.toLowerCase();
+    return this.supplierList.data.filter(supplier => {
+      let { supplier_name = '', supplier_purpose = '', country = '' } = supplier.attributes;
+      
+      if (supplier_name === null) {
+        supplier_name = ""
       }
-    },
-  },
+      if (supplier_purpose === null ) {
+        supplier_purpose = ""
+      }
+      if (country === null) {
+        country = ""
+      }
+      return (
+        supplier_name.toLowerCase().includes(query) ||
+        supplier_purpose.toLowerCase().includes(query) ||
+        country.toLowerCase().includes(query)
+      );
+    });
+    } catch (error) {
+      console.log(error);
+      return []
+    }
+    
+  }
+}
 };
 </script>
 
