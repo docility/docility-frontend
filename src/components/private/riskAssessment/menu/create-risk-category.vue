@@ -1,9 +1,10 @@
 <template>
-  <div class="container flex flex-col w-full h-full overflow-hidden ">
+  <div class="container flex flex-col w-full h-full overflow-hidden gap-2">
     <HeaderButton title="Create Risk Category" :onClick="goBack" />
-
-    <ExcelUpload title="Import Risk Category" @file-read="handleExcelData" />
-      
+    <div class="w-full bg-white h-10 flex items-center ">
+      <ExcelUpload title="Import Risk Category" @file-read="handleExcelData" />
+    </div>
+    
     <form class="overflow-auto" @submit.prevent="submitRiskCategory">
       <!-- Form inputs for category and description -->
       <div v-if="!fileUploaded" class="grid gap-2 grid-cols-1 w-[100%] p-2 items-center justify-center mt-5 bg-primary-text">

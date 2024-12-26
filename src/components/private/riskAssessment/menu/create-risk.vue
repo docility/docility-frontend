@@ -1,8 +1,10 @@
 <template>
-  <div class="container flex flex-col w-full h-full overflow-hidden">
+  <div class="container flex flex-col w-full h-full overflow-hidden gap-2">
     <HeaderButton title="Risk" :onClick="goBack" />
-
-    <ExcelUpload title="Import Category" @file-read="handleExcelData" />
+    <div class="w-full bg-white h-10 flex items-center "> 
+      <ExcelUpload title="Import Risk Category" @file-read="handleExcelData" />
+    </div>
+    
     <div
       v-if="isModalOpen"
       class="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50"
@@ -872,10 +874,12 @@ export default {
       this.treatmentOption = "";
       this.description = "";
     },
-
+    handleCancelImport() {
+      this.isImportModalVisible = false;
+    },
     handleExcelData(data) {
       this.excelData = data;
-      console.log("handleexcel",data);
+      console.log("handleexcel", data);
       // Dynamically extract headers from the first risk object
       if (this.excelData.length > 0) {
         this.importData = this.excelData;
@@ -883,7 +887,7 @@ export default {
       }
     },
     async handleSubmitImport() {
-      const mappedData = this.excelData.map(row => ({
+      const mappedData = this.excelData.map((row) => ({
         dateCreated: row["Date Created"],
         riskOwner: row["Risk Owner"],
         riskCategory: row["Risk Category / Domain"],
@@ -904,10 +908,12 @@ export default {
         riskAssessmentCompleted: row["Risk assessment completed"],
         riskTreatment: row["Risk treatment option"],
         controlDomain: row["Control domain"],
-        personResponsibleToImplement: row["Person responsible to implement the Risk Treatment Plan"],
+        personResponsibleToImplement:
+          row["Person responsible to implement the Risk Treatment Plan"],
         treatmentApprovalDate: row["Treatment approval date"],
         treatmentCompletionDate: row["Expected treatment completion date"],
-        residualTreatmentApprovalDate: row["Residual risk and treatment approval date"],
+        residualTreatmentApprovalDate:
+          row["Residual risk and treatment approval date"],
         approvalEvidence: row["Residual risk and treatment approval evidence"],
         nextReviewDate: row["Next Review Date"],
         treatmentStatus: row["Treatment status"],
@@ -920,9 +926,10 @@ export default {
         notes: row["Notes"],
       }));
       const response = await http.post("/api/create-bulk/risks", mappedData);
-          toast.success(response.data.message);
-          this.reset();
-      console.log(mappedData)
+      toast.success(response.data.message);
+      this.reset();
+      this.isImportModalVisible = false;
+      console.log(mappedData);
     },
     openModal() {
       if (this.riskTreatment && this.riskTreatmentListOptions) {
@@ -1029,41 +1036,64 @@ export default {
         try {
           const data = {
             data: {
-              dateCreated: this.dateCreated,
-              riskOwner: this.riskOwner,
-              riskCategory: this.riskCategory.toString(),
-              threat: this.threat,
-              vulnerability: this.vulnerability,
-              informationAsset: this.informationAsset,
-              ciaImpact: this.ciaImpact,
-              matrix: this.matrix,
-              likelihood: this.likelihood.toString(),
-              initialImpact: this.initialImpact.toString(),
-              risidualImpact: this.residualImpact.toString(),
-              residualLikelihood: this.residualLikelihood.toString(),
-              riskLevel: this.calculateRiskLevel(),
-              residualRiskLevel: this.calculateResidualRiskLevel(),
-              riskAcceptable: this.riskAcceptable,
-              riskApprovalDate: this.riskApprovalDate,
-              riskApprovalEvidence: this.riskApprovalEvidence,
-              riskAssessmentCompleted: this.riskAssessmentCompleted,
-              riskTreatment: this.riskTreatment.toString(),
-              controlDomain: this.controlDomain.toString(),
-              personResponsibleToImplement: this.personResponsibleToImplement,
-              treatmentApprovalDate: this.treatmentApprovalDate,
-              treatmentCompletionDate: this.treatmentCompletionDate,
-              residualTreatmentApprovalDate: this.residualTreatmentApprovalDate,
-              approvalEvidence: this.approvalEvidence,
-              nextReviewDate: this.nextReviewDate,
-              treatmentStatus: this.treatmentStatus.toString(),
-              riskControlMap: this.riskControlMap.toString(),
-              currentControlEffective: this.currentControlEffective.toString(),
-              currentControlInPlace: this.currentControlInPlace.toString(),
-
-              riskTreatmentPlan: this.riskTreatmentPlan,
-              treatmentApprovalEvidence: this.treatmentApprovalEvidence,
-              controlMapped: this.controlMapped.toString(),
-              notes: this.notes,
+              dateCreated: this.dateCreated || "",
+              riskOwner: this.riskOwner || "",
+              riskCategory: this.riskCategory
+                ? this.riskCategory.toString()
+                : "",
+              threat: this.threat || "",
+              vulnerability: this.vulnerability || "",
+              informationAsset: this.informationAsset || "",
+              ciaImpact: this.ciaImpact || "",
+              matrix: this.matrix || "",
+              likelihood: this.likelihood ? this.likelihood.toString() : "",
+              initialImpact: this.initialImpact
+                ? this.initialImpact.toString()
+                : "",
+              residualImpact: this.residualImpact
+                ? this.residualImpact.toString()
+                : "",
+              residualLikelihood: this.residualLikelihood
+                ? this.residualLikelihood.toString()
+                : "",
+              riskLevel: this.calculateRiskLevel() || "",
+              residualRiskLevel: this.calculateResidualRiskLevel() || "",
+              riskAcceptable: this.riskAcceptable || "",
+              riskApprovalDate: this.riskApprovalDate || "",
+              riskApprovalEvidence: this.riskApprovalEvidence || "",
+              riskAssessmentCompleted: this.riskAssessmentCompleted || "",
+              riskTreatment: this.riskTreatment
+                ? this.riskTreatment.toString()
+                : "",
+              controlDomain: this.controlDomain
+                ? this.controlDomain.toString()
+                : "",
+              personResponsibleToImplement:
+                this.personResponsibleToImplement || "",
+              treatmentApprovalDate: this.treatmentApprovalDate || "",
+              treatmentCompletionDate: this.treatmentCompletionDate || "",
+              residualTreatmentApprovalDate:
+                this.residualTreatmentApprovalDate || "",
+              approvalEvidence: this.approvalEvidence || "",
+              nextReviewDate: this.nextReviewDate || "",
+              treatmentStatus: this.treatmentStatus
+                ? this.treatmentStatus.toString()
+                : "",
+              riskControlMap: this.riskControlMap
+                ? this.riskControlMap.toString()
+                : "",
+              currentControlEffective: this.currentControlEffective
+                ? this.currentControlEffective.toString()
+                : "",
+              currentControlInPlace: this.currentControlInPlace
+                ? this.currentControlInPlace.toString()
+                : "",
+              riskTreatmentPlan: this.riskTreatmentPlan || "",
+              treatmentApprovalEvidence: this.treatmentApprovalEvidence || "",
+              controlMapped: this.controlMapped
+                ? this.controlMapped.toString()
+                : "",
+              notes: this.notes || "",
             },
           };
 
