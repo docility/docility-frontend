@@ -1,22 +1,24 @@
 <template>
   <div>
-    <CustomerList
-      @view-customer="showCustomerDetails"
-      @add-customer="openAddCustomerModal"
-    />
-    <CustomerDetailsModal
-      v-if="selectedCustomer"
-      :customer="selectedCustomer"
-      @close="selectedCustomer = null"
-    />
     <AddCustomerModal
       v-if="showAddModal"
-      @close="showAddModal = false"
-      :onAddCustomer="addNewCustomer"
+      @close="showAddModal = false" 
+      :callback="addNewCustomer"
     />
     <button @click="openAddCustomerModal" class="btn btn-primary">
       Add New Customer
     </button>
+    <div>
+      <CustomerList
+        @view-customer="showCustomerDetails"
+        @add-customer="openAddCustomerModal"
+      />
+      <CustomerDetailsModal
+        v-if="selectedCustomer"
+        :customer="selectedCustomer"
+        @close="selectedCustomer = null"
+      />
+    </div>
   </div>
 </template>
 
@@ -56,7 +58,7 @@ export default {
       this.showAddModal = true;
     },
     addNewCustomer(newCustomer) {
-      this.customers.push({ ...newCustomer });
+      console.log("adding new customer", newCustomer)
     },
   },
 };
