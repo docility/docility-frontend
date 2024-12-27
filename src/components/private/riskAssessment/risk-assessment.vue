@@ -37,15 +37,16 @@
         
         <p>Create New Risk</p>
       </router-link>
-      <router-link
+      <!-- <router-link
+      hidden
         to="risk-assessment/create-control"
         type="submit"
         class="button-card hover:shadow-lg hover:scale-2 buttons"
         >
         <svg viewBox="0 0 24 24" width="120px" height="100px"  fill="none" xmlns="http://www.w3.org/2000/svg" aria-labelledby="controlCentreIconTitle" stroke="#756161" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" color="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title id="controlCentreIconTitle">Control Centre</title> <path d="M4 6.5C4 4.567 5.567 3 7.5 3L16.5 3C18.433 3 20 4.567 20 6.5V6.5C20 8.433 18.433 10 16.5 10L7.5 10C5.567 10 4 8.433 4 6.5V6.5Z"></path> <path d="M20 17.5C20 19.433 18.433 21 16.5 21L7.5 21C5.567 21 4 19.433 4 17.5V17.5C4 15.567 5.567 14 7.5 14L16.5 14C18.433 14 20 15.567 20 17.5V17.5Z"></path> <circle cx="16.5" cy="17.5" r="1"></circle> <circle cx="7.5" cy="6.5" r="1"></circle> </g></svg>
        
-        <p>Controls</p>
-      </router-link>
+        <p>New Control</p>
+      </router-link> -->
       <router-link
       to="risk-assessment/create-control-assessment"
       type="submit"
@@ -53,7 +54,7 @@
       >
       <svg viewBox="0 0 24 24" width="120px" height="100px"  fill="none" xmlns="http://www.w3.org/2000/svg" aria-labelledby="controlCentreIconTitle" stroke="#756161" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" color="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title id="controlCentreIconTitle">Control Centre</title> <path d="M4 6.5C4 4.567 5.567 3 7.5 3L16.5 3C18.433 3 20 4.567 20 6.5V6.5C20 8.433 18.433 10 16.5 10L7.5 10C5.567 10 4 8.433 4 6.5V6.5Z"></path> <path d="M20 17.5C20 19.433 18.433 21 16.5 21L7.5 21C5.567 21 4 19.433 4 17.5V17.5C4 15.567 5.567 14 7.5 14L16.5 14C18.433 14 20 15.567 20 17.5V17.5Z"></path> <circle cx="16.5" cy="17.5" r="1"></circle> <circle cx="7.5" cy="6.5" r="1"></circle> </g></svg>
      
-      <p>Control Assessment</p>
+      <p>Create Control</p>
     </router-link>
       <router-link
         to="risk-assessment/risk-register"
