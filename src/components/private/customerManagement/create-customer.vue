@@ -1,331 +1,74 @@
 <template>
-  <div class="modal-overlay flex justify-center items-center fixed inset-0 bg-black bg-opacity-50">
-    <div class="modal-content bg-white p-8 rounded-lg max-w-7xl w-full overflow-y-auto">
-      <h3 class="text-xl font-semibold mb-6">{{ existingCustomer ? 'Update Customer' : 'Add New Customer' }}</h3>
-      <form @submit.prevent="submitForm" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- Basic Information -->
-        <div class="form-group">
-          <label for="customerName" class="block text-sm font-medium">Customer Name <span class="text-red-500">*</span>:</label>
-          <input
-            id="customerName"
-            v-model="newCustomer.name"
-            type="text"
-            class="form-input mt-1 block w-full border rounded-md shadow-sm"
-            required
-            aria-required="true"
-            placeholder="Enter customer name"
-          />
-        </div>
-
-        <div class="form-group">
-          <label for="tradingAs" class="block text-sm font-medium">Customer Trading As <span class="text-red-500">*</span>:</label>
-          <input
-            id="tradingAs"
-            v-model="newCustomer.trading_as"
-            type="text"
-            class="form-input mt-1 block w-full border rounded-md shadow-sm"
-            required
-            aria-required="true"
-            placeholder="Enter trading name"
-          />
-        </div>
-
-        <!-- Registration Details -->
-        <div class="form-group">
-          <label for="abn" class="block text-sm font-medium">ABN <span class="text-red-500">*</span>:</label>
-          <input
-            id="abn"
-            v-model="newCustomer.abn_no"
-            type="text"
-            class="form-input mt-1 block w-full border rounded-md shadow-sm"
-            required
-            aria-required="true"
-            placeholder="Enter ABN"
-          />
-        </div>
-
-        <div class="form-group">
-          <label for="acn" class="block text-sm font-medium">ACN:</label>
-          <input
-            id="acn"
-            v-model="newCustomer.acn_no"
-            type="text"
-            class="form-input mt-1 block w-full border rounded-md shadow-sm"
-            placeholder="Enter ACN (optional)"
-          />
-        </div>
-
-        <!-- Contact Details -->
-        <div class="form-group">
-          <label for="website" class="block text-sm font-medium">Website:</label>
-          <input
-            id="website"
-            v-model="newCustomer.website"
-            type="text"
-            class="form-input mt-1 block w-full border rounded-md shadow-sm"
-            placeholder="Enter website"
-          />
-        </div>
-
-        <div class="form-group">
-          <label for="localOrOverseas" class="block text-sm font-medium">Local/Overseas:</label>
-          <select
-            id="localOrOverseas"
-            v-model="newCustomer.glocal"
-            class="form-input mt-1 block w-full border rounded-md shadow-sm"
+  <div
+    class="modal-overlay flex justify-center items-center fixed inset-0 bg-black bg-opacity-50 z-[99999]"
+  >
+    <div
+      class="modal-content bg-white p-8 rounded-lg max-w-7xl w-full overflow-y-auto"
+    >
+      <h3 class="text-xl font-semibold mb-6">
+        {{ existingCustomer ? "Update Customer" : "Add New Customer" }}
+      </h3>
+      <form
+        @submit.prevent="submitForm"
+        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+      >
+        <div v-for="field in formFields" :key="field.id" class="form-group">
+          <label :for="field.id" class="block text-sm font-medium">
+            {{ field.label }}
+            <span v-if="field.required" class="text-red-500">*</span>
+          </label>
+          <component
+            :is="
+              field.type === 'textarea'
+                ? 'textarea'
+                : field.type === 'select'
+                ? 'select'
+                : 'input'
+            "
+            :id="field.id"
+            v-model="newCustomer[field.model]"
+            :type="
+              field.type === 'textarea' || field.type === 'select'
+                ? undefined
+                : field.type
+            "
+            :class="[
+              'form-input',
+              'mt-1',
+              'block',
+              'w-full',
+              'border',
+              'rounded-md',
+              'shadow-sm',
+            ]"
+            :required="field.required"
+            :aria-required="field.required"
+            :placeholder="field.placeholder"
+            @change="logChange(field.model, $event)"
           >
-            <option value="local">Local</option>
-            <option value="overseas">Overseas</option>
-          </select>
+            <option
+              v-for="option in field.options || []"
+              :key="option.value"
+              :value="option.value"
+            >
+              {{ option.text }}
+            </option>
+          </component>
         </div>
-
-        <!-- Address -->
-        <div class="form-group">
-          <label for="address" class="block text-sm font-medium">Address:</label>
-          <input
-            id="address"
-            v-model="newCustomer.address"
-            type="text"
-            class="form-input mt-1 block w-full border rounded-md shadow-sm"
-            placeholder="Enter address"
-          />
-        </div>
-
-        <div class="form-group">
-          <label for="country" class="block text-sm font-medium">Country:</label>
-          <input
-            id="country"
-            v-model="newCustomer.country"
-            type="text"
-            class="form-input mt-1 block w-full border rounded-md shadow-sm"
-            placeholder="Enter country"
-          />
-        </div>
-
-        <div class="form-group">
-          <label for="state" class="block text-sm font-medium">State:</label>
-          <input
-            id="state"
-            v-model="newCustomer.state"
-            type="text"
-            class="form-input mt-1 block w-full border rounded-md shadow-sm"
-            placeholder="Enter state"
-          />
-        </div>
-
-        <div class="form-group">
-          <label for="suburb" class="block text-sm font-medium">Suburb:</label>
-          <input
-            id="suburb"
-            v-model="newCustomer.suburb"
-            type="text"
-            class="form-input mt-1 block w-full border rounded-md shadow-sm"
-            placeholder="Enter suburb"
-          />
-        </div>
-
-        <div class="form-group">
-          <label for="postcode" class="block text-sm font-medium">Postcode:</label>
-          <input
-            id="postcode"
-            v-model="newCustomer.postal_code"
-            type="text"
-            class="form-input mt-1 block w-full border rounded-md shadow-sm"
-            placeholder="Enter postcode"
-          />
-        </div>
-
-        <!-- Contact Persons -->
-        <div class="form-group">
-          <label for="contactPerson" class="block text-sm font-medium">Contact Person Name <span class="text-red-500">*</span>:</label>
-          <input
-            id="contactPerson"
-            v-model="newCustomer.contact_person_name"
-            type="text"
-            class="form-input mt-1 block w-full border rounded-md shadow-sm"
-            required
-            aria-required="true"
-            placeholder="Enter contact person's name"
-          />
-        </div>
-
-        <div class="form-group">
-          <label for="phone" class="block text-sm font-medium">Phone <span class="text-red-500">*</span>:</label>
-          <input
-            id="phone"
-            v-model="newCustomer.phone_no"
-            type="text"
-            class="form-input mt-1 block w-full border rounded-md shadow-sm"
-            required
-            aria-required="true"
-            placeholder="Enter phone number"
-          />
-        </div>
-
-        <div class="form-group">
-          <label for="email" class="block text-sm font-medium">Email <span class="text-red-500">*</span>:</label>
-          <input
-            id="email"
-            v-model="newCustomer.email"
-            type="email"
-            class="form-input mt-1 block w-full border rounded-md shadow-sm"
-            required
-            aria-required="true"
-            placeholder="Enter email"
-          />
-        </div>
-
-        <div class="form-group">
-          <label for="altContactPerson" class="block text-sm font-medium">Alternate Contact Person Name:</label>
-          <input
-            id="altContactPerson"
-            v-model="newCustomer.alt_person_name"
-            type="text"
-            class="form-input mt-1 block w-full border rounded-md shadow-sm"
-            placeholder="Enter alternate contact person's name"
-          />
-        </div>
-
-        <div class="form-group">
-          <label for="altPhone" class="block text-sm font-medium">Alternate Phone:</label>
-          <input
-            id="altPhone"
-            v-model="newCustomer.alt_phone_no"
-            type="text"
-            class="form-input mt-1 block w-full border rounded-md shadow-sm"
-            placeholder="Enter alternate phone number"
-          />
-        </div>
-
-        <div class="form-group">
-          <label for="altEmail" class="block text-sm font-medium">Alternate Email:</label>
-          <input
-            id="altEmail"
-            v-model="newCustomer.alt_email"
-            type="email"
-            class="form-input mt-1 block w-full border rounded-md shadow-sm"
-            placeholder="Enter alternate email"
-          />
-        </div>
-
-        <!-- Customer Category and Type -->
-        <div class="form-group">
-          <label for="customerCategory" class="block text-sm font-medium">Customer Category:</label>
-          <select
-            id="customerCategory"
-            v-model="newCustomer.customer_category"
-            class="form-input mt-1 block w-full border rounded-md shadow-sm"
+        <div class="modal-actions col-span-full flex justify-end mt-6">
+          <button
+            type="submit"
+            class="btn bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md"
           >
-            <option value="Key">Key Customer</option>
-            <option value="Regular">Regular Customer</option>
-            <option value="One-off">One-off Customer</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label for="customerType" class="block text-sm font-medium">Customer Type:</label>
-          <input
-            id="customerType"
-            v-model="newCustomer.customer_type"
-            type="text"
-            class="form-input mt-1 block w-full border rounded-md shadow-sm"
-            placeholder="Enter customer type"
-          />
-        </div>
-
-        <div class="form-group">
-          <label for="dataShared" class="block text-sm font-medium">Data Shared with Customer:</label>
-          <textarea
-            id="dataShared"
-            v-model="newCustomer.data_shared"
-            class="form-input mt-1 block w-full border rounded-md shadow-sm"
-            placeholder="Enter details about data shared"
-          ></textarea>
-        </div>
-
-        <div class="form-group">
-          <label for="department" class="block text-sm font-medium">Department Managing Customer:</label>
-          <input
-            id="department"
-            v-model="newCustomer.department_managing"
-            type="text"
-            class="form-input mt-1 block w-full border rounded-md shadow-sm"
-            placeholder="Enter managing department"
-          />
-        </div>
-
-        <div class="form-group">
-          <label for="manager" class="block text-sm font-medium">Manager:</label>
-          <input
-            id="manager"
-            v-model="newCustomer.manager"
-            type="text"
-            class="form-input mt-1 block w-full border rounded-md shadow-sm"
-            placeholder="Enter manager"
-          />
-        </div>
-
-        <!-- Contract Details -->
-        <div class="form-group">
-          <label for="contractStart" class="block text-sm font-medium">Contract Start Date:</label>
-          <input
-            id="contractStart"
-            v-model="newCustomer.contract_commencement_date"
-            type="date"
-            class="form-input mt-1 block w-full border rounded-md shadow-sm"
-          />
-        </div>
-
-        <div class="form-group">
-          <label for="contractEnd" class="block text-sm font-medium">Contract End Date:</label>
-          <input
-            id="contractEnd"
-            v-model="newCustomer.contract_end_date"
-            type="date"
-            class="form-input mt-1 block w-full border rounded-md shadow-sm"
-          />
-        </div>
-        <div class="form-group">
-          <label for="cia_impacts" class="block text-sm font-medium">CIA Impact:</label>
-          <input
-            id="manager"
-            v-model="newCustomer.cia_impact"
-            type="text"
-            class="form-input mt-1 block w-full border rounded-md shadow-sm"
-            placeholder="Enter manager"
-          />
-        </div>
-
-        <!-- Agreement and Approval Status -->
-        <div class="form-group">
-          <label for="agreement" class="block text-sm font-medium">Agreement Signed:</label>
-          <select
-            id="agreement"
-            v-model="newCustomer.agreement"
-            class="form-input mt-1 block w-full border rounded-md shadow-sm"
+            Save
+          </button>
+          <button
+            type="button"
+            @click="$emit('close')"
+            class="btn bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-md ml-2"
           >
-            <option value="yes">Yes</option>
-            <option value="no">No</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label for="approvalStatus" class="block text-sm font-medium">Approval Status:</label>
-          <select
-            id="approvalStatus"
-            v-model="newCustomer.approval_status"
-            class="form-input mt-1 block w-full border rounded-md shadow-sm"
-          >
-            <option value="draft">Draft</option>
-            <option value="approved">Approved</option>
-            <option value="rejected">Rejected</option>
-          </select>
-        </div>
-
-        <!-- Modal Actions -->
-        <div class="modal-actions flex justify-end mt-6">
-          <button type="submit" class="btn bg-blue-500 hover:bg-blue-600">Save</button>
-          <button type="button" @click="$emit('close')" class="btn bg-gray-500 hover:bg-gray-600 ml-2">Cancel</button>
+            Cancel
+          </button>
         </div>
       </form>
     </div>
@@ -346,27 +89,274 @@ export default {
   },
   data() {
     return {
-      newCustomer: this.existingCustomer
-        ? { ...this.existingCustomer.attributes }
-        : {
-             
-          },
+      newCustomer: this.initializeCustomerData(this.existingCustomer),
+      formFields: [
+        {
+          id: "customerName",
+          label: "Customer Name",
+          model: "name",
+          type: "text",
+          required: true,
+          placeholder: "Enter customer name",
+        },
+        {
+          id: "tradingAs",
+          label: "Customer Trading As",
+          model: "trading_as",
+          type: "text",
+          required: true,
+          placeholder: "Enter trading name",
+        },
+        {
+          id: "abn",
+          label: "ABN",
+          model: "abn_no",
+          type: "text",
+          required: true,
+          placeholder: "Enter ABN",
+        },
+        {
+          id: "acn",
+          label: "ACN",
+          model: "acn_no",
+          type: "text",
+          placeholder: "Enter ACN (optional)",
+        },
+        {
+          id: "website",
+          label: "Website",
+          model: "website",
+          type: "text",
+          placeholder: "Enter website",
+        },
+        {
+          id: "localOrOverseas",
+          label: "Local/Overseas",
+          model: "glocal",
+          type: "select",
+          options: [
+            { text: "Local", value: "local" },
+            { text: "Overseas", value: "overseas" },
+          ],
+        },
+        {
+          id: "address",
+          label: "Address",
+          model: "address",
+          type: "text",
+          placeholder: "Enter address",
+        },
+        {
+          id: "country",
+          label: "Country",
+          model: "country",
+          type: "text",
+          placeholder: "Enter country",
+        },
+        {
+          id: "state",
+          label: "State",
+          model: "state",
+          type: "text",
+          placeholder: "Enter state",
+        },
+        {
+          id: "suburb",
+          label: "Suburb",
+          model: "suburb",
+          type: "text",
+          placeholder: "Enter suburb",
+        },
+        {
+          id: "postcode",
+          label: "Postcode",
+          model: "postal_code",
+          type: "text",
+          placeholder: "Enter postcode",
+        },
+        {
+          id: "contactPerson",
+          label: "Contact Person Name",
+          model: "contact_person_name",
+          type: "text",
+          required: true,
+          placeholder: "Enter contact person's name",
+        },
+        {
+          id: "phone",
+          label: "Phone",
+          model: "phone_no",
+          type: "text",
+          required: true,
+          placeholder: "Enter phone number",
+        },
+        {
+          id: "email",
+          label: "Email",
+          model: "email",
+          type: "email",
+          required: true,
+          placeholder: "Enter email",
+        },
+        {
+          id: "altContactPerson",
+          label: "Alternate Contact Person Name",
+          model: "alt_person_name",
+          type: "text",
+          placeholder: "Enter alternate contact person",
+        },
+        {
+          id: "altPhone",
+          label: "Alternate Phone",
+          model: "alt_phone_no",
+          type: "text",
+          placeholder: "Enter alternate phone",
+        },
+        {
+          id: "altEmail",
+          label: "Alternate Email",
+          model: "alt_email",
+          type: "email",
+          placeholder: "Enter alternate email",
+        },
+        {
+          id: "customerCategory",
+          label: "Customer Category",
+          model: "customer_category",
+          type: "select",
+          options: [
+            { text: "Key Customer", value: "Key" },
+            { text: "Regular Customer", value: "Regular" },
+            { text: "One-off Customer", value: "One-off" },
+          ],
+        },
+        {
+          id: "customerType",
+          label: "Customer Type",
+          model: "customer_type",
+          type: "text",
+          placeholder: "Enter customer type",
+        },
+        {
+          id: "dataShared",
+          label: "Data Shared with Customer",
+          model: "data_shared",
+          type: "textarea",
+          placeholder: "Enter details about data shared",
+        },
+        {
+          id: "department",
+          label: "Department Managing Customer",
+          model: "department_managing",
+          type: "text",
+          placeholder: "Enter managing department",
+        },
+        {
+          id: "manager",
+          label: "Manager",
+          model: "manager",
+          type: "text",
+          placeholder: "Enter manager",
+        },
+        {
+          id: "contractStart",
+          label: "Contract Start Date",
+          model: "contract_commencement_date",
+          type: "date",
+        },
+        {
+          id: "contractEnd",
+          label: "Contract End Date",
+          model: "contract_end_date",
+          type: "date",
+        },
+        {
+          id: "ciaImpacts",
+          label: "CIA Impact",
+          model: "cia_impact",
+          type: "text",
+          placeholder: "Enter CIA impact",
+        },
+        {
+          id: "agreement",
+          label: "Agreement Signed",
+          model: "agreement",
+          type: "select",
+          options: [
+            { text: "Yes", value: "yes" },
+            { text: "No", value: "no" },
+          ],
+        },
+        {
+          id: "approvalStatus",
+          label: "Approval Status",
+          model: "approval_status",
+          type: "select",
+          options: [
+            { text: "Draft", value: "draft" },
+            { text: "Approved", value: "approved" },
+            { text: "Rejected", value: "rejected" },
+          ],
+        },
+      ],
     };
   },
+  watch: {
+    existingCustomer: {
+      immediate: true,
+      handler(newVal) {
+        this.newCustomer = this.initializeCustomerData(newVal);
+      },
+    },
+  },
   methods: {
+    logChange(model, event) {
+      console.log(`Changed ${model}:`, event.target.value);
+      this.newCustomer[model] = event.target.value; // Ensure the model updates immediately
+    },
+    initializeCustomerData(customer = null) {
+      return customer
+        ? { ...customer }
+        : {
+            name: "",
+            trading_as: "",
+            abn_no: "",
+            acn_no: "",
+            website: "",
+            glocal: "",
+            address: "",
+            country: "",
+            state: "",
+            suburb: "",
+            postal_code: "",
+            contact_person_name: "",
+            phone_no: "",
+            email: "",
+            alt_person_name: "",
+            alt_phone_no: "",
+            alt_email: "",
+            customer_category: "",
+            customer_type: "",
+            data_shared: "",
+            department_managing: "",
+            manager: "",
+            contract_commencement_date: "",
+            contract_end_date: "",
+            cia_impact: "",
+            agreement: "",
+            approval_status: "",
+          };
+    },
     submitForm() {
-      if (this.existingCustomer) {
-        console.log('Updating customer:', this.newCustomer);
-        this.callback(this.newCustomer); // Update logic
-      } else {
-        this.callback(this.newCustomer); // Add logic
+      console.log("Submitted Data:", this.newCustomer);
+      if (Object.values(this.newCustomer).some((value) => value === "")) {
+        alert("Please fill in all required fields.");
+        return;
       }
-      this.$emit('close');
+
+      this.callback({ ...this.newCustomer });
+      this.$emit("close");
     },
   },
 };
 </script>
-
-<style scoped>
-/* Tailwind classes already applied, so no need for custom CSS here */
-</style>

@@ -1,8 +1,15 @@
 <template>
   <div class="w-14">
     <label class="w-4">
-      <img class="cursor-pointer hover:scale-110" src="@/assets/import.svg" alt="My Icon" />
-      <input type="file" @change="handleFileUpload" accept=".xlsx, .xls" ref="fileInput" />
+      <div class="flex items-center flex-col cursor-pointer hover:scale-110">
+        <img src="@/assets/import.svg" alt="My Icon" /> <small>Upload</small>
+      </div>
+      <input
+        type="file"
+        @change="handleFileUpload"
+        accept=".xlsx, .xls"
+        ref="fileInput"
+      />
     </label>
   </div>
 </template>
@@ -35,7 +42,7 @@ export default {
           this.$emit("file-read", jsonData);
 
           // Reset file input to trigger change event on re-uploading the same file
-          this.$refs.fileInput.value = '';
+          this.$refs.fileInput.value = "";
         };
 
         reader.readAsArrayBuffer(file);

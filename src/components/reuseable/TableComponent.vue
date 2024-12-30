@@ -1,8 +1,8 @@
 <template>
   <div class="container mx-auto p-4">
-    <div class="overflow-x-auto">
+    <div class="overflow-x-auto max-h-[600px] overflow-y-auto">
       <table class="min-w-full border-collapse border border-gray-200 shadow-sm rounded-lg">
-        <thead>
+        <thead class="sticky top-0 bg-gray-100 z-10">
           <tr class="bg-gray-100 text-nowrap">
             <th
               v-for="(header, index) in headers"

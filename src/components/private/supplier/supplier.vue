@@ -31,12 +31,13 @@
             placeholder="Search for items"
           />
         </div>
-        <div class="flex justify-center items-center">
+        <div class="flex justify-center items-center gap-2">
           <ExcelUpload
             title="Import Risk Category"
             @file-read="handleExcelData"
           />
-          <img @click="addNewSupplier()" src="@/assets/add.svg" alt="My Icon" />
+          
+          <ImageButton :svg="require('@/assets/add.svg')" title="New" :callback="addNewSupplier"/> 
           <!-- Trigger button for the modal -->
         </div>
       </div>
@@ -1057,14 +1058,17 @@
 <script>
 import http from "@/helpers/http";
 import { toast } from "vue3-toastify";
-import ExcelUpload from "@/components/reuseable/ExcelUpload.vue";
+
 import TableComponent from "@/components/reuseable/TableComponent.vue";
+import ImageButton from "@/components/reuseable/ImageButton.vue";
+import ExcelUpload from "@/components/reuseable/ExcelUpload.vue";
 
 export default {
   name: "SupplierComponent",
   components: {
     ExcelUpload,
     TableComponent,
+    ImageButton
   },
   data() {
     return {
