@@ -1,36 +1,7 @@
 <template>
   <div class="supplier-component">
     <div class="relative shadow-md sm:rounded-lg">
-      <div class="pb-4 bg-white flex p-2 justify-between flex-row-reverse">
-        <div class="relative m-1">
-          <div
-            class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none"
-          >
-            <svg
-              class="w-4 h-4 text-gray-500 dark:text-gray-400"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 20 20"
-            >
-              <path
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-              />
-            </svg>
-          </div>
-          <input
-            v-model="searchQuery"
-            type="text"
-            id="table-search"
-            onchange="computed"
-            class="block h-10 pt-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
-            placeholder="Search for items"
-          />
-        </div>
+      <div class="pb-4 bg-white flex p-2 justify-between flex-row">
         <div class="flex justify-center items-center gap-2">
           <ExcelUpload
             title="Import Risk Category"
@@ -69,134 +40,6 @@
             </div>
           </div>
         </div>
-        <table
-          class="min-w-full text-sm text-left rtl:text-right text-primary dark:text-gray-400"
-        >
-          <thead class="text-xs uppercase text-text-primary">
-            <tr class="sticky z-10">
-              <th
-                scope="col"
-                class="sticky top-0 p-4 bg-dark-background-secondary z-10 text-dark-text"
-              >
-                <div class="flex items-center">
-                  <input
-                    id="checkbox-all-search"
-                    type="checkbox"
-                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                  />
-                  <label for="checkbox-all-search" class="sr-only"
-                    >checkbox</label
-                  >
-                </div>
-              </th>
-              <th
-                scope="col"
-                class="sticky top-0 px-6 py-3 z-10 bg-dark-background-secondary text-dark-text"
-              >
-                Supplier Id
-              </th>
-              <th
-                scope="col"
-                class="sticky top-0 px-6 py-3 z-10 bg-dark-background-secondary text-dark-text"
-              >
-                Supplier Name
-              </th>
-              <th
-                scope="col"
-                class="sticky top-0 px-6 py-3 z-10 bg-dark-background-secondary text-dark-text"
-              >
-                Supplier Purpose
-              </th>
-              <th
-                scope="col"
-                class="sticky top-0 px-6 py-3 z-10 bg-dark-background-secondary text-dark-text"
-              >
-                Supplier Type
-              </th>
-              <th
-                scope="col"
-                class="sticky top-0 px-6 py-3 z-10 bg-dark-background-secondary text-dark-text"
-              >
-                Glocal
-              </th>
-              <th
-                scope="col"
-                class="sticky top-0 px-6 py-3 z-10 bg-dark-background-secondary text-dark-text"
-              >
-                Country
-              </th>
-              <th
-                scope="col"
-                class="sticky top-0 px-6 py-3 z-10 bg-dark-background-secondary text-dark-text"
-              >
-                Assessment Status
-              </th>
-              <th
-                scope="col"
-                class="sticky top-0 px-6 py-3 z-10 text-dark-text bg-dark-background-secondary"
-              >
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr
-              v-for="supplier in filteredSuppliers"
-              :key="supplier.id"
-              class="bg-background border-b hover:bg-dark-background-primary text-text-primary"
-            >
-              <td class="w-4 p-4">
-                <div class="flex items-center">
-                  <input
-                    :id="'checkbox-table-' + supplier?.id"
-                    type="checkbox"
-                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                  />
-                  <label :for="'checkbox-table-' + supplier?.id" class="sr-only"
-                    >checkbox</label
-                  >
-                </div>
-              </td>
-              <td class="px-6 py-4 text-dark-text-primary">
-                {{ supplier?.id }}
-              </td>
-              <td class="px-6 py-4 text-dark-text-primary">
-                {{ supplier?.attributes?.supplier_name }}
-              </td>
-              <td class="px-6 py-4 text-dark-text-primary">
-                {{ supplier?.attributes?.supplier_purpose }}
-              </td>
-              <td class="px-6 py-4 text-dark-text-primary">
-                {{ supplier?.attributes?.supplier_type }}
-              </td>
-              <td class="px-6 py-4 text-dark-text-primary">
-                {{ supplier?.attributes?.glocal }}
-              </td>
-              <td class="px-6 py-4 text-dark-text-primary">
-                {{ supplier?.attributes?.country }}
-              </td>
-              <td class="px-6 py-4 text-dark-text-primary">
-                {{ supplier?.attributes?.assessment_status }}
-              </td>
-              <td
-                class="px-6 py-4 gap-2 flex sticky top-0 text-dark-text-primary"
-              >
-                <button
-                  @click="editSupplier(supplier)"
-                  class="text-blue-600 hover:underline"
-                >
-                  Edit
-                </button>
-                <button
-                  @click="deleteSupplier(supplier.id)"
-                  class="text-red-600 hover:underline"
-                >
-                  Delete
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
       </div>
     </div>
 
@@ -1052,6 +895,7 @@
         </form>
       </div>
     </div>
+    <SupplierList />
   </div>
 </template>
 
@@ -1062,13 +906,15 @@ import { toast } from "vue3-toastify";
 import TableComponent from "@/components/reuseable/TableComponent.vue";
 import ImageButton from "@/components/reuseable/ImageButton.vue";
 import ExcelUpload from "@/components/reuseable/ExcelUpload.vue";
+import SupplierList from './supplier-list.vue'
 
 export default {
   name: "SupplierComponent",
   components: {
     ExcelUpload,
     TableComponent,
-    ImageButton
+    ImageButton,
+    SupplierList
   },
   data() {
     return {

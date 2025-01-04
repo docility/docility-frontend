@@ -1,14 +1,6 @@
 <template>
   <div class="mx-auto p-4">
-    <!-- Add Customer Modal -->
-    <AddCustomerModal
-      v-if="showUpdateModal"
-      @close="showUpdateModal = false"
-      :existingCustomer="selectedCustomer"
-      :callback="updateCustomer()"
-    />
-
-    <ExportButtons :headers="headers" :data="filteredCustomers" />
+    <ExportButtons :headers="headers" :data="filteredSupplier" />
 
     <!-- Page Size and Search -->
     <div class="flex justify-between items-center mb-4">
@@ -61,46 +53,31 @@
         >
           <tr>
             <th class="p-4">Actions</th>
-            <th class="p-4">Customer Name</th>
-            <th class="p-4">Trading As</th>
-            <th class="p-4">ABN</th>
-            <th class="p-4">ACN</th>
-            <th class="p-4">Website</th>
-            <th class="p-4">Customer Address</th>
-            <th class="p-4">Country</th>
-            <th class="p-4">Contact Person</th>
-            <th class="p-4">Email</th>
+            <th v-for="(header, index) in headers" :key="index" class="p-4">
+              {{ header }}</th>
           </tr>
         </thead>
         <tbody>
           <tr
-            v-for="customer in filteredCustomers"
-            :key="customer.id"
+            v-for="supplier in filteredSupplier"
+            :key="supplier.id"
             class="border-b hover:bg-gray-50 text-nowrap"
           >
             <td class="p-4 space-x-2">
               <button
-                @click="selectCustomer(customer)"
+                @click="selectSupplier(supplier)"
                 class="text-blue-600 hover:underline"
               >
                 Edit
               </button>
               <button
-                @click="selectCustomer(customer)"
+                @click="selectSupplier(supplier)"
                 class="text-red-600 hover:underline"
               >
                 Delete
               </button>
             </td>
-            <td class="p-4">{{ customer.attributes.name }}</td>
-            <td class="p-4">{{ customer.attributes.trading_as }}</td>
-            <td class="p-4">{{ customer.attributes.abn_no }}</td>
-            <td class="p-4">{{ customer.attributes.acn_no }}</td>
-            <td class="p-4">{{ customer.attributes.website }}</td>
-            <td class="p-4">{{ customer.attributes.address }}</td>
-            <td class="p-4">{{ customer.attributes.country }}</td>
-            <td class="p-4">{{ customer.attributes.contact_person_name }}</td>
-            <td class="p-4">{{ customer.attributes.email }}</td>
+            <td v-for="(headerKeys, index) in Object.keys(headers)" :key="index" class="p-4">{{ supplier.attributes[headerKeys] }}</td>
           </tr>
         </tbody>
       </table>
@@ -129,28 +106,79 @@
 
 <script>
 import http from "@/helpers/http";
-import AddCustomerModal from "./create-customer.vue";
+// import AddCustomerModal from "./create-customer.vue";
 import ExportButtons from "@/components/reuseable/ExportButtons.vue";
 
 export default {
   components: {
-    AddCustomerModal,
     ExportButtons,
   },
   data() {
     return {
       headers: {
-        name: "Customer Name",
-        trading_as: "Trading As",
-        abn_no: "ABN",
-        acn_no: "ACN",
+        supplier_name: "Supplier Name",
+        trading_as: "Supplier Trading As",
+        abn_no:"ABN No",
+        acn_no: "ACN No",
         website: "Website",
-        address: "Customer Address",
-        country: "Country",
-        contact_person_name: "Contact Person",
-        email: "Email",
+        bsb: "BSB",
+        bank_acc_no:"Bank Account No",
+        bank_acc_name: "Bank Account Name",
+        glocal:"GLocal",
+        supplier_type: "Supplier Type",
+        address: "Address",
+        country:"Country",
+        state: "State",
+        suburb: "SubUrb",
+        postal_code:"Postal Code",
+        contact_person_name:"Contact Person Name",
+        contact_person_number:"Contact Person Number",
+        contact_person_email:"Contact Person Email",
+        support_person_name:"Support Person Name",
+        support_person_number:"Support Person Number",
+        support_person_email: "Support Person Email",
+        payment_terms:"Payment Term",
+        notes:"Notes",
+        supplier_category:"Supplier Category",
+        terms_for_use:"Terms For Use",
+        ongoing_management:"Ongoing Management",
+         exit_terms: "Exit Terms",
+        supplier_purpose: "Supplier Purpose",
+        service_provider: "Service Provider",
+        data_shared: "Data Shared",
+        department_managing:"Department Managing",
+        owner:"Owner",
+        is_sla:"Is SLA",
+        sla_details:"SLA Details",
+        credit_limit:"Credit Limit",
+        iso_27001:"Iso 27001",
+        iso_9001:"ISO 9001",
+        iso_14001:"ISO 14001",
+        iso_45001:"ISO 45001",
+        modern_slavery_act:"Modern Slavery Act",
+        modern_slavery_statement_date:"Modern Slavery Statement Date",
+        certification:"Certification",
+        other_certification_exists:"Other Certification Exists",
+        annual_budget:"Annual Budget",
+        contract_commencement_date:"Contract Commencement Date",
+        contract_end_date:"Contract End Date",
+        cia_impact:"CIA Impact",
+        threat: "Threat",
+        matrix: "Matrix",
+        likelihood:"Likelihood",
+        impact:"Impact",
+        inherent_risk_level:"Inherent Risk Level",
+        risk_assessment_completed:"Risk Assessment Completed",
+        risk_assessment_required: "Risk Assessment Required",
+        assessment_due_date: "Assessment Due Date",
+        assessment_status:"Assessment Status",
+        assessment_reviewer_person:"Assessment Reviewer Person",
+        supplier_agreement:  "Supplier Agreement",
+        approval_status: "Approval Status",
+        date_entered: "Date Entered",
+        decision_date: "Decision Date",
       },
-      customers: [],
+      suppliers: [],
       searchQuery: "",
       selectedCustomer: null,
       showUpdateModal: false,
@@ -160,37 +188,39 @@ export default {
     };
   },
   mounted() {
-    this.fetchCustomers();
+    this.fetchSupplier();
   },
   methods: {
-    async fetchCustomers() {
+    async fetchSupplier() {
       try {
         const response = await http.get(
-          `/api/customer-managements?pagination[page]=${this.currentPage}&pagination[pageSize]=${this.pageSize}`
+          `/api/suppliers?pagination[page]=${this.currentPage}&pagination[pageSize]=${this.pageSize}`
         );
-        this.customers = response.data.data;
+
+        console.log("Suppliers:", response.data.data);
+        this.suppliers = response.data.data;
         this.totalPages = response.data.meta.pagination.pageCount;
       } catch (error) {
-        console.error("Error fetching customers:", error);
+        console.error("Error fetching suppliers:", error);
       }
     },
-    selectCustomer(customer) {
-      this.selectedCustomer = customer;
+    selectSupplier(suppliers) {
+      this.selectedSuppliers = suppliers;
       this.showUpdateModal = true;
     },
-    updateCustomer() {
-      console.log("Updating customer");
+    updateSupplier() {
+      console.log("Updating supplier");
     },
     changePage(page) {
       if (page < 1 || page > this.totalPages) return;
       this.currentPage = page;
-      this.fetchCustomers();
+      this.fetchSupplier();
     },
   },
   computed: {
-    filteredCustomers() {
-      return this.customers.filter((customer) =>
-        JSON.stringify(customer)
+    filteredSupplier() {
+      return this.suppliers.filter((supplier) =>
+        JSON.stringify(supplier)
           .toLowerCase()
           .includes(this.searchQuery.toLowerCase())
       );

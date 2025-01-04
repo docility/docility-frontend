@@ -7,6 +7,7 @@
           @file-read="handleExcelData"
         />
 
+     
         <ImageButton
           :svg="require('@/assets/add.svg')"
           title="New"
@@ -65,6 +66,7 @@ import http from "@/helpers/http";
 import ImageButton from "@/components/reuseable/ImageButton.vue";
 import ExcelUpload from "@/components/reuseable/ExcelUpload.vue";
 import TableComponent from "@/components/reuseable/TableComponent.vue";
+
 import { toast } from "vue3-toastify";
 
 export default {
@@ -74,7 +76,7 @@ export default {
     CustomerDetailsModal,
     AddCustomerModal,
     ExcelUpload,
-    ImageButton,
+    ImageButton, 
   },
   data() {
     return {
