@@ -67,6 +67,17 @@
               Company Management
             </router-link>
           </li>
+          <li>
+            <router-link
+              to="/dashboard/questionnaire-management"
+              :class="[
+                'block px-4 py-2 rounded',
+                isActive('/dashboard/questionnaire-management') ?  'active-button-style' : 'button-style',
+              ]"
+            >
+              Questionnaire Management
+            </router-link>
+          </li>
         </ul>
         <button
           @click="showLogoutModal = true"

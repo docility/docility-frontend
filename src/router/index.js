@@ -15,6 +15,7 @@ import RiskRegistered from "@/components/private/riskAssessment/menu/risks/risk-
 import NewAssessmentChecklist from "@/components/private/riskAssessment/menu/assessment-checklist/new-assessment-checklist.vue";
 import CustomerManagement from "@/components/private/customerManagement/customer-management.vue";
 import CompanyManagement from "@/components/private/companyManagement/company-management.vue";
+import QuestionnaireManagement from "@/components/private/questionnaireManagement/questionnaire-management.vue";
 import PrivacyPolicy from "@/components/public/PrivacyPolicy.vue";
 import CreateControlAssessment from "@/components/private/riskAssessment/menu/create-controll-assessment.vue";
 
@@ -91,6 +92,11 @@ const routes = [
         name: "Company management",
         component: CompanyManagement,
       },
+      {
+        path: "questionnaire-management",
+        name: "Questionnaire management",
+        component: QuestionnaireManagement,
+      },  
       { path: "/:catchAll(.*)", name: "NotFound", component: NotFound },
     ],
   },
