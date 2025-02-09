@@ -74,7 +74,7 @@
                 'block px-4 py-2 rounded',
                 isActive('/dashboard/questionnaire-management') ?  'active-button-style' : 'button-style',
               ]"
-            >
+            > 
               Questionnaire
             </router-link>
           </li>
