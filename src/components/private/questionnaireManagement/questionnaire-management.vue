@@ -90,8 +90,8 @@ export default {
       excelData: null,
       companyListKey: 0,
       ImportFileHeaders: [
-        "Company Name",
-        "Address",
+        "Title",
+        "Description",
       ],
     };
   },
@@ -109,13 +109,13 @@ export default {
     handleSubmitImport() {
       console.log(this.excelData);
       const mapped = this.excelData.map((curr) => ({
-        name: curr["Company Name"],
-        address: curr["Address"], 
+        title: curr["Title"],
+        description: curr["Description"], 
       }));
       console.log(mapped);
       // Assuming you want to send this data to the server
       http
-        .post("/api/create-bulk/companies", mapped)
+        .post("/api/create-bulk/questionnaires", mapped)
         .then((response) => {
           toast.success("Company imported successfully");
           this.isImportModalVisible = false;
@@ -138,7 +138,7 @@ export default {
     },
     async deleteCompany(company){
       console.log(company)
-      const res = await http.delete(`api/companies/${company.id}`); 
+      const res = await http.delete(`api/questionnaires/${company.id}`); 
       if (res.status == 200) {
         this.companyListKey++;
       }
@@ -148,7 +148,7 @@ export default {
     },
    async addNewCompany(newCompany) {
       console.log("adding new Company", newCompany);
-      const res = await http.post("api/companies", { data: newCompany }); 
+      const res = await http.post("api/questionnaires", { data: newCompany }); 
       if (res.status == 200) {
         this.companyListKey++;
       }

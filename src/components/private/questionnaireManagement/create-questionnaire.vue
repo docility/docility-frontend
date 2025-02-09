@@ -97,20 +97,32 @@ export default {
       companyCategoryList: null,
       formFields: [
         {
-          id: "name",
-          label: "Company Name",
-          model: "name",
+          id: "title",
+          label: "Title",
+          model: "title",
           type: "text",
           required: true,
-          placeholder: "Enter Company name",
+          placeholder: "Enter Title",
         },
         {
-          id: "address",
-          label: "Address",
-          model: "address",
+          id: "description",
+          label: "Description",
+          model: "description",
           type: "text",
           required: true,
-          placeholder: "Enter Address",
+          placeholder: "Enter Description",
+        },
+        {
+          id: "type",
+          label: "Questionnaire type",
+          model: "type",
+          type: "select",
+          required: true,
+          options: [
+            { text: 'Customer', value: 'Customer' },
+            { text: 'Supplier', value: 'Supplier' }
+          ],
+          placeholder: "Enter Questionnaire Type",
         },
       ],
     };
@@ -133,8 +145,9 @@ export default {
       return company
         ? { ...company }
         : {
-            name: "",
-            address: "",
+            title: "",
+            description: "",
+            type: ""
           };
     },
     submitForm() {

@@ -53,7 +53,7 @@
                 isActive('/dashboard/customer-management') ?  'active-button-style' : 'button-style',
               ]"
             >
-              Customer Management
+              Customer
             </router-link>
           </li>
           <li>
@@ -64,7 +64,7 @@
                 isActive('/dashboard/company-management') ?  'active-button-style' : 'button-style',
               ]"
             >
-              Company Management
+              Company
             </router-link>
           </li>
           <li>
@@ -75,7 +75,7 @@
                 isActive('/dashboard/questionnaire-management') ?  'active-button-style' : 'button-style',
               ]"
             >
-              Questionnaire Management
+              Questionnaire
             </router-link>
           </li>
         </ul>

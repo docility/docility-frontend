@@ -63,13 +63,15 @@
             <th class="p-4">Actions</th>
             <th class="p-4">Title</th>
             <th class="p-4">Description</th> 
+            <th class="p-4">Questionnaire Type</th> 
           </tr>
         </thead>
         <tbody>
           <tr
             v-for="customer in filteredCustomers"
             :key="customer.id"
-            class="border-b hover:bg-gray-50 text-nowrap"
+            class="border-b hover:bg-gray-200 text-nowrap"
+
           >
             <td class="p-4 space-x-2">
                <button
@@ -93,6 +95,7 @@
             </td>
             <td class="p-4">{{ customer.attributes.title }}</td>
             <td class="p-4">{{ customer.attributes.description }}</td> 
+            <td class="p-4">{{ customer.attributes.type }}</td> 
           </tr>
         </tbody>
       </table>
