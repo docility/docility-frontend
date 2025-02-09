@@ -895,7 +895,7 @@
         </form>
       </div>
     </div>
-    <SupplierList />
+    <SupplierList :Update="editSupplier" :Delete="deleteSupplier"/>
   </div>
 </template>
 

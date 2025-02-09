@@ -61,15 +61,8 @@
         >
           <tr>
             <th class="p-4">Actions</th>
-            <th class="p-4">Customer Name</th>
-            <th class="p-4">Trading As</th>
-            <th class="p-4">ABN</th>
-            <th class="p-4">ACN</th>
-            <th class="p-4">Website</th>
-            <th class="p-4">Customer Address</th>
-            <th class="p-4">Country</th>
-            <th class="p-4">Contact Person</th>
-            <th class="p-4">Email</th>
+            <th class="p-4">Company Name</th>
+            <th class="p-4">Address</th> 
           </tr>
         </thead>
         <tbody>
@@ -86,21 +79,14 @@
                 Edit
               </button>
               <button
-                @click="selectCustomer(customer)"
+                @click="DeleteAction(customer)"
                 class="text-red-600 hover:underline"
               >
                 Delete
               </button>
             </td>
             <td class="p-4">{{ customer.attributes.name }}</td>
-            <td class="p-4">{{ customer.attributes.trading_as }}</td>
-            <td class="p-4">{{ customer.attributes.abn_no }}</td>
-            <td class="p-4">{{ customer.attributes.acn_no }}</td>
-            <td class="p-4">{{ customer.attributes.website }}</td>
-            <td class="p-4">{{ customer.attributes.address }}</td>
-            <td class="p-4">{{ customer.attributes.country }}</td>
-            <td class="p-4">{{ customer.attributes.contact_person_name }}</td>
-            <td class="p-4">{{ customer.attributes.email }}</td>
+            <td class="p-4">{{ customer.attributes.address }}</td> 
           </tr>
         </tbody>
       </table>
@@ -129,7 +115,7 @@
 
 <script>
 import http from "@/helpers/http";
-import AddCustomerModal from "./create-customer.vue";
+import AddCustomerModal from "./create-company.vue";
 import ExportButtons from "@/components/reuseable/ExportButtons.vue";
 
 export default {
@@ -150,15 +136,8 @@ export default {
   data() {
     return {
       headers: {
-        name: "Customer Name",
-        trading_as: "Trading As",
-        abn_no: "ABN",
-        acn_no: "ACN",
-        website: "Website",
-        address: "Customer Address",
-        country: "Country",
-        contact_person_name: "Contact Person",
-        email: "Email",
+        name: "Company Name",
+        address: "Address",
       },
       customers: [],
       searchQuery: "",
@@ -176,7 +155,7 @@ export default {
     async fetchCustomers() {
       try {
         const response = await http.get(
-          `/api/customer-managements?pagination[page]=${this.currentPage}&pagination[pageSize]=${this.pageSize}`
+          `/api/companies?pagination[page]=${this.currentPage}&pagination[pageSize]=${this.pageSize}`
         );
         this.customers = response.data.data;
         this.totalPages = response.data.meta.pagination.pageCount;
@@ -191,6 +170,9 @@ export default {
     },
     UpdateAction(customer) { 
       this.Update(customer);
+    },
+    DeleteAction(customer) { 
+      this.Delete(customer);
     },
     changePage(page) {
       if (page < 1 || page > this.totalPages) return;

@@ -18,12 +18,13 @@
     </div>
     <AddCustomerModal
       v-if="showAddModal"
+      :existingCustomer="existingCustomerData"
       @close="showAddModal = false"
       :callback="addNewCustomer"
     />
 
     <div>
-      <CustomerList :key="customerListKey" />
+      <CustomerList :Update="updateCustomer" :Delete="deleteCustomer" :key="customerListKey" />
       <CustomerDetailsModal
         v-if="selectedCustomer"
         :customer="selectedCustomer"
@@ -84,6 +85,7 @@ export default {
       showAddModal: false,
       fileUploaded: false,
       isImportModalVisible: false,
+      existingCustomerData: null,
       importData: null,
       excelData: null,
       customerListKey: 0,
@@ -129,7 +131,7 @@ export default {
       console.log(data);
       this.fileUploaded = true;
       this.isImportModalVisible = true;
-    },
+    }, 
     handleSubmitImport() {
       console.log(this.excelData);
       const mapped = this.excelData.map((curr) => ({
@@ -180,6 +182,11 @@ export default {
     },
     showCustomerDetails(customer) {
       this.selectedCustomer = customer;
+    },
+    updateCustomer(customer) {
+      console.log("updating customer", customer);
+      this.existingCustomerData = customer.attributes;
+      this.showAddModal = true;
     },
     openAddCustomerModal() {
       this.showAddModal = true;

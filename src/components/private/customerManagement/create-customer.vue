@@ -45,6 +45,7 @@
             :aria-required="field.required"
             :placeholder="field.placeholder"
             @change="logChange(field.model, $event)"
+            @click="logChange(field.model, $event)"
           >
             <option
               v-for="option in field.options || []"
@@ -71,11 +72,39 @@
           </button>
         </div>
       </form>
+      <div v-if="showCreateCustomerCategory" class="modal-backdrop">
+        <div class="modal">
+          <h3>Create New Customer Category</h3>
+          <form @submit.prevent="submitNewCategory">
+            <div class="flex flex-row">
+              <label class="text-nowrap" for="newCategoryName"
+                >Category Name:</label
+              >
+              <input
+                class="border-2"
+                id="newCategoryName"
+                v-model="newCategoryName"
+                type="text"
+                required
+              />
+            </div>
+
+            <div class="modal-buttons">
+              <button type="submit" class="btn-save">Save</button>
+              <button type="button" class="btn-cancel" @click="closeModal">
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import http from "@/helpers/http";
+import { toast } from "vue3-toastify";
 export default {
   props: {
     existingCustomer: {
@@ -90,6 +119,8 @@ export default {
   data() {
     return {
       newCustomer: this.initializeCustomerData(this.existingCustomer),
+      showCreateCustomerCategory: false,
+      customerCategoryList: null,
       formFields: [
         {
           id: "customerName",
@@ -224,7 +255,7 @@ export default {
           label: "Customer Category",
           model: "customer_category",
           type: "select",
-          options: [
+          options: [ 
             { text: "Key Customer", value: "Key" },
             { text: "Regular Customer", value: "Regular" },
             { text: "One-off Customer", value: "One-off" },
@@ -312,9 +343,41 @@ export default {
   methods: {
     logChange(model, event) {
       console.log(`Changed ${model}:`, event.target.value);
+      if (model == "customer_category" && event.target.value == "Action") {
+        // alert("Create New Customer Category");
+        this.showCreateCustomerCategory = true;
+      }
       this.newCustomer[model] = event.target.value; // Ensure the model updates immediately
     },
+    closeModal() {
+      this.showCreateCustomerCategory = false;
+      this.newCategoryName = "";
+    },
+    submitNewCategory() {
+      if (this.newCategoryName.trim()) {
+        console.log(`New Customer Category: ${this.newCategoryName}`);
+        alert(`New Category "${this.newCategoryName}" has been created.`);
+        http
+          .post("/api/customer-categories", {
+            data: { category: this.newCategoryName },
+          })
+          .then((response) => {
+            toast.success("Customer Category successfully saved");
+            this.isImportModalVisible = false;
+            console.log(response);
+            // this.fetchSupplier();
+            this.customerListKey++;
+            this.fetchCustomerCategory()
+          })
+          .catch((error) => {
+            console.error(error);
+            toast.error("Error importing customers");
+          });
+        this.closeModal();
+      }
+    },
     initializeCustomerData(customer = null) {
+      console.log(customer);
       return customer
         ? { ...customer }
         : {
@@ -357,6 +420,100 @@ export default {
       this.callback({ ...this.newCustomer });
       this.$emit("close");
     },
+    async fetchCustomerCategory() {
+      console.log("fetch ccategorys")
+      try {
+        const response = await http.get(`/api/customer-categories`);
+        console.log(response)
+        let categoryIndex = 0;
+        response.data.data.forEach((category) => {   
+          this.formFields.forEach((v, i) => {
+            if (v.id == 'customerCategory') { 
+              categoryIndex = i;
+              this.formFields[i].options.push({
+                text: category.attributes.category,
+                value: category.attributes.category,
+              })
+              console.log(this.formFields[i]);
+            }
+          }) 
+        });
+        this.formFields[categoryIndex].options.push({
+            text: 'Create New',
+            value: 'Action',
+          })
+      } catch (error) {
+        console.error("Error fetching customers:", error);
+      }
+    },
+  },
+  mounted() {
+    this.fetchCustomerCategory();
+    console.log("Existing Customer:", this.customerCategoryList);
   },
 };
 </script>
+<style>
+/* Modal Backdrop with Blur */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(8px);
+  background-color: rgba(0, 0, 0, 0.5); /* Slightly darken the background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Modal Styling */
+.modal {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  width: 350px;
+  max-width: 90%;
+  text-align: center;
+}
+
+.modal h3 {
+  margin-bottom: 15px;
+  font-size: 18px;
+  color: #333;
+}
+
+.modal-buttons {
+  margin-top: 15px;
+}
+
+.btn-save {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btn-save:hover {
+  background-color: #45a049;
+}
+
+.btn-cancel {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.btn-cancel:hover {
+  background-color: #d32f2f;
+}
+</style>

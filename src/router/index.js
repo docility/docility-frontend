@@ -11,11 +11,13 @@ import CreateControl from "@/components/private/riskAssessment/menu/create-contr
 import CreateInformationAsset from "@/components/private/riskAssessment/menu/create-information-asset.vue";
 import CreateRiskCategory from "@/components/private/riskAssessment/menu/create-risk-category.vue";
 import CreateTemplate from "@/components/private/riskAssessment/menu/create-template.vue";
-import RiskRegistered from "@/components/private/riskAssessment/menu/risk-registered.vue";
+import RiskRegistered from "@/components/private/riskAssessment/menu/risks/risk-registered.vue";
 import NewAssessmentChecklist from "@/components/private/riskAssessment/menu/assessment-checklist/new-assessment-checklist.vue";
 import CustomerManagement from "@/components/private/customerManagement/customer-management.vue";
+import CompanyManagement from "@/components/private/companyManagement/company-management.vue";
 import PrivacyPolicy from "@/components/public/PrivacyPolicy.vue";
 import CreateControlAssessment from "@/components/private/riskAssessment/menu/create-controll-assessment.vue";
+
 
 // Define your routes
 const routes = [
@@ -38,48 +40,57 @@ const routes = [
       //   path: "risk-assessment/create-control",
       //   name: "Create Control",
       //   component: CreateControl,
-      // },  
+      // },
       {
         path: "risk-assessment/create-control",
         name: "Control Assessment",
         component: CreateControl,
-      },  
+      },
       {
         path: "risk-assessment/create-control-assessment",
         name: "New Control Assessment",
         component: CreateControlAssessment,
-      },  
+      },
       {
         path: "risk-assessment/create-control/new-control",
         name: "New Assessment Checklist",
         component: NewAssessmentChecklist,
-      },  
+      },
       {
         path: "risk-assessment/create-information-asset",
         name: "Information Asset",
         component: CreateInformationAsset,
-      },  
+      },
       {
         path: "risk-assessment/risk",
         name: "Risk",
         component: CreateRisk,
-      },  
+      },
       {
         path: "risk-assessment/create-risk-category",
         name: "Risk Category",
         component: CreateRiskCategory,
-      },  
+      },
       {
         path: "risk-assessment/create-risk-treatment",
         name: "Risk Treatment",
         component: CreateTemplate,
-      },  
+      },
       {
         path: "risk-assessment/risk-register",
         name: "Risks List",
         component: RiskRegistered,
-      },  
-      { path: "customer-management", name: "Customer management", component: CustomerManagement },
+      },
+      {
+        path: "customer-management",
+        name: "Customer management",
+        component: CustomerManagement,
+      },
+      {
+        path: "company-management",
+        name: "Company management",
+        component: CompanyManagement,
+      },
       { path: "/:catchAll(.*)", name: "NotFound", component: NotFound },
     ],
   },

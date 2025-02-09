@@ -65,13 +65,13 @@
           >
             <td class="p-4 space-x-2">
               <button
-                @click="selectSupplier(supplier)"
+                @click="UpdateAction(supplier)"
                 class="text-blue-600 hover:underline"
               >
                 Edit
               </button>
               <button
-                @click="selectSupplier(supplier)"
+                @click="DeleteAction(supplier.id)"
                 class="text-red-600 hover:underline"
               >
                 Delete
@@ -112,6 +112,16 @@ import ExportButtons from "@/components/reuseable/ExportButtons.vue";
 export default {
   components: {
     ExportButtons,
+  },
+  props: {
+    Update: {
+      type: Function,
+      required: true,
+    },
+    Delete: {
+      type: Function,
+      required: true,
+    },
   },
   data() {
     return {
@@ -191,6 +201,14 @@ export default {
     this.fetchSupplier();
   },
   methods: {
+    async DeleteAction(id) {
+      await this.Delete(id);
+      this.fetchSupplier();
+    },
+    async UpdateAction(supplier) {
+      await this.Update(supplier);
+      this.fetchSupplier();
+    },
     async fetchSupplier() {
       try {
         const response = await http.get(

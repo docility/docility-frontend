@@ -56,6 +56,17 @@
               Customer Management
             </router-link>
           </li>
+          <li>
+            <router-link
+              to="/dashboard/company-management"
+              :class="[
+                'block px-4 py-2 rounded',
+                isActive('/dashboard/company-management') ?  'active-button-style' : 'button-style',
+              ]"
+            >
+              Company Management
+            </router-link>
+          </li>
         </ul>
         <button
           @click="showLogoutModal = true"
@@ -151,5 +162,11 @@ export default {
 </script>
 
 <style scoped>
-/* Optional custom styles */
+  .logo {
+    margin-left: 0;
+    padding: 0;
+    height: 55px;
+    width: 203px;
+    transition: all 300ms linear 0s;
+  }
 </style>

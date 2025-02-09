@@ -57,25 +57,34 @@ export default {
   XLSX.utils.book_append_sheet(wb, ws, "Data");
   XLSX.writeFile(wb, "data.xlsx");
 },
+   
     exportToPdf() {
-      const doc = new jsPDF();
-      const tableData = this.data.map((item) => {
-         return Object.keys(this.headers).map((header) => item.attributes[header] || "")
-        }
-      );
+  const doc = new  jsPDF({ orientation: "landscape" });
+  // Extract header titles
+  const headerList = Object.values(this.headers);
 
-      const headerList = []
-      Object.keys(this.headers).forEach((header) => {
-        headerList.push(this.headers[header])
-      });
- 
-      doc.autoTable({
-        head: [headerList],
-        body: tableData,
-      });
-      doc.save("data.pdf");
-    },
-    exportToWord() {
+  // Extract table data based on headers
+  const tableData = this.data.map((item) => 
+    Object.keys(this.headers).map((headerKey) => item.attributes[headerKey] || "")
+  );
+
+  // Generate PDF with autoTable
+  doc.autoTable({
+    head: [headerList], // Header row
+    body: tableData,    // Table body
+    tableWidth: "auto",
+  styles: {
+    fontSize: '8',
+    overflow: 'linebreak',
+    cellWidth: 'wrap',
+  }, 
+  margin: { top: 10, left: 10, right: 10 },
+  });
+
+  // Save the generated PDF
+  doc.save("data.pdf");
+},
+exportToWord() {
   const rows = this.data.map((item) => {
     let row = {};
     Object.keys(this.headers).forEach((header) => {
@@ -83,6 +92,8 @@ export default {
     });
     return row;
   });
+
+  console.log(rows);
 
   const htmlContent = `
     <!DOCTYPE html>
@@ -93,11 +104,14 @@ export default {
         <style>
           table {
             border-collapse: collapse;
-            width: 100%;
+            table-layout: auto; /* Allow automatic column sizing */
+            width: auto;        /* Let the table width adjust to its content */
           }
           th, td {
             border: 1px solid #ddd;
-            padding: 8px;
+            padding: 8px; /* Add padding for better readability */
+            word-wrap: break-word; /* Enable word wrapping */
+            white-space: normal;   /* Allow text to wrap naturally */
           }
           th {
             background-color: #f2f2f2;
@@ -135,7 +149,8 @@ export default {
   link.href = URL.createObjectURL(blob);
   link.download = "data.doc";
   link.click();
-},
+}
+
   },
 };
 </script>
