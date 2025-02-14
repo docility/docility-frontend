@@ -7,8 +7,7 @@
     "serve:development": "VUE_APP_ENVI=development vue-cli-service serve",
     "build": "VUE_APP_ENVI=production vue-cli-service build",
     "build:staging": "VUE_APP_ENVI=staging vue-cli-service build",
-    "build:development": "VUE_APP_ENVI=development vue-cli-service build",
-    "lint": "eslint . --fix",
+    "build:development": "VUE_APP_ENVI=development vue-cli-service build", 
     "format": "prettier --write ."
   },
   "dependencies": {
