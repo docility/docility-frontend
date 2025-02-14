@@ -79,7 +79,7 @@ export default {
         : { questionnaire_id: this.$route.query.questionaireId },
 
       type: "", // Stores the selected type
-      formFields: [
+      formFields: [ 
         {
           id: "Company",
           label: "Type",
