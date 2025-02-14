@@ -69,8 +69,8 @@
           <tr>
             <th class="p-4">Actions</th>
             <th class="p-4">Title</th>
-            <th class="p-4">Description</th> 
-            <th class="p-4">Questionnaire Type</th> 
+            <th class="p-4">Description</th>
+            <th class="p-4">Questionnaire Type</th>
           </tr>
         </thead>
         <tbody>
@@ -100,8 +100,8 @@
               </button>
             </td>
             <td class="p-4">{{ customer.attributes.title }}</td>
-            <td class="p-4">{{ customer.attributes.description }}</td> 
-            <td class="p-4">{{ customer.attributes.type }}</td> 
+            <td class="p-4">{{ customer.attributes.description }}</td>
+            <td class="p-4">{{ customer.attributes.type }}</td>
           </tr>
         </tbody>
       </table>
@@ -175,7 +175,7 @@ export default {
     async fetchCustomers() {
       try {
         const response = await http.get(
-          `/api/questionnaires?pagination[page]=${this.currentPage}&pagination[pageSize]=${this.pageSize}`
+          `/api/questionnaires?pagination[page]=${this.currentPage}&pagination[pageSize]=${this.pageSize}`,
         );
         this.customers = response.data.data;
         this.totalPages = response.data.meta.pagination.pageCount;
@@ -184,7 +184,7 @@ export default {
       }
     },
     ViewAction(customer) {
-      this.selectedQuestionnaire = {...customer.attributes, id: customer.id};
+      this.selectedQuestionnaire = { ...customer.attributes, id: customer.id };
       this.showViewModal = true;
     },
     UpdateAction(customer) {
@@ -204,7 +204,7 @@ export default {
       return this.customers.filter((customer) =>
         JSON.stringify(customer)
           .toLowerCase()
-          .includes(this.searchQuery.toLowerCase())
+          .includes(this.searchQuery.toLowerCase()),
       );
     },
   },

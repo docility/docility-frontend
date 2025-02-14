@@ -8,7 +8,6 @@
       :callback="updateCustomer()"
     />
 
-  
     <ExportButtons :headers="headers" :data="filteredCustomers" />
 
     <!-- Page Size and Search -->
@@ -63,8 +62,8 @@
           <tr>
             <th class="p-4">Actions</th>
             <th class="p-4">Title</th>
-            <th class="p-4">Description</th> 
-            <th class="p-4">Questionnaire Type</th> 
+            <th class="p-4">Description</th>
+            <th class="p-4">Questionnaire Type</th>
           </tr>
         </thead>
         <tbody>
@@ -94,8 +93,8 @@
               </button>
             </td>
             <td class="p-4">{{ customer.attributes.title }}</td>
-            <td class="p-4">{{ customer.attributes.description }}</td> 
-            <td class="p-4">{{ customer.attributes.type }}</td> 
+            <td class="p-4">{{ customer.attributes.description }}</td>
+            <td class="p-4">{{ customer.attributes.type }}</td>
           </tr>
         </tbody>
       </table>
@@ -125,12 +124,12 @@
 <script>
 // import { ref } from "vue";
 import http from "@/helpers/http";
-import AddCustomerModal from "./create-questionnaire.vue"; 
+import AddCustomerModal from "./create-questionnaire.vue";
 import ExportButtons from "@/components/reuseable/ExportButtons.vue";
 
 export default {
   components: {
-    AddCustomerModal, 
+    AddCustomerModal,
     ExportButtons,
   },
   props: {
@@ -167,7 +166,7 @@ export default {
     async fetchCustomers() {
       try {
         const response = await http.get(
-          `/api/questionnaires?pagination[page]=${this.currentPage}&pagination[pageSize]=${this.pageSize}`
+          `/api/questionnaires?pagination[page]=${this.currentPage}&pagination[pageSize]=${this.pageSize}`,
         );
         this.customers = response.data.data;
         this.totalPages = response.data.meta.pagination.pageCount;
@@ -176,9 +175,12 @@ export default {
       }
     },
     ViewAction(customer) {
-       this.$router.push({ 
-        path: "questions-management", 
-        query: { questionaireId: customer.id, name: customer.attributes.title.toUpperCase() } 
+      this.$router.push({
+        path: "questions-management",
+        query: {
+          questionaireId: customer.id,
+          name: customer.attributes.title.toUpperCase(),
+        },
       });
     },
     UpdateAction(customer) {
@@ -198,7 +200,7 @@ export default {
       return this.customers.filter((customer) =>
         JSON.stringify(customer)
           .toLowerCase()
-          .includes(this.searchQuery.toLowerCase())
+          .includes(this.searchQuery.toLowerCase()),
       );
     },
   },

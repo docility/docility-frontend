@@ -25,12 +25,14 @@
       
     </div> -->
     <!-- Custom File Import Button -->
-    <label class="custom-file-upload  save-button">
+    <label class="custom-file-upload save-button">
       <input type="file" @change="onFileChange" />
       Import File
     </label>
-    
-    <button @click="exportToExcel" class="export-button ">Export to Excel</button>
+
+    <button @click="exportToExcel" class="export-button">
+      Export to Excel
+    </button>
 
     <div v-if="isRenameModalVisible" class="rename-modal">
       <div class="rename-content">
@@ -58,8 +60,10 @@
         licenseKey="non-commercial-and-evaluation"
         class="overflow-auto"
       />
-    </div> 
-    <button @click="saveAssessment" class="w-full  rounded  button-style">Save</button> 
+    </div>
+    <button @click="saveAssessment" class="w-full rounded button-style">
+      Save
+    </button>
   </div>
 </template>
 
@@ -71,10 +75,9 @@ import * as XLSX from "xlsx";
 import "handsontable/dist/handsontable.full.css";
 import { HyperFormula } from "hyperformula";
 import axios from "axios";
-import * as ExcelJS from "exceljs"; 
+import * as ExcelJS from "exceljs";
 import http from "@/helpers/http";
 import { toast } from "vue3-toastify";
- 
 
 registerAllModules();
 
@@ -84,18 +87,17 @@ export default defineComponent({
   },
   setup() {
     const hotTableRef = ref(null);
-    const data = ref([ 
-    ]);
-    const files = ref([]); 
-    const selectedFile = ref(null); 
+    const data = ref([]);
+    const files = ref([]);
+    const selectedFile = ref(null);
     const loading = ref(false); // New loading state
     const isRenameModalVisible = ref(false);
     const newFileName = ref("");
     const styles = ref({
       /* define your style object here */
     });
-    const extension = ""
- 
+    const extension = "";
+
     const hotSettings = ref({
       colHeaders: true,
       rowHeaders: true,
@@ -117,7 +119,7 @@ export default defineComponent({
         const cellProperties = {};
         cellProperties.renderer = customCellRenderer;
         return cellProperties;
-      }, 
+      },
     });
 
     const openRenameModal = () => {
@@ -137,74 +139,81 @@ export default defineComponent({
     };
 
     const saveAssessment = async () => {
-  try {
-    // Get data from Handsontable instance (hotTableRef)
-    const hotInstance = hotTableRef.value.hotInstance;
-    if (!hotInstance) {
-      console.error("HotTable instance not found.");
-      return;
-    }
-
-    // Get all data from the table
-    const hotData = hotInstance.getData();
-
-    // Convert the table data to JSON format
-    const jsonData = hotData.map((row) => {
-      return row.map((cell) => (cell !== null && cell !== undefined ? cell : '')); // Handle null or undefined cells
-    });
-
-    // Log JSON data for inspection (Optional)
-    console.log("Table data as JSON:", jsonData[0]);
-
-    if (jsonData[0][0] == "Domain" && jsonData[0][1] == "Annex. A Control" && jsonData[0][2] == "Control Heading" && jsonData[0][3] == "Control Description" ) {
-      
       try {
-          const controls = []
-          for (let x = 1; x < jsonData.length; x++) {
-            controls.push({
-              domain: jsonData[x][0],
-              annexControl: jsonData[x][1],
-              controlHeading: jsonData[x][2],
-              controlDescription: jsonData[x][3]
-            })
+        // Get data from Handsontable instance (hotTableRef)
+        const hotInstance = hotTableRef.value.hotInstance;
+        if (!hotInstance) {
+          console.error("HotTable instance not found.");
+          return;
+        }
+
+        // Get all data from the table
+        const hotData = hotInstance.getData();
+
+        // Convert the table data to JSON format
+        const jsonData = hotData.map((row) => {
+          return row.map((cell) =>
+            cell !== null && cell !== undefined ? cell : "",
+          ); // Handle null or undefined cells
+        });
+
+        // Log JSON data for inspection (Optional)
+        console.log("Table data as JSON:", jsonData[0]);
+
+        if (
+          jsonData[0][0] == "Domain" &&
+          jsonData[0][1] == "Annex. A Control" &&
+          jsonData[0][2] == "Control Heading" &&
+          jsonData[0][3] == "Control Description"
+        ) {
+          try {
+            const controls = [];
+            for (let x = 1; x < jsonData.length; x++) {
+              controls.push({
+                domain: jsonData[x][0],
+                annexControl: jsonData[x][1],
+                controlHeading: jsonData[x][2],
+                controlDescription: jsonData[x][3],
+              });
+            }
+            console.log(controls);
+            const response = await http.post(
+              "/api/create-bulk/assessment-controls",
+              controls,
+            );
+            toast.success(response.data.message);
+          } catch (error) {
+            console.log(error);
+            toast.error(
+              "Error Saving Excel Data: " +
+                error.response?.data?.error?.message,
+            );
+          } finally {
+            // Reset data and loading state
+            const hotInstance = hotTableRef.value.hotInstance;
+
+            if (hotInstance) {
+              hotInstance.loadData([]); // Reset the Handsontable data
+              hotInstance.updateSettings({ cells: hotSettings.value.cells });
+            }
+
+            selectedFile.value = null; // Clear selected file
+            loading.value = false; // Stop loading state
+            isRenameModalVisible.value = false; // Close rename modal if open
           }
-          console.log(controls)
-          const response = await http.post('/api/create-bulk/assessment-controls', 
-            controls,
-          ); 
-          toast.success(response.data.message); 
-        } catch (error) {
-          console.log(error)
-          toast.error('Error Saving Excel Data: ' + error.response?.data?.error?.message);
-        } finally {
-    // Reset data and loading state
-    const hotInstance = hotTableRef.value.hotInstance;
-
-    if (hotInstance) {
-      hotInstance.loadData([]);  // Reset the Handsontable data
-      hotInstance.updateSettings({ cells: hotSettings.value.cells });
-    }
-    
-    selectedFile.value = null; // Clear selected file
-    loading.value = false; // Stop loading state
-    isRenameModalVisible.value = false; // Close rename modal if open
-  }
-    } else {
-      alert("data is not in valid format")
-    }
-   
-  
-  } catch (error) {
-    console.error("Error in saveAssessment:", error);
-  }
-};
-
+        } else {
+          alert("data is not in valid format");
+        }
+      } catch (error) {
+        console.error("Error in saveAssessment:", error);
+      }
+    };
 
     const fetchDefaultExcel = async () => {
       try {
         loading.value = true; // Start loading
         const response = await fetch(
-          `https://api.nemsu-grading.online/uploads/Book2_65c69ff6e1.xlsx`
+          `https://api.nemsu-grading.online/uploads/Book2_65c69ff6e1.xlsx`,
         );
         if (!response.ok) throw new Error("Network response was not ok");
         const arrayBuffer = await response.arrayBuffer();
@@ -254,7 +263,7 @@ export default defineComponent({
         try {
           loading.value = true; // Start loading
           const response = await fetch(
-            `https://api.nemsu-grading.online${selectedFile.value.url}`
+            `https://api.nemsu-grading.online${selectedFile.value.url}`,
           );
           if (!response.ok) throw new Error("Network response was not ok");
           const arrayBuffer = await response.arrayBuffer();
@@ -296,7 +305,6 @@ export default defineComponent({
         }
       }
     };
- 
 
     // Handle file change
     const onFileChange = (e) => {
@@ -389,7 +397,7 @@ export default defineComponent({
       try {
         try {
           await axios.delete(
-            `https://api.nemsu-grading.online/api/upload/files/${selectedFile.value.id}`
+            `https://api.nemsu-grading.online/api/upload/files/${selectedFile.value.id}`,
           );
         } catch (error) {
           //
@@ -403,7 +411,7 @@ export default defineComponent({
             body: formData,
             // Uncomment if you need to send authorization token
             // headers: { 'Authorization': `Bearer ${token}` },
-          }
+          },
         );
 
         await response.json();
@@ -419,10 +427,9 @@ export default defineComponent({
         }
         selectedFile.value = [];
         loading.value = false;
-        isRenameModalVisible.value = false; 
+        isRenameModalVisible.value = false;
       }
     };
-  
 
     // Function to convert string to ArrayBuffer
     const s2ab = (s) => {
@@ -490,7 +497,7 @@ export default defineComponent({
       col,
       prop,
       value,
-      cellProperties
+      cellProperties,
     ) => {
       // Apply cell value
       console.debug(instance, prop, cellProperties, value);
@@ -498,38 +505,39 @@ export default defineComponent({
       // Apply background color
       // console.log(styles.value[row], row, styles.value[row].col, col)
 
-      styles.value ?? styles.value.map((style) => {
-        if (style.row == row && style.col == col) {
-          // console.log("match", styles.value[row])
-          if (style.fill && style.fill.fgColor) {
-            td.style.backgroundColor = `#${style.fill.fgColor}`;
-          }
+      styles.value ??
+        styles.value.map((style) => {
+          if (style.row == row && style.col == col) {
+            // console.log("match", styles.value[row])
+            if (style.fill && style.fill.fgColor) {
+              td.style.backgroundColor = `#${style.fill.fgColor}`;
+            }
 
-          // Font styles
-          if (style.fontStyle) {
-            // console.log("color", style.fontStyle)
-            td.style.fontWeight = style.fontStyle.bold ? "bold" : "normal";
-            td.style.fontStyle = style.fontStyle.italic ? "italic" : "normal";
-            td.style.color = style.fontStyle.color
-              ? `#${style.fontStyle.color}`
-              : "black";
-            td.style.italic = style.fontStyle.italic;
-          }
+            // Font styles
+            if (style.fontStyle) {
+              // console.log("color", style.fontStyle)
+              td.style.fontWeight = style.fontStyle.bold ? "bold" : "normal";
+              td.style.fontStyle = style.fontStyle.italic ? "italic" : "normal";
+              td.style.color = style.fontStyle.color
+                ? `#${style.fontStyle.color}`
+                : "black";
+              td.style.italic = style.fontStyle.italic;
+            }
 
-          // Alignment
-          if (style.alignment) {
-            td.style.textAlign = style.alignment.horizontal || "left";
-            td.style.verticalAlign = style.alignment.vertical || "middle";
+            // Alignment
+            if (style.alignment) {
+              td.style.textAlign = style.alignment.horizontal || "left";
+              td.style.verticalAlign = style.alignment.vertical || "middle";
+            }
           }
-        }
-        return td;
-      });
+          return td;
+        });
     };
 
     const processMergedCells = (excelData, merges) => {
       const mergedData = excelData.map((row) => {
         return row.map((cell) =>
-          cell && typeof cell === "object" ? cell.v : cell
+          cell && typeof cell === "object" ? cell.v : cell,
         );
       });
       const mergeSettings = [];
@@ -560,12 +568,9 @@ export default defineComponent({
       return { data: mergedData, mergeCells: mergeSettings };
     };
 
-  
-     
- 
-    // Fetch files when component is mounted 
-  
-    return { 
+    // Fetch files when component is mounted
+
+    return {
       hotTableRef,
       data,
       hotSettings,
@@ -580,10 +585,10 @@ export default defineComponent({
       renameFile,
       onFileChange,
       saveToExcel,
-      loadFile, 
+      loadFile,
       fetchDefaultExcel,
       customCellRenderer,
-      saveAssessment
+      saveAssessment,
     };
   },
 });
@@ -628,7 +633,6 @@ export default defineComponent({
 .save-button:hover {
   background-color: #45a049;
 }
- 
 
 .hot-table {
   transition: transform 0.2s ease; /* Smooth transition for zoom */
@@ -724,7 +728,6 @@ export default defineComponent({
   margin-bottom: 5px; /* Space between label and select */
   display: block; /* Make label take the full width */
 }
- 
 
 @keyframes spin {
   0% {

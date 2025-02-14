@@ -1,7 +1,9 @@
 <template>
   <div class="container mx-auto p-4">
     <div class="overflow-x-auto max-h-[600px] overflow-y-auto">
-      <table class="min-w-full border-collapse border border-gray-200 shadow-sm rounded-lg">
+      <table
+        class="min-w-full border-collapse border border-gray-200 shadow-sm rounded-lg"
+      >
         <thead class="sticky top-0 bg-gray-100 z-10">
           <tr class="bg-gray-100 text-nowrap">
             <th
@@ -22,14 +24,17 @@
                 :key="index"
                 class="px-6 py-3 text-sm text-gray-700 border-b border-gray-200"
               >
-                {{ row[header] || '' }}
+                {{ row[header] || "" }}
               </td>
             </tr>
           </template>
           <!-- Show message if no data -->
           <template v-else>
             <tr>
-              <td colspan="100%" class="px-6 py-3 text-sm text-gray-700 text-center border-b border-gray-200">
+              <td
+                colspan="100%"
+                class="px-6 py-3 text-sm text-gray-700 text-center border-b border-gray-200"
+              >
                 No data available.
               </td>
             </tr>

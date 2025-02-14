@@ -1,29 +1,32 @@
-import axios from 'axios';
-console.log(process.env.VUE_APP_ENVI)
+import axios from "axios";
+console.log(process.env.VUE_APP_ENVI);
 const http = axios.create({
-  baseURL: process.env.VUE_APP_ENVI == 'production' ? process.env.VUE_APP_API_URL_PROD : process.env.VUE_APP_API_URL || 'https://api.example.com', // Use your API URL
+  baseURL:
+    process.env.VUE_APP_ENVI === "production"
+      ? process.env.VUE_APP_API_URL_PROD
+      : process.env.VUE_APP_API_URL || "https://api.example.com", // Use your API URL
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
 });
 
 // Optional: Set up request interceptors for token attachment or logging
 http.interceptors.request.use(
-  (config) => { 
+  (config) => {
     // For example, add token from local storage if needed
-    const token = sessionStorage.getItem('jwt');
-    const profile = JSON.parse(sessionStorage.getItem('profile'));
+    const token = sessionStorage.getItem("jwt");
+    const profile = JSON.parse(sessionStorage.getItem("profile"));
     if (token) {
-      config.headers.Authorization = `Bearer ${token}`; 
+      config.headers.Authorization = `Bearer ${token}`;
     }
 
-    console.log(profile)
+    console.log(profile);
     if (profile && profile.id) {
       config.headers.userId = profile.id; // Add the user ID to the headers
     }
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error),
 );
 
 // Optional: Set up response interceptors for error handling
@@ -32,7 +35,7 @@ http.interceptors.response.use(
   (error) => {
     // Handle errors here, such as refreshing tokens or logging out users
     return Promise.reject(error);
-  }
+  },
 );
 
 export default http;

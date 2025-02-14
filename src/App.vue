@@ -6,15 +6,15 @@
 </template>
 
 <script>
-import { toast } from 'vue3-toastify';
-import socket from './helpers/socket';
+import { toast } from "vue3-toastify";
+import socket from "./helpers/socket";
 
 export default {
-  name: 'App',
-  mounted() { 
-    socket.on("message", (data) => { 
+  name: "App",
+  mounted() {
+    socket.on("message", (data) => {
       toast[data.type](data.message); // Pass data to a custom handler
-    }); 
-  }
-}
+    });
+  },
+};
 </script>

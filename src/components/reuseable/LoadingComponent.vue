@@ -1,6 +1,9 @@
 <!-- Loading.vue -->
 <template>
-  <div v-if="isLoading" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+  <div
+    v-if="isLoading"
+    class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+  >
     <div class="loader">
       <!-- Customize your loading animation here -->
       <svg

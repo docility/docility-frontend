@@ -7,8 +7,12 @@
             title="Import Risk Category"
             @file-read="handleExcelData"
           />
-          
-          <ImageButton :svg="require('@/assets/add.svg')" title="New" :callback="addNewSupplier"/> 
+
+          <ImageButton
+            :svg="require('@/assets/add.svg')"
+            title="New"
+            :callback="addNewSupplier"
+          />
           <!-- Trigger button for the modal -->
         </div>
       </div>
@@ -895,7 +899,7 @@
         </form>
       </div>
     </div>
-    <SupplierList :Update="editSupplier" :Delete="deleteSupplier"/>
+    <SupplierList :Update="editSupplier" :Delete="deleteSupplier" />
   </div>
 </template>
 
@@ -906,7 +910,7 @@ import { toast } from "vue3-toastify";
 import TableComponent from "@/components/reuseable/TableComponent.vue";
 import ImageButton from "@/components/reuseable/ImageButton.vue";
 import ExcelUpload from "@/components/reuseable/ExcelUpload.vue";
-import SupplierList from './supplier-list.vue'
+import SupplierList from "./supplier-list.vue";
 
 export default {
   name: "SupplierComponent",
@@ -914,7 +918,7 @@ export default {
     ExcelUpload,
     TableComponent,
     ImageButton,
-    SupplierList
+    SupplierList,
   },
   data() {
     return {
@@ -1144,14 +1148,14 @@ export default {
         date_entered: curr["Date Entered"],
         decision_date: curr["Decision Date"],
       }));
-      console.log(mapped)
+      console.log(mapped);
       // Assuming you want to send this data to the server
       http
-        .post("/api/create-bulk/supplier", mapped )
+        .post("/api/create-bulk/supplier", mapped)
         .then((response) => {
           toast.success("Suppliers imported successfully");
           this.isImportModalVisible = false;
-          console.log(response)
+          console.log(response);
           this.fetchSupplier();
         })
         .catch((error) => {
@@ -1270,15 +1274,15 @@ export default {
         iso_45001: String(this.createSupplier.iso45001),
         modern_slavery_act: String(this.createSupplier.modernSlaveryAct),
         modern_slavery_statement_date: String(
-          this.createSupplier.modernSlaveryDate
+          this.createSupplier.modernSlaveryDate,
         ),
         certification: String(this.createSupplier.otherCertification),
         other_Certification_exists: String(
-          this.createSupplier.otherCertificationExists
+          this.createSupplier.otherCertificationExists,
         ),
         annual_budget: String(this.createSupplier.annualBudget),
         contract_commencement_date: String(
-          this.createSupplier.contractStartDate
+          this.createSupplier.contractStartDate,
         ),
         contract_end_date: String(this.createSupplier.contractEndDate),
         cia_impact: String(this.createSupplier.sensitivityData),
@@ -1288,17 +1292,17 @@ export default {
         impact: String(this.createSupplier.selectedImpactOptions),
         inherent_risk_level: String(this.calculateRiskLevel()),
         risk_assessment_completed: String(
-          this.createSupplier.riskAssessmentCompleted
+          this.createSupplier.riskAssessmentCompleted,
         ),
         risk_assessment_required: String(
-          this.createSupplier.supplierAssessmentRequired
+          this.createSupplier.supplierAssessmentRequired,
         ),
         assessment_due_date: String(
-          this.createSupplier.supplierAssessmentDueDate
+          this.createSupplier.supplierAssessmentDueDate,
         ),
         assessment_status: String(this.createSupplier.supplierAssessmentStatus),
         assessment_reviewer_person: String(
-          this.createSupplier.supplierReviewer
+          this.createSupplier.supplierReviewer,
         ),
         supplier_agreement: String(this.createSupplier.supplierAgreement),
         approval_status: String(this.createSupplier.approvalStatus),
@@ -1320,7 +1324,7 @@ export default {
         console.log(error);
         toast.error(
           "Error Adding Supplier:" +
-            toast.error(error.response.data.error.message)
+            toast.error(error.response.data.error.message),
         );
       }
     },
@@ -1441,7 +1445,7 @@ export default {
     },
     calculateRiskLevel() {
       const likelihoodValue = parseInt(
-        this.createSupplier.selectedLikelihoodOptions
+        this.createSupplier.selectedLikelihoodOptions,
       );
       const impactValue = parseInt(this.createSupplier.selectedImpactOptions);
       const riskLevel = likelihoodValue + impactValue;
@@ -1470,7 +1474,7 @@ export default {
       } catch (error) {
         toast.error(
           "Error Deleting Supplier:" +
-            toast.error(error.response.data.error.message)
+            toast.error(error.response.data.error.message),
         );
       }
     },
@@ -1480,37 +1484,40 @@ export default {
     this.fetchSupplier();
   },
   computed: {
-  filteredSuppliers() {
-    try {
-      if (!this.supplierList || !this.supplierList.data) {
-      return [];
-    }
-    const query = this.searchQuery.toLowerCase();
-    return this.supplierList.data.filter(supplier => {
-      let { supplier_name = '', supplier_purpose = '', country = '' } = supplier.attributes;
-      
-      if (supplier_name === null) {
-        supplier_name = ""
+    filteredSuppliers() {
+      try {
+        if (!this.supplierList || !this.supplierList.data) {
+          return [];
+        }
+        const query = this.searchQuery.toLowerCase();
+        return this.supplierList.data.filter((supplier) => {
+          let {
+            supplier_name = "",
+            supplier_purpose = "",
+            country = "",
+          } = supplier.attributes;
+
+          if (supplier_name === null) {
+            supplier_name = "";
+          }
+          if (supplier_purpose === null) {
+            supplier_purpose = "";
+          }
+          if (country === null) {
+            country = "";
+          }
+          return (
+            supplier_name.toLowerCase().includes(query) ||
+            supplier_purpose.toLowerCase().includes(query) ||
+            country.toLowerCase().includes(query)
+          );
+        });
+      } catch (error) {
+        console.log(error);
+        return [];
       }
-      if (supplier_purpose === null ) {
-        supplier_purpose = ""
-      }
-      if (country === null) {
-        country = ""
-      }
-      return (
-        supplier_name.toLowerCase().includes(query) ||
-        supplier_purpose.toLowerCase().includes(query) ||
-        country.toLowerCase().includes(query)
-      );
-    });
-    } catch (error) {
-      console.log(error);
-      return []
-    }
-    
-  }
-}
+    },
+  },
 };
 </script>
 

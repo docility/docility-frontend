@@ -22,8 +22,8 @@
               field.type === 'textarea'
                 ? 'textarea'
                 : field.type === 'select'
-                ? 'select'
-                : 'input'
+                  ? 'select'
+                  : 'input'
             "
             :id="field.id"
             v-model="newCustomer[field.model]"
@@ -255,7 +255,7 @@ export default {
           label: "Customer Category",
           model: "customer_category",
           type: "select",
-          options: [ 
+          options: [
             { text: "Key Customer", value: "Key" },
             { text: "Regular Customer", value: "Regular" },
             { text: "One-off Customer", value: "One-off" },
@@ -367,7 +367,7 @@ export default {
             console.log(response);
             // this.fetchSupplier();
             this.customerListKey++;
-            this.fetchCustomerCategory()
+            this.fetchCustomerCategory();
           })
           .catch((error) => {
             console.error(error);
@@ -421,27 +421,27 @@ export default {
       this.$emit("close");
     },
     async fetchCustomerCategory() {
-      console.log("fetch ccategorys")
+      console.log("fetch ccategorys");
       try {
         const response = await http.get(`/api/customer-categories`);
-        console.log(response)
+        console.log(response);
         let categoryIndex = 0;
-        response.data.data.forEach((category) => {   
+        response.data.data.forEach((category) => {
           this.formFields.forEach((v, i) => {
-            if (v.id == 'customerCategory') { 
+            if (v.id == "customerCategory") {
               categoryIndex = i;
               this.formFields[i].options.push({
                 text: category.attributes.category,
                 value: category.attributes.category,
-              })
+              });
               console.log(this.formFields[i]);
             }
-          }) 
+          });
         });
         this.formFields[categoryIndex].options.push({
-            text: 'Create New',
-            value: 'Action',
-          })
+          text: "Create New",
+          value: "Action",
+        });
       } catch (error) {
         console.error("Error fetching customers:", error);
       }

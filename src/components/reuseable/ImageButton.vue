@@ -1,6 +1,6 @@
 <template>
   <div class="flex items-center flex-col cursor-pointer hover:scale-110">
-    <img @click="callback" :src="svg" alt="My Icon" /> 
+    <img @click="callback" :src="svg" alt="My Icon" />
     <small>{{ title }}</small>
   </div>
 </template>
@@ -10,11 +10,11 @@ export default {
   props: {
     svg: {
       type: String,
-      default: '',
+      default: "",
     },
     title: {
       type: String,
-      default: '', // Change type to String if it's just text
+      default: "", // Change type to String if it's just text
     },
     callback: {
       type: Function,

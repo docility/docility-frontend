@@ -22,8 +22,8 @@
               field.type === 'textarea'
                 ? 'textarea'
                 : field.type === 'select'
-                ? 'select'
-                : 'input'
+                  ? 'select'
+                  : 'input'
             "
             :id="field.id"
             v-model="newCompany[field.model]"
@@ -111,8 +111,8 @@ export default {
           type: "text",
           required: true,
           options: [
-            { text: 'Customer', value: 'Customer' },
-            { text: 'Supplier', value: 'Supplier' }
+            { text: "Customer", value: "Customer" },
+            { text: "Supplier", value: "Supplier" },
           ],
           placeholder: "Enter Questionnaire Type",
         },
@@ -131,7 +131,7 @@ export default {
     logChange(model, event) {
       console.log(`Changed ${model}:`, event.target.value);
       this.newCompany[model] = event.target.value;
-    }, 
+    },
     initializeCompanyData(company = null) {
       console.log(company);
       return company
@@ -139,7 +139,7 @@ export default {
         : {
             question: "",
             options: "",
-            questionnaire_id: this.$route.query.questionaireId,
+            questionnaires_id: this.$route.query.questionaireId,
           };
     },
     submitForm() {
@@ -148,13 +148,12 @@ export default {
         alert("Please fill in all required fields.");
         return;
       }
- 
 
       this.callback({ ...this.newCompany });
       this.$emit("close");
-    }, 
+    },
   },
-  mounted() { 
+  mounted() {
     console.log("Existing Company:", this.companyCategoryList);
   },
 };

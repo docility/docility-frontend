@@ -3,13 +3,12 @@
 @tailwind components;
 @tailwind utilities;
 
-
-.button-style{
+.button-style {
   @apply bg-dark-background-primary text-dark-text-secondary mt-4   py-2  font-semibold rounded hover:bg-dark-select  hover:text-dark-text;
 }
 
-.secondary-button-style{
-  @apply  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150  bg-dark-background-primary text-dark-text-secondary mt-4   py-2 rounded-lg   shadow-lg font-semibold   hover:bg-dark-select  hover:text-dark-text;
+.secondary-button-style {
+  @apply focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150  bg-dark-background-primary text-dark-text-secondary mt-4   py-2 rounded-lg   shadow-lg font-semibold   hover:bg-dark-select  hover:text-dark-text;
 }
 
 .link-text-primary {
@@ -19,7 +18,7 @@
 .link-text-secondary {
   @apply text-dark-text-secondary underline underline-offset-2 hover:text-dark-text-primary text-xs;
 }
-.active-button-style{
+.active-button-style {
   @apply bg-dark-background-secondary text-dark-text font-semibold;
 }
 

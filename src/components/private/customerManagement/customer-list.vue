@@ -176,7 +176,7 @@ export default {
     async fetchCustomers() {
       try {
         const response = await http.get(
-          `/api/customer-managements?pagination[page]=${this.currentPage}&pagination[pageSize]=${this.pageSize}`
+          `/api/customer-managements?pagination[page]=${this.currentPage}&pagination[pageSize]=${this.pageSize}`,
         );
         this.customers = response.data.data;
         this.totalPages = response.data.meta.pagination.pageCount;
@@ -187,9 +187,8 @@ export default {
     selectCustomer(customer) {
       this.selectedCustomer = customer;
       this.showUpdateModal = true;
-
     },
-    UpdateAction(customer) { 
+    UpdateAction(customer) {
       this.Update(customer);
     },
     changePage(page) {
@@ -203,7 +202,7 @@ export default {
       return this.customers.filter((customer) =>
         JSON.stringify(customer)
           .toLowerCase()
-          .includes(this.searchQuery.toLowerCase())
+          .includes(this.searchQuery.toLowerCase()),
       );
     },
   },

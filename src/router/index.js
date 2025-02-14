@@ -21,11 +21,10 @@ import PrivacyPolicy from "@/components/public/PrivacyPolicy.vue";
 import CreateControlAssessment from "@/components/private/riskAssessment/menu/create-controll-assessment.vue";
 import Assessment from "@/components/public/assessment.vue";
 
-
 // Define your routes
 const routes = [
   { path: "/signin", name: "signin", component: UserLogin },
-  { path: "/privacy-policy", name: "privacy-policy", component: PrivacyPolicy }, 
+  { path: "/privacy-policy", name: "privacy-policy", component: PrivacyPolicy },
   {
     path: "/assessment/:id",
     name: "assessment",
@@ -125,7 +124,7 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const isAuthenticated = sessionStorage.getItem("jwt");
 
-  console.log(to.name)
+  console.log(to.name);
 
   if (
     to.name !== "signin" &&
@@ -141,6 +140,5 @@ router.beforeEach((to, from, next) => {
     next();
   }
 });
-
 
 export default router;

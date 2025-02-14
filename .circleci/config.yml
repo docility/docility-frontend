@@ -3,7 +3,7 @@ version: 2.1
 executors:
   docker-executor:
     docker:
-      - image: circleci/python:3.8  # Use an appropriate base image for your build
+      - image: circleci/python:3.8 # Use an appropriate base image for your build
 
 jobs:
   build:
@@ -12,15 +12,15 @@ jobs:
       - checkout
 
       - setup_remote_docker:
-          docker_layer_caching: true  # Enable layer caching for faster builds
-  
+          docker_layer_caching: true # Enable layer caching for faster builds
+
       - run:
           name: Build Docker Image
           command: |
             IMAGE_TAG=${CIRCLE_BUILD_NUM}  # Use the CircleCI build number as the image tag
             docker build -t reneboy/docility:${IMAGE_TAG} .
 
-      - run:  
+      - run:
           name: Push Docker Image
           command: |
             IMAGE_TAG=${CIRCLE_BUILD_NUM}

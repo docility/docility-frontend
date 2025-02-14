@@ -3,49 +3,45 @@
     <HeaderButton title="Risk Registered" :onClick="goBack" />
     <!-- Custom Select Dropdown for controlling visibility with checkboxes -->
     <div class="mb-4 relative z-20">
-      
-      <RiskList :Update="editRisk" :Delete="deleteRisk"/>
-      
+      <RiskList :Update="editRisk" :Delete="deleteRisk" />
     </div>
-
-     
   </div>
 </template>
 
 <script>
-import http from '@/helpers/http';
+import http from "@/helpers/http";
 import { toast } from "vue3-toastify";
 
-import HeaderButton from '@/components/reuseable/HeaderButton.vue';
-import RiskList from './risk-list.vue'
+import HeaderButton from "@/components/reuseable/HeaderButton.vue";
+import RiskList from "./risk-list.vue";
 
 export default {
   components: {
     HeaderButton,
-    RiskList
+    RiskList,
   },
   name: "registered-risk",
   data() {
     return {
       risks: [],
-      headers: [],  // This will hold all possible headers
-      visibleHeaders: {},  // This will control the visibility of each column
-      selectedHeaders: [],  // This will store selected column headers
-      isDropdownOpen: false,  // Tracks the dropdown visibility
+      headers: [], // This will hold all possible headers
+      visibleHeaders: {}, // This will control the visibility of each column
+      selectedHeaders: [], // This will store selected column headers
+      isDropdownOpen: false, // Tracks the dropdown visibility
     };
   },
   computed: {
     // Dynamically filter the visible headers
     visibleHeaderKeys() {
-      return this.headers.filter(header => this.visibleHeaders[header]);
-    }
+      return this.headers.filter((header) => this.visibleHeaders[header]);
+    },
   },
   methods: {
     goBack() {
-      this.$router.back(-1)
+      this.$router.back(-1);
     },
     async fetchRisks() {
-      const risks = await http.get('/api/risks');
+      const risks = await http.get("/api/risks");
       this.risks = risks.data.data;
 
       // Dynamically extract headers from the first risk object
@@ -53,14 +49,14 @@ export default {
         this.headers = Object.keys(this.risks[0].attributes);
 
         // Check if sessionStorage contains saved header visibility settings
-        const storedVisibility = sessionStorage.getItem('headerVisibility');
+        const storedVisibility = sessionStorage.getItem("headerVisibility");
         if (storedVisibility) {
           this.visibleHeaders = JSON.parse(storedVisibility);
         } else {
           // Set default selection for the first 6 headers
           this.selectedHeaders = this.headers.slice(0, 6);
           this.headers.forEach((header, index) => {
-            this.visibleHeaders[header] = index < 6;  // First 6 columns are visible by default
+            this.visibleHeaders[header] = index < 6; // First 6 columns are visible by default
           });
         }
       }
@@ -71,11 +67,11 @@ export default {
     async deleteRisk(id) {
       try {
         await http.delete(`api/risks/${id}`);
-        toast.success("Supplier Successfully Deleted"); 
+        toast.success("Supplier Successfully Deleted");
       } catch (error) {
         toast.error(
           "Error Deleting Supplier:" +
-            toast.error(error.response.data.error.message)
+            toast.error(error.response.data.error.message),
         );
       }
     },
@@ -83,20 +79,23 @@ export default {
       this.isDropdownOpen = !this.isDropdownOpen;
     },
     updateVisibilityFromSelection() {
-      this.headers.forEach(header => {
+      this.headers.forEach((header) => {
         this.visibleHeaders[header] = this.selectedHeaders.includes(header);
       });
-     
+
       // Save visibility settings to sessionStorage
-      sessionStorage.setItem('headerVisibility', JSON.stringify(this.visibleHeaders));
-      console.log(sessionStorage.getItem('headerVisibility'))
-    }
+      sessionStorage.setItem(
+        "headerVisibility",
+        JSON.stringify(this.visibleHeaders),
+      );
+      console.log(sessionStorage.getItem("headerVisibility"));
+    },
   },
   watch: {
     // Watch the selectedHeaders array and update visibility
     selectedHeaders() {
       this.updateVisibilityFromSelection();
-    }
+    },
   },
   mounted() {
     console.log("mounted");
@@ -105,8 +104,8 @@ export default {
   beforeUnmount() {
     // This is where you can perform cleanup if needed
     console.log("Component is about to unmount");
-  }
-}
+  },
+};
 </script>
 
 <style scoped>

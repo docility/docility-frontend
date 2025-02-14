@@ -1,15 +1,13 @@
 <template>
   <div class="under-construction">
-    <div class="message">
-      🚧 This page is currently under construction! 🚧
-    </div>
+    <div class="message">🚧 This page is currently under construction! 🚧</div>
     <p>Please check back later for updates.</p>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'UnderConstruction',
+  name: "UnderConstruction",
 };
 </script>
 

@@ -7,7 +7,6 @@
           @file-read="handleExcelData"
         />
 
-     
         <ImageButton
           :svg="require('@/assets/add.svg')"
           title="New"
@@ -24,7 +23,11 @@
     />
 
     <div>
-      <CustomerList :Update="updateCustomer" :Delete="deleteCustomer" :key="customerListKey" />
+      <CustomerList
+        :Update="updateCustomer"
+        :Delete="deleteCustomer"
+        :key="customerListKey"
+      />
       <CustomerDetailsModal
         v-if="selectedCustomer"
         :customer="selectedCustomer"
@@ -35,7 +38,7 @@
       v-if="isImportModalVisible"
       class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
     >
-      <div class="bg-white p-6 rounded-lg shadow-lg w-3/4 max-w-4xl ">
+      <div class="bg-white p-6 rounded-lg shadow-lg w-3/4 max-w-4xl">
         <!-- Table inside the modal -->
         <TableComponent :headers="ImportFileHeaders" :data="importData" />
 
@@ -77,7 +80,7 @@ export default {
     CustomerDetailsModal,
     AddCustomerModal,
     ExcelUpload,
-    ImageButton, 
+    ImageButton,
   },
   data() {
     return {
@@ -131,7 +134,7 @@ export default {
       console.log(data);
       this.fileUploaded = true;
       this.isImportModalVisible = true;
-    }, 
+    },
     handleSubmitImport() {
       console.log(this.excelData);
       const mapped = this.excelData.map((curr) => ({
@@ -172,7 +175,7 @@ export default {
           toast.success("Customer imported successfully");
           this.isImportModalVisible = false;
           console.log(response);
-          // this.fetchSupplier(); 
+          // this.fetchSupplier();
           this.customerListKey++;
         })
         .catch((error) => {

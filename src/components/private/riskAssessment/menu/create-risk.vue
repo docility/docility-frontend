@@ -1,10 +1,10 @@
 <template>
   <div class="container flex flex-col w-full h-full overflow-hidden gap-2">
     <HeaderButton title="Risk" :onClick="goBack" />
-    <div class="w-full bg-white h-10 flex items-center "> 
+    <div class="w-full bg-white h-10 flex items-center">
       <ExcelUpload title="Import Risk Category" @file-read="handleExcelData" />
     </div>
-    
+
     <div
       v-if="isModalOpen"
       class="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50"
@@ -746,7 +746,7 @@ export default {
       return this.controlCategoryList.filter(
         (item) =>
           item.attributes.domain == domain &&
-          item.attributes.annexControl == annexControl
+          item.attributes.annexControl == annexControl,
       );
     },
     riskControlMapping() {
@@ -757,7 +757,7 @@ export default {
       return this.controlCategoryList.filter(
         (item) =>
           item.attributes.domain == domain &&
-          item.attributes.annexControl == annexControl
+          item.attributes.annexControl == annexControl,
       );
     },
     visibleHeaderKeys() {
@@ -934,7 +934,7 @@ export default {
     openModal() {
       if (this.riskTreatment && this.riskTreatmentListOptions) {
         this.selectedRiskTreatment = this.riskTreatmentListOptions.filter(
-          (f) => f.id == this.riskTreatment
+          (f) => f.id == this.riskTreatment,
         )[0].attributes;
 
         this.isModalOpen = true;
@@ -1101,7 +1101,7 @@ export default {
           if (this.updateRisk == true) {
             response = await http.put(
               `/api/risks/${this.$route.query.id}`,
-              data
+              data,
             );
           } else {
             response = await http.post("/api/risks", data);
@@ -1172,7 +1172,7 @@ export default {
           this.reset();
         } catch (error) {
           toast.error(
-            "Error Saving Excel Data: " + error.response?.data?.error?.message
+            "Error Saving Excel Data: " + error.response?.data?.error?.message,
           );
         } finally {
           this.reset();
@@ -1185,7 +1185,7 @@ export default {
         this.riskOwnerList = ownerList.data.data;
       } catch (error) {
         toast.error(
-          "Internal Server Error: " + error.response?.data?.error?.message
+          "Internal Server Error: " + error.response?.data?.error?.message,
         );
       }
     },
@@ -1195,7 +1195,7 @@ export default {
         this.riskCategoryList = categoryList.data.data;
       } catch (error) {
         toast.error(
-          "Internal Server Error: " + error.response?.data?.error?.message
+          "Internal Server Error: " + error.response?.data?.error?.message,
         );
       }
     },
@@ -1206,7 +1206,7 @@ export default {
         this.controlCategoryList = controlList.data.data;
       } catch (error) {
         toast.error(
-          "Internal Server Error: " + error.response?.data?.error?.message
+          "Internal Server Error: " + error.response?.data?.error?.message,
         );
       }
     },
@@ -1216,7 +1216,7 @@ export default {
         this.riskTreatmentListOptions = riskTreatment.data.data;
       } catch (error) {
         toast.error(
-          "Internal Server Error: " + error.response?.data?.error?.message
+          "Internal Server Error: " + error.response?.data?.error?.message,
         );
       }
     },
@@ -1226,7 +1226,7 @@ export default {
         this.controlDomainListOptions = controlDomains.data.data;
       } catch (error) {
         toast.error(
-          "Internal Server Error: " + error.response?.data?.error?.message
+          "Internal Server Error: " + error.response?.data?.error?.message,
         );
       }
     },

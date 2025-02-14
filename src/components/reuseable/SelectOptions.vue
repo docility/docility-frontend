@@ -3,8 +3,15 @@
     <label class="block text-lg font-medium text-gray-700">
       {{ label }}
     </label>
-    <select v-model="localValue" class="mt-1 block w-full p-2 border border-gray-300 rounded">
-      <optgroup v-for="group in groupedItems" :label="group.controlHeading" :key="group.controlHeading">
+    <select
+      v-model="localValue"
+      class="mt-1 block w-full p-2 border border-gray-300 rounded"
+    >
+      <optgroup
+        v-for="group in groupedItems"
+        :label="group.controlHeading"
+        :key="group.controlHeading"
+      >
         <option v-for="item in group.items" :key="item.id" :value="item.id">
           {{ item.attributes.controlHeading }}
         </option>

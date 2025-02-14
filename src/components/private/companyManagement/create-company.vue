@@ -22,8 +22,8 @@
               field.type === 'textarea'
                 ? 'textarea'
                 : field.type === 'select'
-                ? 'select'
-                : 'input'
+                  ? 'select'
+                  : 'input'
             "
             :id="field.id"
             v-model="newCompany[field.model]"
@@ -135,7 +135,7 @@ export default {
     logChange(model, event) {
       console.log(`Changed ${model}:`, event.target.value);
       this.newCompany[model] = event.target.value;
-    }, 
+    },
     initializeCompanyData(company = null) {
       console.log(company);
       return company
@@ -154,9 +154,9 @@ export default {
 
       this.callback({ ...this.newCompany });
       this.$emit("close");
-    }, 
+    },
   },
-  mounted() { 
+  mounted() {
     console.log("Existing Company:", this.companyCategoryList);
   },
 };

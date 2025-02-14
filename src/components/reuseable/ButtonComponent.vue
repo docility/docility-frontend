@@ -1,9 +1,9 @@
 <!-- Button.vue -->
 <template>
-  <button 
-    :type="type" 
-    :class="['button', className]" 
-    :disabled="disabled" 
+  <button
+    :type="type"
+    :class="['button', className]"
+    :disabled="disabled"
     @click="handleClick"
   >
     <slot>{{ label }}</slot>
@@ -12,19 +12,19 @@
 
 <script>
 export default {
-  name: 'ButtonComponent',
+  name: "ButtonComponent",
   props: {
     type: {
       type: String,
-      default: 'button',
+      default: "button",
     },
     label: {
       type: String,
-      default: '',
+      default: "",
     },
     className: {
       type: String,
-      default: '',
+      default: "",
     },
     disabled: {
       type: Boolean,
@@ -33,7 +33,7 @@ export default {
   },
   methods: {
     handleClick(event) {
-      this.$emit('click', event);
+      this.$emit("click", event);
     },
   },
 };

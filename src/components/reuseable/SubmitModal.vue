@@ -13,7 +13,7 @@
 
 <script>
 export default {
-  name: 'SubmitModal',
+  name: "SubmitModal",
   props: {
     visible: {
       type: Boolean,
@@ -21,7 +21,7 @@ export default {
     },
     title: {
       type: String,
-      default: 'Confirmation',
+      default: "Confirmation",
     },
     message: {
       type: String,
@@ -29,19 +29,19 @@ export default {
     },
     submitText: {
       type: String,
-      default: 'Submit',
+      default: "Submit",
     },
     cancelText: {
       type: String,
-      default: 'Cancel',
+      default: "Cancel",
     },
   },
   methods: {
     handleSubmit() {
-      this.$emit('submit');
+      this.$emit("submit");
     },
     handleCancel() {
-      this.$emit('cancel');
+      this.$emit("cancel");
     },
   },
 };

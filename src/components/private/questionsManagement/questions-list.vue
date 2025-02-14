@@ -71,7 +71,7 @@
             :key="customer.id"
             class="border-b hover:bg-gray-200 text-nowrap"
           >
-            <td class="p-4 space-x-2"> 
+            <td class="p-4 space-x-2">
               <button
                 @click="UpdateAction(customer)"
                 class="text-blue-600 hover:underline"
@@ -86,7 +86,7 @@
               </button>
             </td>
             <td class="p-4">{{ customer.attributes.question }}</td>
-            <td class="p-4">{{ customer.attributes.options }}</td>  
+            <td class="p-4">{{ customer.attributes.options }}</td>
           </tr>
         </tbody>
       </table>
@@ -116,11 +116,11 @@
 <script>
 // import { ref } from "vue";
 import http from "@/helpers/http";
-import AddCustomerModal from "./create-questions.vue";  
+import AddCustomerModal from "./create-questions.vue";
 
 export default {
   components: {
-    AddCustomerModal,  
+    AddCustomerModal,
   },
   props: {
     Update: {
@@ -153,29 +153,29 @@ export default {
     this.fetchCustomers();
   },
   methods: {
-      async fetchCustomers() {
-    const questionaireId = this.$route.query.questionaireId; // Get query param from URL
-    if (!questionaireId) {
-      console.error("No questionaireId found in URL.");
-      return;
-    }
+    async fetchCustomers() {
+      const questionaireId = this.$route.query.questionaireId; // Get query param from URL
+      if (!questionaireId) {
+        console.error("No questionaireId found in URL.");
+        return;
+      }
 
-    try {
-      const response = await http.get(
-        `/api/questions?field[questionnaires_id]=${questionaireId}`
-      );
-      this.customers = response.data.data;
-      this.totalPages = response.data.meta.pagination.pageCount;
-    } catch (error) {
-      console.error("Error fetching customers:", error);
-    }
-  },
+      try {
+        const response = await http.get(
+          `/api/questions?filters[questionnaires_id]=${questionaireId}`,
+        );
+        this.customers = response.data.data;
+        this.totalPages = response.data.meta.pagination.pageCount;
+      } catch (error) {
+        console.error("Error fetching customers:", error);
+      }
+    },
     ViewAction(customer) {
-      this.selectedQuestionnaire = {...customer.attributes, id: customer.id};
-     
-      this.$router.push({ 
-        path: "/questions-management", 
-        query: { questionaireId: customer.id } 
+      this.selectedQuestionnaire = { ...customer.attributes, id: customer.id };
+
+      this.$router.push({
+        path: "/questions-management",
+        query: { questionaireId: customer.id },
       });
     },
     UpdateAction(customer) {
@@ -195,7 +195,7 @@ export default {
       return this.customers.filter((customer) =>
         JSON.stringify(customer)
           .toLowerCase()
-          .includes(this.searchQuery.toLowerCase())
+          .includes(this.searchQuery.toLowerCase()),
       );
     },
   },

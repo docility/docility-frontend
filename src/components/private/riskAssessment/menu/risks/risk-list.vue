@@ -54,7 +54,8 @@
           <tr>
             <th class="p-4">Actions</th>
             <th v-for="(header, index) in headers" :key="index" class="p-4">
-              {{ header }}</th>
+              {{ header }}
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -64,7 +65,7 @@
             class="border-b hover:bg-gray-50 text-nowrap"
           >
             <td class="p-4 space-x-2">
-              <button 
+              <button
                 @click="updateAction(risk.id)"
                 class="text-blue-600 hover:underline"
               >
@@ -77,7 +78,13 @@
                 Delete
               </button>
             </td>
-            <td v-for="(headerKeys, index) in Object.keys(headers)" :key="index" class="p-4">{{ risk.attributes[headerKeys] }}</td>
+            <td
+              v-for="(headerKeys, index) in Object.keys(headers)"
+              :key="index"
+              class="p-4"
+            >
+              {{ risk.attributes[headerKeys] }}
+            </td>
           </tr>
         </tbody>
       </table>
@@ -176,7 +183,7 @@ export default {
     async fetchSupplier() {
       try {
         const response = await http.get(
-          `/api/risks?pagination[page]=${this.currentPage}&pagination[pageSize]=${this.pageSize}`
+          `/api/risks?pagination[page]=${this.currentPage}&pagination[pageSize]=${this.pageSize}`,
         );
 
         console.log("Suppliers:", response.data.data);
@@ -190,7 +197,7 @@ export default {
       this.selectedSuppliers = suppliers;
       this.showUpdateModal = true;
     },
-    async updateAction(id) { 
+    async updateAction(id) {
       await this.Update(id);
       this.fetchSupplier();
     },
@@ -209,7 +216,7 @@ export default {
       return this.suppliers.filter((supplier) =>
         JSON.stringify(supplier)
           .toLowerCase()
-          .includes(this.searchQuery.toLowerCase())
+          .includes(this.searchQuery.toLowerCase()),
       );
     },
   },

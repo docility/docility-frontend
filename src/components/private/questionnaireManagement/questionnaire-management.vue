@@ -7,7 +7,6 @@
           @file-read="handleExcelData"
         />
 
-     
         <ImageButton
           :svg="require('@/assets/add.svg')"
           title="New"
@@ -24,7 +23,11 @@
     />
 
     <div>
-      <CompanyList :Update="updateCompany" :Delete="deleteCompany" :key="companyListKey" />
+      <CompanyList
+        :Update="updateCompany"
+        :Delete="deleteCompany"
+        :key="companyListKey"
+      />
       <CompanyDetailsModal
         v-if="selectedCompany"
         :company="selectedCompany"
@@ -35,7 +38,7 @@
       v-if="isImportModalVisible"
       class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
     >
-      <div class="bg-white p-6 rounded-lg shadow-lg w-3/4 max-w-4xl ">
+      <div class="bg-white p-6 rounded-lg shadow-lg w-3/4 max-w-4xl">
         <!-- Table inside the modal -->
         <TableComponent :headers="ImportFileHeaders" :data="importData" />
 
@@ -77,7 +80,7 @@ export default {
     CompanyDetailsModal,
     AddCompanyModal,
     ExcelUpload,
-    ImageButton, 
+    ImageButton,
   },
   data() {
     return {
@@ -89,10 +92,7 @@ export default {
       importData: null,
       excelData: null,
       companyListKey: 0,
-      ImportFileHeaders: [
-        "Title",
-        "Description",
-      ],
+      ImportFileHeaders: ["Title", "Description"],
     };
   },
   methods: {
@@ -105,12 +105,12 @@ export default {
       console.log(data);
       this.fileUploaded = true;
       this.isImportModalVisible = true;
-    }, 
+    },
     handleSubmitImport() {
       console.log(this.excelData);
       const mapped = this.excelData.map((curr) => ({
         title: curr["Title"],
-        description: curr["Description"], 
+        description: curr["Description"],
       }));
       console.log(mapped);
       // Assuming you want to send this data to the server
@@ -120,7 +120,7 @@ export default {
           toast.success("Company imported successfully");
           this.isImportModalVisible = false;
           console.log(response);
-          // this.fetchSupplier(); 
+          // this.fetchSupplier();
           this.companyListKey++;
         })
         .catch((error) => {
@@ -136,9 +136,9 @@ export default {
       this.existingCompanyData = company.attributes;
       this.showAddModal = true;
     },
-    async deleteCompany(company){
-      console.log(company)
-      const res = await http.delete(`api/questionnaires/${company.id}`); 
+    async deleteCompany(company) {
+      console.log(company);
+      const res = await http.delete(`api/questionnaires/${company.id}`);
       if (res.status == 200) {
         this.companyListKey++;
       }
@@ -146,9 +146,9 @@ export default {
     openAddCompanyModal() {
       this.showAddModal = true;
     },
-   async addNewCompany(newCompany) {
+    async addNewCompany(newCompany) {
       console.log("adding new Company", newCompany);
-      const res = await http.post("api/questionnaires", { data: newCompany }); 
+      const res = await http.post("api/questionnaires", { data: newCompany });
       if (res.status == 200) {
         this.companyListKey++;
       }

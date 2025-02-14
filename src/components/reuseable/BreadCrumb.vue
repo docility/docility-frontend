@@ -19,17 +19,20 @@
 export default {
   computed: {
     breadcrumbs() {
-      let pathArray = this.$route.path.split('/');
+      let pathArray = this.$route.path.split("/");
       pathArray.shift(); // Remove the first empty element
 
       return pathArray.map((path, index) => {
         return {
-          name: (path.charAt(0).toUpperCase() + path.slice(1)).replaceAll("-", " "),
-          path: '/' + pathArray.slice(0, index + 1).join('/')
+          name: (path.charAt(0).toUpperCase() + path.slice(1)).replaceAll(
+            "-",
+            " ",
+          ),
+          path: "/" + pathArray.slice(0, index + 1).join("/"),
         };
       });
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -42,12 +45,12 @@ nav ol {
 }
 
 nav ol li::after {
-  content: '>';
+  content: ">";
   margin: 0 5px;
   color: gray;
 }
 
 nav ol li:last-child::after {
-  content: '';
+  content: "";
 }
 </style>

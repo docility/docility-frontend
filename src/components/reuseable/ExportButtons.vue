@@ -41,61 +41,63 @@ export default {
   },
   methods: {
     exportToExcel() {
-  // Create a worksheet from data
-  const formattedData = this.data.map((row) => {
-    const formattedRow = {};
-    Object.keys(this.headers).forEach((header) => {
-      formattedRow[this.headers[header]] = row.attributes[header] || ""; // Ensure data matches headers
-    });
-    return formattedRow;
-  });
+      // Create a worksheet from data
+      const formattedData = this.data.map((row) => {
+        const formattedRow = {};
+        Object.keys(this.headers).forEach((header) => {
+          formattedRow[this.headers[header]] = row.attributes[header] || ""; // Ensure data matches headers
+        });
+        return formattedRow;
+      });
 
-  console.log(formattedData);
+      console.log(formattedData);
 
-  const ws = XLSX.utils.json_to_sheet(formattedData);
-  const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, "Data");
-  XLSX.writeFile(wb, "data.xlsx");
-},
-   
+      const ws = XLSX.utils.json_to_sheet(formattedData);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Data");
+      XLSX.writeFile(wb, "data.xlsx");
+    },
+
     exportToPdf() {
-  const doc = new  jsPDF({ orientation: "landscape" });
-  // Extract header titles
-  const headerList = Object.values(this.headers);
+      const doc = new jsPDF({ orientation: "landscape" });
+      // Extract header titles
+      const headerList = Object.values(this.headers);
 
-  // Extract table data based on headers
-  const tableData = this.data.map((item) => 
-    Object.keys(this.headers).map((headerKey) => item.attributes[headerKey] || "")
-  );
+      // Extract table data based on headers
+      const tableData = this.data.map((item) =>
+        Object.keys(this.headers).map(
+          (headerKey) => item.attributes[headerKey] || "",
+        ),
+      );
 
-  // Generate PDF with autoTable
-  doc.autoTable({
-    head: [headerList], // Header row
-    body: tableData,    // Table body
-    tableWidth: "auto",
-  styles: {
-    fontSize: '8',
-    overflow: 'linebreak',
-    cellWidth: 'wrap',
-  }, 
-  margin: { top: 10, left: 10, right: 10 },
-  });
+      // Generate PDF with autoTable
+      doc.autoTable({
+        head: [headerList], // Header row
+        body: tableData, // Table body
+        tableWidth: "auto",
+        styles: {
+          fontSize: "8",
+          overflow: "linebreak",
+          cellWidth: "wrap",
+        },
+        margin: { top: 10, left: 10, right: 10 },
+      });
 
-  // Save the generated PDF
-  doc.save("data.pdf");
-},
-exportToWord() {
-  const rows = this.data.map((item) => {
-    let row = {};
-    Object.keys(this.headers).forEach((header) => {
-      row[header] = item.attributes[header] || "";
-    });
-    return row;
-  });
+      // Save the generated PDF
+      doc.save("data.pdf");
+    },
+    exportToWord() {
+      const rows = this.data.map((item) => {
+        let row = {};
+        Object.keys(this.headers).forEach((header) => {
+          row[header] = item.attributes[header] || "";
+        });
+        return row;
+      });
 
-  console.log(rows);
+      console.log(rows);
 
-  const htmlContent = `
+      const htmlContent = `
     <!DOCTYPE html>
     <html>
       <head>
@@ -134,7 +136,7 @@ exportToWord() {
                 (row) =>
                   `<tr>${Object.keys(this.headers)
                     .map((header) => `<td>${row[header]}</td>`)
-                    .join("")}</tr>`
+                    .join("")}</tr>`,
               )
               .join("")}
           </tbody>
@@ -143,14 +145,15 @@ exportToWord() {
     </html>
   `;
 
-  // Create a Blob with the correct MIME type
-  const blob = new Blob(["\ufeff", htmlContent], { type: "application/msword" });
-  const link = document.createElement("a");
-  link.href = URL.createObjectURL(blob);
-  link.download = "data.doc";
-  link.click();
-}
-
+      // Create a Blob with the correct MIME type
+      const blob = new Blob(["\ufeff", htmlContent], {
+        type: "application/msword",
+      });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "data.doc";
+      link.click();
+    },
   },
 };
 </script>
