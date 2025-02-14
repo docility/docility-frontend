@@ -19,3 +19,4 @@ module.exports = {
     "prettier/prettier": "error", // Ensure Prettier rules are enforced
   },
 };
+ 
