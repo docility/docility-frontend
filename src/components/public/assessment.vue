@@ -2,14 +2,18 @@
   <div
     class="container w-[50%] mx-auto p-6 bg-white shadow-md rounded-lg gap-2"
   >
-    <h1 class="text-2xl font-bold mb-4 text-center">Assessment</h1>
+    <h1 class="text-2xl font-bold mb-4 text-center">
+      {{ questionnaire.type.toUpperCase() }} ASSESSMENT
+    </h1>
 
     <!-- Company Details Section -->
     <div
       v-if="companyDetails"
       class="bg-gray-100 p-4 rounded-lg shadow-sm flex mb-6 flex-col"
     >
-      <h2 class="text-lg font-semibold mb-2">Company Details</h2>
+      <h2 class="text-lg font-semibold mb-2">
+        {{ questionnaire.type.toUpperCase() }} Details
+      </h2>
       <label
         >Name:
         {{
