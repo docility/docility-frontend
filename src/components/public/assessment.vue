@@ -9,7 +9,7 @@
       v-if="companyDetails"
       class="bg-gray-100 p-4 rounded-lg shadow-sm flex mb-6 flex-col"
     >
-      <h2 class="text-lg font-semibold mb-2">{{}}</h2>
+      <h2 class="text-lg font-semibold mb-2">Company Details</h2>
       <label
         >Name:
         {{
@@ -30,8 +30,17 @@
       <label>Status: {{ companyQuestionnaire.status }}</label>
     </div>
 
+    <!-- Show Thank You message if form is submitted successfully -->
+    <div
+      v-if="submitted"
+      class="bg-green-100 p-6 text-center text-green-700 rounded-lg shadow-md"
+    >
+      <h2 class="text-2xl font-semibold">Thank You!</h2>
+      <p>Your answers have been submitted successfully.</p>
+    </div>
+
     <!-- Questionnaire & Answers -->
-    <div v-if="questions" class="bg-gray-100 p-4 rounded-lg shadow-sm">
+    <div v-else-if="questions" class="bg-gray-100 p-4 rounded-lg shadow-sm">
       <h2 class="text-lg font-semibold mb-2">Questionnaire</h2>
       <form @submit.prevent="submitAnswers">
         <ul class="space-y-4">
@@ -73,6 +82,7 @@ export default {
       companyDetails: [],
       companyQuestionnaire: [],
       questionnaire: [],
+      submitted: false, // Tracks form submission status
     };
   },
   methods: {
@@ -108,16 +118,33 @@ export default {
         answer: this.answers[index] || "", // Avoid undefined values
         questionnaire_id: String(this.companyQuestionnaire.questionnaire_id),
         question_id: String(question.id),
-        company_id: String(this.companyDetails.id),
+        company_id:
+          this.questionnaire.type === "Supplier"
+            ? ""
+            : String(this.companyDetails.id),
+        supplier_id:
+          this.questionnaire.type === "Supplier"
+            ? String(this.companyDetails.id)
+            : "",
+        type: this.questionnaire.type === "Supplier" ? "Supplier" : "Company",
       }));
 
       console.log("Submitted Data:", submittedData);
 
-      // Example API request:
+      // API request to submit answers
       http
         .post("/api/create-bulk/submitAnswer", { data: submittedData })
-        .then((response) => console.log("Submitted successfully:", response))
-        .catch((error) => console.error("Submission failed:", error));
+        .then((response) => {
+          console.log("Submitted successfully:", response);
+
+          // Check if API response contains is_success: true
+          if (response.data.is_success) {
+            this.submitted = true; // Show thank you message
+          }
+        })
+        .catch((error) => {
+          console.error("Submission failed:", error);
+        });
     },
   },
   mounted() {
