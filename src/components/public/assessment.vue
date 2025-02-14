@@ -3,40 +3,49 @@
     class="container w-[50%] mx-auto p-6 bg-white shadow-md rounded-lg gap-2"
   >
     <h1 class="text-2xl font-bold mb-4 text-center">
-      {{ questionnaire.type.toUpperCase() }} ASSESSMENT
+      {{ questionnaire.type }} ASSESSMENT
     </h1>
 
     <!-- Company Details Section -->
     <div
-      v-if="companyDetails"
+      v-if="companyDetails && !questionnaireCompleted"
       class="bg-gray-100 p-4 rounded-lg shadow-sm flex mb-6 flex-col"
     >
       <h2 class="text-lg font-semibold mb-2">
-        {{ questionnaire.type.toUpperCase() }} Details
+        {{ questionnaire.type }} Details
       </h2>
-      <label
-        >Name:
+      <label>
+        Name:
         {{
-          questionnaire.type == "Supplier"
+          questionnaire.type === "Supplier"
             ? companyDetails.supplier_name
             : companyDetails.name
-        }}</label
-      >
+        }}
+      </label>
       <label>Address: {{ companyDetails.address }}</label>
-      <label
-        >Email:
+      <label>
+        Email:
         {{
-          questionnaire.type == "Supplier"
+          questionnaire.type === "Supplier"
             ? companyDetails.contact_person_email
             : companyDetails.email
-        }}</label
-      >
+        }}
+      </label>
       <label>Status: {{ companyQuestionnaire.status }}</label>
     </div>
 
-    <!-- Show Thank You message if form is submitted successfully -->
+    <!-- Show Thank You message if Questionnaire is Completed -->
     <div
-      v-if="submitted"
+      v-if="questionnaireCompleted"
+      class="bg-green-100 p-6 text-center text-green-700 rounded-lg shadow-md"
+    >
+      <h2 class="text-2xl font-semibold">Assessment Completed!</h2>
+      <p>Your questionnaire has been submitted successfully.</p>
+    </div>
+
+    <!-- Show Thank You message if Form is Submitted -->
+    <div
+      v-else-if="submitted"
       class="bg-green-100 p-6 text-center text-green-700 rounded-lg shadow-md"
     >
       <h2 class="text-2xl font-semibold">Thank You!</h2>
@@ -44,7 +53,10 @@
     </div>
 
     <!-- Questionnaire & Answers -->
-    <div v-else-if="questions" class="bg-gray-100 p-4 rounded-lg shadow-sm">
+    <div
+      v-else-if="questions.length"
+      class="bg-gray-100 p-4 rounded-lg shadow-sm"
+    >
       <h2 class="text-lg font-semibold mb-2">Questionnaire</h2>
       <form @submit.prevent="submitAnswers">
         <ul class="space-y-4">
@@ -87,6 +99,7 @@ export default {
       companyQuestionnaire: [],
       questionnaire: [],
       submitted: false, // Tracks form submission status
+      questionnaireCompleted: false,
     };
   },
   methods: {
@@ -103,15 +116,20 @@ export default {
         );
         console.log(response);
 
-        if (response.data.data && response.data.data.questions) {
-          this.questions = response.data.data.questions;
-          this.questionnaire = response.data.data.questionnaire[0];
+        if (response.data?.questionnaireStatus?.toLowerCase() === "completed") {
+          this.questionnaireCompleted = true;
+        }
+
+        if (response.data.data) {
+          this.questions = response.data.data.questions || [];
+          this.questionnaire = response.data.data.questionnaire?.[0] || {};
+          this.companyDetails = response.data.data.company_details?.[0] || {};
+          this.companyQuestionnaire =
+            response.data.data.company_questionnaire || {};
 
           this.answers = new Array(this.questions.length).fill(""); // Initialize answers array
-          this.companyDetails = response.data.data.company_details[0];
-          this.companyQuestionnaire = response.data.data.company_questionnaire;
         } else {
-          console.warn("No questions found in response.");
+          console.warn("No valid data found in response.");
         }
       } catch (error) {
         console.error("Error fetching assessment:", error);
@@ -137,7 +155,10 @@ export default {
 
       // API request to submit answers
       http
-        .post("/api/create-bulk/submitAnswer", { data: submittedData })
+        .post("/api/create-bulk/submitAnswer", {
+          data: submittedData,
+          url: this.assessmentId,
+        })
         .then((response) => {
           console.log("Submitted successfully:", response);
 
@@ -156,7 +177,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-/* Add additional styles here if needed */
-</style>
