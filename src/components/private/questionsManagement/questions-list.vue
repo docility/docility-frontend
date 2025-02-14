@@ -8,8 +8,7 @@
       :callback="updateCustomer()"
     />
 
-  
-    <ExportButtons :headers="headers" :data="filteredCustomers" />
+    <!-- <ExportButtons :headers="headers" :data="filteredCustomers" /> -->
 
     <!-- Page Size and Search -->
     <div class="flex justify-between items-center mb-4">
@@ -62,9 +61,8 @@
         >
           <tr>
             <th class="p-4">Actions</th>
-            <th class="p-4">Title</th>
-            <th class="p-4">Description</th> 
-            <th class="p-4">Questionnaire Type</th> 
+            <th class="p-4">Question</th>
+            <th class="p-4">Option</th>
           </tr>
         </thead>
         <tbody>
@@ -73,13 +71,7 @@
             :key="customer.id"
             class="border-b hover:bg-gray-200 text-nowrap"
           >
-            <td class="p-4 space-x-2">
-              <button
-                @click="ViewAction(customer)"
-                class="text-primaryText hover:underline"
-              >
-                View
-              </button>
+            <td class="p-4 space-x-2"> 
               <button
                 @click="UpdateAction(customer)"
                 class="text-blue-600 hover:underline"
@@ -93,9 +85,8 @@
                 Delete
               </button>
             </td>
-            <td class="p-4">{{ customer.attributes.title }}</td>
-            <td class="p-4">{{ customer.attributes.description }}</td> 
-            <td class="p-4">{{ customer.attributes.type }}</td> 
+            <td class="p-4">{{ customer.attributes.question }}</td>
+            <td class="p-4">{{ customer.attributes.options }}</td>  
           </tr>
         </tbody>
       </table>
@@ -125,13 +116,11 @@
 <script>
 // import { ref } from "vue";
 import http from "@/helpers/http";
-import AddCustomerModal from "./create-questionnaire.vue"; 
-import ExportButtons from "@/components/reuseable/ExportButtons.vue";
+import AddCustomerModal from "./create-questions.vue";  
 
 export default {
   components: {
-    AddCustomerModal, 
-    ExportButtons,
+    AddCustomerModal,  
   },
   props: {
     Update: {
@@ -164,21 +153,29 @@ export default {
     this.fetchCustomers();
   },
   methods: {
-    async fetchCustomers() {
-      try {
-        const response = await http.get(
-          `/api/questionnaires?pagination[page]=${this.currentPage}&pagination[pageSize]=${this.pageSize}`
-        );
-        this.customers = response.data.data;
-        this.totalPages = response.data.meta.pagination.pageCount;
-      } catch (error) {
-        console.error("Error fetching customers:", error);
-      }
-    },
+      async fetchCustomers() {
+    const questionaireId = this.$route.query.questionaireId; // Get query param from URL
+    if (!questionaireId) {
+      console.error("No questionaireId found in URL.");
+      return;
+    }
+
+    try {
+      const response = await http.get(
+        `/api/questions?field[questionnaires_id]=${questionaireId}`
+      );
+      this.customers = response.data.data;
+      this.totalPages = response.data.meta.pagination.pageCount;
+    } catch (error) {
+      console.error("Error fetching customers:", error);
+    }
+  },
     ViewAction(customer) {
-       this.$router.push({ 
-        path: "questions-management", 
-        query: { questionaireId: customer.id, name: customer.attributes.title.toUpperCase() } 
+      this.selectedQuestionnaire = {...customer.attributes, id: customer.id};
+     
+      this.$router.push({ 
+        path: "/questions-management", 
+        query: { questionaireId: customer.id } 
       });
     },
     UpdateAction(customer) {

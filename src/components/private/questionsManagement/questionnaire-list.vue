@@ -8,7 +8,13 @@
       :callback="updateCustomer()"
     />
 
-  
+    <!-- View Questionnaire Modal -->
+    <QuestionnaireModal
+      v-if="showViewModal"
+      :questionnaire="selectedQuestionnaire"
+      @close="showViewModal = false"
+    />
+
     <ExportButtons :headers="headers" :data="filteredCustomers" />
 
     <!-- Page Size and Search -->
@@ -125,12 +131,14 @@
 <script>
 // import { ref } from "vue";
 import http from "@/helpers/http";
-import AddCustomerModal from "./create-questionnaire.vue"; 
+import AddCustomerModal from "./create-questionnaire.vue";
+import QuestionnaireModal from "./questionnaire-details.vue";
 import ExportButtons from "@/components/reuseable/ExportButtons.vue";
 
 export default {
   components: {
-    AddCustomerModal, 
+    AddCustomerModal,
+    QuestionnaireModal,
     ExportButtons,
   },
   props: {
@@ -176,10 +184,8 @@ export default {
       }
     },
     ViewAction(customer) {
-       this.$router.push({ 
-        path: "questions-management", 
-        query: { questionaireId: customer.id, name: customer.attributes.title.toUpperCase() } 
-      });
+      this.selectedQuestionnaire = {...customer.attributes, id: customer.id};
+      this.showViewModal = true;
     },
     UpdateAction(customer) {
       this.Update(customer);

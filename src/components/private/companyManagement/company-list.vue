@@ -63,6 +63,7 @@
             <th class="p-4">Actions</th>
             <th class="p-4">Company Name</th>
             <th class="p-4">Address</th> 
+            <th class="p-4">Email</th> 
           </tr>
         </thead>
         <tbody>
@@ -87,6 +88,7 @@
             </td>
             <td class="p-4">{{ customer.attributes.name }}</td>
             <td class="p-4">{{ customer.attributes.address }}</td> 
+            <td class="p-4">{{ customer.attributes.email }}</td> 
           </tr>
         </tbody>
       </table>

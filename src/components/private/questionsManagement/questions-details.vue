@@ -8,7 +8,13 @@
       :callback="updateCustomer()"
     />
 
-  
+    <!-- View Questionnaire Modal -->
+    <QuestionnaireModal
+      v-if="showViewModal"
+      :questionnaire="selectedQuestionnaire"
+      @close="showViewModal = false"
+    />
+
     <ExportButtons :headers="headers" :data="filteredCustomers" />
 
     <!-- Page Size and Search -->
@@ -125,12 +131,14 @@
 <script>
 // import { ref } from "vue";
 import http from "@/helpers/http";
-import AddCustomerModal from "./create-questionnaire.vue"; 
+import AddCustomerModal from "./create-questions.vue";
+import QuestionnaireModal from "./questions-details.vue";
 import ExportButtons from "@/components/reuseable/ExportButtons.vue";
 
 export default {
   components: {
-    AddCustomerModal, 
+    AddCustomerModal,
+    QuestionnaireModal,
     ExportButtons,
   },
   props: {
@@ -165,9 +173,16 @@ export default {
   },
   methods: {
     async fetchCustomers() {
+      const questionaireId = this.$route.query.questionaireId; // Get query param from URL
+      console.log(questionaireId)
+      if (!questionaireId) {
+        console.error("No questionaireId found in URL.");
+        return;
+      }
+
       try {
         const response = await http.get(
-          `/api/questionnaires?pagination[page]=${this.currentPage}&pagination[pageSize]=${this.pageSize}`
+          `/api/questionnaires?questionaireId=${questionaireId}&pagination[page]=${this.currentPage}&pagination[pageSize]=${this.pageSize}`
         );
         this.customers = response.data.data;
         this.totalPages = response.data.meta.pagination.pageCount;
@@ -176,10 +191,8 @@ export default {
       }
     },
     ViewAction(customer) {
-       this.$router.push({ 
-        path: "questions-management", 
-        query: { questionaireId: customer.id, name: customer.attributes.title.toUpperCase() } 
-      });
+      this.selectedQuestionnaire = {...customer.attributes, id: customer.id};
+      this.showViewModal = true;
     },
     UpdateAction(customer) {
       this.Update(customer);

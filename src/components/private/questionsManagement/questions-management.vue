@@ -1,7 +1,9 @@
 <template>
   <div>
     <div class="pb-4 bg-white flex p-2 justify-between">
+        
       <div class="flex justify-center items-center gap-2">
+       
         <ExcelUpload
           title="Import Risk Category"
           @file-read="handleExcelData"
@@ -13,14 +15,30 @@
           title="New"
           :callback="openAddCompanyModal"
         />
+
+         <ImageButton
+          :svg="require('@/assets/email.svg')"
+          title="Send Questionnaire"
+          :callback="openSendEmailModal"
+        />
+      
         <!-- Trigger button for the modal -->
       </div>
+    
     </div>
+       <h1 class="text-dark-text-primary text-[60px]">{{this.$route.query.name}} Question List </h1>
     <AddCompanyModal
       v-if="showAddModal"
       :existingCompany="existingCompanyData"
       @close="showAddModal = false"
       :callback="addNewCompany"
+    />
+
+    <SendCompanyModal
+      v-if="showCompanyModal"
+      :existingCompany="existingCompanyData"
+      @close="showCompanyModal = false"
+      :callback="sendEmail"
     />
 
     <div>
@@ -60,9 +78,10 @@
 </template>
 
 <script>
-import CompanyList from "./company-list.vue";
-import CompanyDetailsModal from "./company-details.vue";
-import AddCompanyModal from "./create-company.vue";
+import CompanyList from "./questions-list.vue";
+import CompanyDetailsModal from "./questions-details.vue";
+import AddCompanyModal from "./create-questions.vue";
+import SendCompanyModal from "./send-company.vue";
 import http from "@/helpers/http";
 import ImageButton from "@/components/reuseable/ImageButton.vue";
 import ExcelUpload from "@/components/reuseable/ExcelUpload.vue";
@@ -76,6 +95,7 @@ export default {
     CompanyList,
     CompanyDetailsModal,
     AddCompanyModal,
+    SendCompanyModal,
     ExcelUpload,
     ImageButton, 
   },
@@ -83,6 +103,7 @@ export default {
     return {
       selectedCompany: null,
       showAddModal: false,
+      showCompanyModal: false,
       fileUploaded: false,
       isImportModalVisible: false,
       existingCompanyData: null,
@@ -90,9 +111,8 @@ export default {
       excelData: null,
       companyListKey: 0,
       ImportFileHeaders: [
-        "Company Name",
-        "Address",
-        "Email"
+        "Title",
+        "Description",
       ],
     };
   },
@@ -110,14 +130,13 @@ export default {
     handleSubmitImport() {
       console.log(this.excelData);
       const mapped = this.excelData.map((curr) => ({
-        name: curr["Company Name"],
-        address: curr["Address"], 
-        email: curr["Email"],
+        title: curr["Title"],
+        description: curr["Description"], 
       }));
       console.log(mapped);
       // Assuming you want to send this data to the server
       http
-        .post("/api/create-bulk/companies", mapped)
+        .post("/api/create-bulk/questionnaires", mapped)
         .then((response) => {
           toast.success("Company imported successfully");
           this.isImportModalVisible = false;
@@ -140,7 +159,7 @@ export default {
     },
     async deleteCompany(company){
       console.log(company)
-      const res = await http.delete(`api/companies/${company.id}`); 
+      const res = await http.delete(`api/questionnaires/${company.id}`); 
       if (res.status == 200) {
         this.companyListKey++;
       }
@@ -148,9 +167,12 @@ export default {
     openAddCompanyModal() {
       this.showAddModal = true;
     },
+    openSendEmailModal() {
+      this.showCompanyModal = true;
+    },
    async addNewCompany(newCompany) {
       console.log("adding new Company", newCompany);
-      const res = await http.post("api/companies", { data: newCompany }); 
+      const res = await http.post("api/questions", { data: newCompany }); 
       if (res.status == 200) {
         this.companyListKey++;
       }

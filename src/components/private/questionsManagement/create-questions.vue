@@ -97,28 +97,24 @@ export default {
       companyCategoryList: null,
       formFields: [
         {
-          id: "name",
-          label: "Company Name",
-          model: "name",
+          id: "question",
+          label: "Question",
+          model: "question",
           type: "text",
           required: true,
-          placeholder: "Enter Company name",
+          placeholder: "Enter Description",
         },
         {
-          id: "address",
-          label: "Address",
-          model: "address",
+          id: "options",
+          label: "Options",
+          model: "options",
           type: "text",
           required: true,
-          placeholder: "Enter Address",
-        },
-        {
-          id: "email",
-          label: "Email",
-          model: "email",
-          type: "text",
-          required: true,
-          placeholder: "Enter Address",
+          options: [
+            { text: 'Customer', value: 'Customer' },
+            { text: 'Supplier', value: 'Supplier' }
+          ],
+          placeholder: "Enter Questionnaire Type",
         },
       ],
     };
@@ -141,8 +137,9 @@ export default {
       return company
         ? { ...company }
         : {
-            name: "",
-            address: "",
+            question: "",
+            options: "",
+            questionnaire_id: this.$route.query.questionaireId,
           };
     },
     submitForm() {
@@ -151,6 +148,7 @@ export default {
         alert("Please fill in all required fields.");
         return;
       }
+ 
 
       this.callback({ ...this.newCompany });
       this.$emit("close");

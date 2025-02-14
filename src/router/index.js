@@ -16,14 +16,21 @@ import NewAssessmentChecklist from "@/components/private/riskAssessment/menu/ass
 import CustomerManagement from "@/components/private/customerManagement/customer-management.vue";
 import CompanyManagement from "@/components/private/companyManagement/company-management.vue";
 import QuestionnaireManagement from "@/components/private/questionnaireManagement/questionnaire-management.vue";
+import QuestionsManagement from "@/components/private/questionsManagement/questions-management.vue";
 import PrivacyPolicy from "@/components/public/PrivacyPolicy.vue";
 import CreateControlAssessment from "@/components/private/riskAssessment/menu/create-controll-assessment.vue";
+import Assessment from "@/components/public/assessment.vue";
 
 
 // Define your routes
 const routes = [
   { path: "/signin", name: "signin", component: UserLogin },
-  { path: "/privacy-policy", name: "privacy-policy", component: PrivacyPolicy },
+  { path: "/privacy-policy", name: "privacy-policy", component: PrivacyPolicy }, 
+  {
+    path: "/assessment/:id",
+    name: "assessment",
+    component: Assessment,
+  },
   {
     path: "/dashboard",
     name: "dashboard",
@@ -96,7 +103,12 @@ const routes = [
         path: "questionnaire-management",
         name: "Questionnaire management",
         component: QuestionnaireManagement,
-      },  
+      },
+      {
+        path: "questions-management",
+        name: "Questions",
+        component: QuestionsManagement,
+      },
       { path: "/:catchAll(.*)", name: "NotFound", component: NotFound },
     ],
   },
@@ -112,11 +124,15 @@ const router = createRouter({
 // Global navigation guard
 router.beforeEach((to, from, next) => {
   const isAuthenticated = sessionStorage.getItem("jwt");
+
+  console.log(to.name)
+
   if (
     to.name !== "signin" &&
     !isAuthenticated &&
     to.name !== "register" &&
-    to.name !== "privacy-policy"
+    to.name !== "privacy-policy" &&
+    to.name !== "assessment"
   ) {
     next({ name: "signin" });
   } else if (to.name === "signin" && isAuthenticated) {
