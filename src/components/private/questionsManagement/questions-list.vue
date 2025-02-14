@@ -162,7 +162,7 @@ export default {
 
       try {
         const response = await http.get(
-          `/api/questions?filters[questionnaires_id]=${questionaireId}`,
+          `/api/questions?filters[questionnaires_id]=${questionaireId}`
         );
         this.customers = response.data.data;
         this.totalPages = response.data.meta.pagination.pageCount;
@@ -175,7 +175,10 @@ export default {
 
       this.$router.push({
         path: "/questions-management",
-        query: { questionaireId: customer.id },
+        query: {
+          questionaireId: customer.id,
+          type: this.selectedQuestionnaire,
+        },
       });
     },
     UpdateAction(customer) {
@@ -195,7 +198,7 @@ export default {
       return this.customers.filter((customer) =>
         JSON.stringify(customer)
           .toLowerCase()
-          .includes(this.searchQuery.toLowerCase()),
+          .includes(this.searchQuery.toLowerCase())
       );
     },
   },

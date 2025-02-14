@@ -119,7 +119,7 @@ export default {
           type: "select",
           required: true,
           options: [
-            { text: "Customer", value: "Customer" },
+            { text: "Company", value: "Company" },
             { text: "Supplier", value: "Supplier" },
           ],
           placeholder: "Enter Questionnaire Type",

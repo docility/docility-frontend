@@ -7,7 +7,7 @@
     >
       <!-- Modal Title -->
       <h3 class="text-xl font-semibold mb-4 text-gray-800">
-        Send To {{ type }}
+        Send To {{ this.$route.query.type }}
       </h3>
 
       <!-- Form -->
@@ -44,6 +44,7 @@
             :aria-required="field.required"
             :placeholder="field.placeholder"
             @change="handleSelection(field.model, $event)"
+            @click="handleSelection(field.model, $event)"
           >
             <option
               v-for="option in field.options || []"
@@ -100,18 +101,6 @@ export default {
       type: "", // Stores the selected type
       formFields: [
         {
-          id: "Company",
-          label: "Type",
-          model: "type",
-          type: "select",
-          required: true,
-          options: [
-            { text: "Company", value: "Company" },
-            { text: "Supplier", value: "Supplier" },
-          ],
-          placeholder: "Enter Questionnaire Type",
-        },
-        {
           id: "selected",
           label: "Select",
           model: "selected",
@@ -134,26 +123,7 @@ export default {
   methods: {
     async handleSelection(model, event) {
       this.newCompany[model] = event.target?.value ?? event;
-
-      if (model === "type") {
-        this.type = event.target?.value ?? event;
-        this.formFields[1].options = [];
-
-        const apiUrl =
-          this.type === "Supplier" ? "/api/suppliers" : "/api/companies";
-        try {
-          const response = await http.get(apiUrl);
-          this.formFields[1].options = response.data.data.map((item) => ({
-            text:
-              this.type === "Supplier"
-                ? item.attributes.supplier_name
-                : item.attributes.name,
-            value: item.id,
-          }));
-        } catch (error) {
-          console.error("Error fetching data:", error);
-        }
-      }
+      console.log(this.newCompany);
     },
 
     async submitForm() {
@@ -167,7 +137,7 @@ export default {
           questionnaire_id: this.$route.query.questionaireId,
           company_id: this.newCompany.selected,
           supplier_id: this.newCompany.selected,
-          type: this.type,
+          type: this.$route.query.type,
         },
       });
       console.log(response);
@@ -175,9 +145,31 @@ export default {
       this.callback({ ...this.newCompany });
       this.$emit("close");
     },
+
+    async fetchData() {
+      this.type = event.target?.value ?? event;
+      this.formFields[0].options = [];
+
+      const apiUrl =
+        this.$route.query.type == "SUPPLIER"
+          ? "/api/suppliers"
+          : "/api/companies";
+      try {
+        const response = await http.get(apiUrl);
+        this.formFields[0].options = response.data.data.map((item) => ({
+          text:
+            this.$route.query.type === "SUPPLIER"
+              ? item.attributes.supplier_name
+              : item.attributes.name,
+          value: item.id,
+        }));
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    },
   },
   mounted() {
-    this.handleSelection("type", "Company");
+    this.fetchData();
   },
 };
 </script>

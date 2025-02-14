@@ -166,7 +166,7 @@ export default {
     async fetchCustomers() {
       try {
         const response = await http.get(
-          `/api/questionnaires?pagination[page]=${this.currentPage}&pagination[pageSize]=${this.pageSize}`,
+          `/api/questionnaires?pagination[page]=${this.currentPage}&pagination[pageSize]=${this.pageSize}`
         );
         this.customers = response.data.data;
         this.totalPages = response.data.meta.pagination.pageCount;
@@ -180,6 +180,7 @@ export default {
         query: {
           questionaireId: customer.id,
           name: customer.attributes.title.toUpperCase(),
+          type: customer.attributes.type.toUpperCase(),
         },
       });
     },
@@ -200,7 +201,7 @@ export default {
       return this.customers.filter((customer) =>
         JSON.stringify(customer)
           .toLowerCase()
-          .includes(this.searchQuery.toLowerCase()),
+          .includes(this.searchQuery.toLowerCase())
       );
     },
   },
