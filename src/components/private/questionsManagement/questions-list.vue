@@ -61,7 +61,9 @@
         >
           <tr>
             <th class="p-4">Actions</th>
+            <th class="p-4">Topics</th>
             <th class="p-4">Question</th>
+            <th class="p-4">Note</th>
             <th class="p-4">Option</th>
           </tr>
         </thead>
@@ -85,8 +87,16 @@
                 Delete
               </button>
             </td>
+            <td class="p-4">{{ customer.attributes.topic }}</td>
             <td class="p-4">{{ customer.attributes.question }}</td>
-            <td class="p-4">{{ customer.attributes.options }}</td>
+            <td class="p-4">{{ customer.attributes.notes }}</td>
+            <td class="p-4">
+              {{
+                JSON.parse(customer.attributes.options)
+                  .options.join(", ")
+                  .toUpperCase()
+              }}
+            </td>
           </tr>
         </tbody>
       </table>
@@ -182,6 +192,7 @@ export default {
       });
     },
     UpdateAction(customer) {
+      console.log("update", customer);
       this.Update(customer);
     },
     DeleteAction(customer) {

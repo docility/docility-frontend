@@ -30,7 +30,7 @@
         </div>
         <div class="mb-4">
           <label class="block text-lg font-medium text-gray-700"
-            >Category Type</label
+            >Category Types</label
           >
           <select
             v-model="categoryType"
@@ -196,14 +196,17 @@ export default {
       if (!this.fileUploaded) {
         // Submit data from form fields
         try {
-          const response = await http.post("/api/asset-categories", {
-            data: {
-              category: this.category,
-              description: this.description,
-              categoryType: this.categoryType,
-              companies: [this.selectedCompany],
-            },
-          });
+          const response = await http.post(
+            "/api/information-asset-categories",
+            {
+              data: {
+                category: this.category,
+                description: this.description,
+                categoryType: this.categoryType,
+                companies: [this.selectedCompany],
+              },
+            }
+          );
           if (response.status === 200) {
             toast.success("New Category Successfully Saved");
           } else {
@@ -211,7 +214,7 @@ export default {
           }
         } catch (error) {
           toast.error(
-            "Internal Server Error: " + error.response?.data?.error?.message,
+            "Internal Server Error: " + error.response?.data?.error?.message
           );
         } finally {
           this.reset();
@@ -231,13 +234,13 @@ export default {
           console.log(categories);
           const response = await http.post(
             "/api/create-bulk/asset-categories",
-            categories,
+            categories
           );
           toast.success(response.data.message);
           this.reset();
         } catch (error) {
           toast.error(
-            "Error Saving Excel Data: " + error.response?.data?.error?.message,
+            "Error Saving Excel Data: " + error.response?.data?.error?.message
           );
         }
       }

@@ -23,7 +23,7 @@
       </div>
     </div>
     <h1 class="text-dark-text-primary text-[60px]">
-      {{ this.$route.query.name }} Question List
+      {{ this.$route.query.name }}
     </h1>
     <AddCompanyModal
       v-if="showAddModal"
@@ -153,12 +153,12 @@ export default {
     },
     updateCompany(company) {
       console.log("updating Company", company);
-      this.existingCompanyData = company.attributes;
+      this.existingCompanyData = { ...company.attributes, id: company.id };
       this.showAddModal = true;
     },
     async deleteCompany(company) {
       console.log(company);
-      const res = await http.delete(`api/questionnaires/${company.id}`);
+      const res = await http.delete(`api/questions/${company.id}`);
       if (res.status == 200) {
         this.companyListKey++;
       }
@@ -171,9 +171,18 @@ export default {
     },
     async addNewCompany(newCompany) {
       console.log("adding new Company", newCompany);
-      const res = await http.post("api/questions", { data: newCompany });
-      if (res.status == 200) {
-        this.companyListKey++;
+      if (newCompany?.id) {
+        const res = await http.put(`api/questions/${newCompany.id}`, {
+          data: newCompany,
+        });
+        if (res.status == 200) {
+          this.companyListKey++;
+        }
+      } else {
+        const res = await http.post("api/questions", { data: newCompany });
+        if (res.status == 200) {
+          this.companyListKey++;
+        }
       }
     },
   },

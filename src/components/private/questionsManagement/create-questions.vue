@@ -6,7 +6,7 @@
       class="modal-content bg-white p-8 rounded-lg max-w-7xl w-full overflow-y-auto"
     >
       <h3 class="text-xl font-semibold mb-6">
-        {{ existingCompany ? "Update Company" : "Add New Company" }}
+        {{ existingCompany ? "Update Question" : "Add New Question" }}
       </h3>
       <form
         @submit.prevent="submitForm"
@@ -17,45 +17,62 @@
             {{ field.label }}
             <span v-if="field.required" class="text-red-500">*</span>
           </label>
-          <component
-            :is="
-              field.type === 'textarea'
-                ? 'textarea'
-                : field.type === 'select'
-                  ? 'select'
-                  : 'input'
-            "
+
+          <!-- Input Fields -->
+          <textarea
+            v-if="field.type === 'textarea'"
             :id="field.id"
             v-model="newCompany[field.model]"
-            :type="
-              field.type === 'textarea' || field.type === 'select'
-                ? undefined
-                : field.type
-            "
-            :class="[
-              'form-input',
-              'mt-1',
-              'block',
-              'w-full',
-              'border',
-              'rounded-md',
-              'shadow-sm',
-            ]"
-            :required="field.required"
-            :aria-required="field.required"
             :placeholder="field.placeholder"
-            @change="logChange(field.model, $event)"
-            @click="logChange(field.model, $event)"
+            :required="field.required"
+            class="form-input mt-1 block w-full border rounded-md shadow-sm"
+          ></textarea>
+
+          <input
+            v-else-if="field.type === 'text'"
+            :id="field.id"
+            v-model="newCompany[field.model]"
+            :type="field.type"
+            :placeholder="field.placeholder"
+            :required="field.required"
+            class="form-input mt-1 block w-full border rounded-md shadow-sm"
+          />
+
+          <!-- Select Dropdown for Single Selection -->
+          <select
+            v-else-if="field.type === 'select'"
+            :id="field.id"
+            v-model="newCompany[field.model]"
+            :required="field.required"
+            class="form-input mt-1 block w-full border rounded-md shadow-sm"
           >
             <option
-              v-for="option in field.options || []"
+              v-for="option in field.options"
               :key="option.value"
               :value="option.value"
             >
               {{ option.text }}
             </option>
-          </component>
+          </select>
+
+          <!-- Checkbox Group for Multi-Select -->
+          <div v-else-if="field.type === 'checkbox'" class="mt-2 space-y-2">
+            <label
+              v-for="option in field.options"
+              :key="option.value"
+              class="flex items-center space-x-2"
+            >
+              <input
+                type="checkbox"
+                :value="option.value"
+                v-model="newCompany[field.model]"
+                class="form-checkbox h-4 w-4 text-blue-500"
+              />
+              <span>{{ option.text }}</span>
+            </label>
+          </div>
         </div>
+
         <div class="modal-actions col-span-full flex justify-end mt-6">
           <button
             type="submit"
@@ -77,8 +94,8 @@
 </template>
 
 <script>
-// import http from "@/helpers/http";
-// import { toast } from "vue3-toastify";
+import http from "@/helpers/http";
+
 export default {
   props: {
     existingCompany: {
@@ -92,10 +109,17 @@ export default {
   },
   data() {
     return {
+      topics: [], // Initially empty, will be filled after fetch
       newCompany: this.initializeCompanyData(this.existingCompany),
-      showCreateCompanyCategory: false,
-      companyCategoryList: null,
       formFields: [
+        {
+          id: "topic",
+          label: "Topic",
+          model: "topic",
+          type: "select", // Single selection dropdown
+          required: true,
+          options: [], // Will be populated later
+        },
         {
           id: "question",
           label: "Question",
@@ -105,16 +129,24 @@ export default {
           placeholder: "Enter Description",
         },
         {
+          id: "notes",
+          label: "Notes",
+          model: "notes",
+          type: "text",
+          required: true,
+          placeholder: "Enter Notes",
+        },
+        {
           id: "options",
           label: "Options",
           model: "options",
-          type: "text",
+          type: "checkbox", // Multi-select checkboxes
           required: true,
           options: [
-            { text: "Customer", value: "Customer" },
-            { text: "Supplier", value: "Supplier" },
+            { text: "YES", value: "Yes" },
+            { text: "No", value: "No" },
+            { text: "Not Applicable", value: "Not Applicable" },
           ],
-          placeholder: "Enter Questionnaire Type",
         },
       ],
     };
@@ -128,17 +160,15 @@ export default {
     },
   },
   methods: {
-    logChange(model, event) {
-      console.log(`Changed ${model}:`, event.target.value);
-      this.newCompany[model] = event.target.value;
-    },
     initializeCompanyData(company = null) {
-      console.log(company);
       return company
-        ? { ...company }
+        ? {
+            ...company,
+            options: Array.isArray(company.options) ? company.options : [],
+          }
         : {
             question: "",
-            options: "",
+            options: [], // Ensure options is an array for checkboxes
             questionnaires_id: this.$route.query.questionaireId,
           };
     },
@@ -149,15 +179,45 @@ export default {
         return;
       }
 
+      // Stringify options if necessary before submission
+      this.newCompany.options = JSON.stringify({
+        options: this.newCompany.options,
+      });
+
+      this.newCompany.id = this.existingCompany?.id;
+
+      console.log(this.existingCompany);
+
       this.callback({ ...this.newCompany });
       this.$emit("close");
     },
+    async fetchTopics() {
+      let topicData = [];
+      try {
+        const topics = await http.get("/api/questionnaire-topics");
+        if (topics?.data?.data.length > 0) {
+          topics.data.data.forEach((item) => {
+            topicData.push({
+              text: item.attributes.title,
+              value: item.attributes.title,
+            });
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching topics:", error);
+      }
+      this.topics = topicData;
+      // Update the options for the 'topic' field
+      this.formFields.find((field) => field.id === "topic").options = topicData;
+    },
   },
   mounted() {
-    console.log("Existing Company:", this.companyCategoryList);
+    // Fetch topics when the component is mounted
+    this.fetchTopics();
   },
 };
 </script>
+
 <style>
 /* Modal Backdrop with Blur */
 .modal-backdrop {
@@ -167,7 +227,7 @@ export default {
   width: 100%;
   height: 100%;
   backdrop-filter: blur(8px);
-  background-color: rgba(0, 0, 0, 0.5); /* Slightly darken the background */
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
