@@ -83,7 +83,7 @@
               >
                 Edit
               </button>
-              <button
+              <button 
                 @click="DeleteAction(customer)"
                 class="px-3 py-1 bg-red-600 text-white text-xs rounded-md hover:bg-red-700 transition"
               >
