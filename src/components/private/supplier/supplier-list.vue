@@ -48,9 +48,7 @@
       class="overflow-x-auto max-h-[600px] overflow-y-auto bg-white shadow rounded-lg"
     >
       <table class="w-full text-left text-sm text-gray-700">
-        <thead
-          class="bg-dark-background-primary text-nowrap text-xs uppercase sticky top-0 z-10"
-        >
+        <thead class="bg-blue-600 text-white text-xs uppercase flex-nowrap text-nowrap">
           <tr>
             <th class="p-4">Actions</th>
             <th v-for="(header, index) in headers" :key="index" class="p-4">
@@ -67,13 +65,13 @@
             <td class="p-4 space-x-2">
               <button
                 @click="UpdateAction(supplier)"
-                class="text-blue-600 hover:underline"
+                class="px-3 py-1 bg-blue-600 text-white text-xs rounded-md hover:bg-blue-700 transition"
               >
                 Edit
               </button>
               <button
                 @click="DeleteAction(supplier.id)"
-                class="text-red-600 hover:underline"
+                class="px-3 py-1 bg-red-600 text-white text-xs rounded-md hover:bg-red-700 transition"
               >
                 Delete
               </button>

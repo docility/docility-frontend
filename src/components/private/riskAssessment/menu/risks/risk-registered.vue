@@ -1,8 +1,8 @@
 <template>
-  <div class="container flex flex-col w-full h-full overflow-hidden">
+  <div class="">
     <HeaderButton title="Risk Registered" :onClick="goBack" />
     <!-- Custom Select Dropdown for controlling visibility with checkboxes -->
-    <div class="mb-4 relative z-20">
+    <div class="mb-4">
       <RiskList :Update="editRisk" :Delete="deleteRisk" />
     </div>
   </div>
@@ -128,10 +128,7 @@ export default {
   display: block;
 }
 
-/* Sticky actions column styles */
-.sticky {
-  position: sticky;
-}
+ 
 
 .top-0 {
   top: 0;
@@ -158,8 +155,5 @@ export default {
 .overflow-x-auto {
   overflow-x: auto;
 }
-
-.table-container {
-  position: relative;
-}
+ 
 </style>

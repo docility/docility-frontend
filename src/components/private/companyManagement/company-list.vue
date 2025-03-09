@@ -1,5 +1,5 @@
 <template>
-  <div class="mx-auto p-4">
+  <div class="container mx-auto p-6 bg-white shadow-lg rounded-lg">
     <!-- Add Customer Modal -->
     <AddCustomerModal
       v-if="showUpdateModal"
@@ -11,7 +11,7 @@
     <ExportButtons :headers="headers" :data="filteredCustomers" />
 
     <!-- Page Size and Search -->
-    <div class="flex justify-between items-center mb-4">
+    <div class="flex justify-between items-center mb-4 z-0">
       <div class="flex items-center space-x-2">
         <label for="pageSize" class="text-sm text-gray-600">Page Size:</label>
         <select
@@ -56,9 +56,7 @@
       class="overflow-x-auto max-h-[600px] overflow-y-auto bg-white shadow rounded-lg"
     >
       <table class="w-full text-left text-sm text-gray-700">
-        <thead
-          class="bg-dark-background-primary text-nowrap text-xs uppercase sticky top-0 z-10"
-        >
+        <thead class="bg-blue-600 text-white text-xs uppercase flex-nowrap text-nowrap">
           <tr>
             <th class="p-4">Actions</th>
             <th class="p-4">Company Name</th>
@@ -75,13 +73,13 @@
             <td class="p-4 space-x-2">
               <button
                 @click="UpdateAction(customer)"
-                class="text-blue-600 hover:underline"
+              class="px-3 py-1 bg-blue-600 text-white text-xs rounded-md hover:bg-blue-700 transition"
               >
                 Edit
               </button>
               <button
                 @click="DeleteAction(customer)"
-                class="text-red-600 hover:underline"
+                 class="px-3 py-1 bg-red-600 text-white text-xs rounded-md hover:bg-red-700 transition"
               >
                 Delete
               </button>
