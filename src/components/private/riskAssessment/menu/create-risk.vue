@@ -65,8 +65,8 @@
             >
               <option
                 v-for="owner in riskOwnerList"
-                :key="owner.attributes.user_id"
-                :value="owner.attributes.user_id"
+                :key="owner.id"
+                :value="owner.id"
               >
                 {{ owner.attributes.name }}
               </option>

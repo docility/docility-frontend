@@ -81,7 +81,7 @@
               :key="index"
               class="p-4"
             >
-              {{ risk.attributes[headerKeys] }}
+              {{ headerKeys === "riskOwner" ? risk.attributes[headerKeys].data?.attributes?.name : headerKeys === "riskCategory" ? risk.attributes[headerKeys].data?.attributes?.description : risk.attributes[headerKeys]   }}
             </td>
           </tr>
         </tbody>
@@ -181,11 +181,12 @@ export default {
     async fetchSupplier() {
       try {
         const response = await http.get(
-          `/api/risks?pagination[page]=${this.currentPage}&pagination[pageSize]=${this.pageSize}`,
+          `/api/risks?pagination[page]=${this.currentPage}&pagination[pageSize]=${this.pageSize}&populate=*`,
         );
 
         console.log("Suppliers:", response.data.data);
         this.suppliers = response.data.data;
+        this.suppliers.riskOwner = this.suppliers.attributes.riskOwner.data.attributes.name
         this.totalPages = response.data.meta.pagination.pageCount;
       } catch (error) {
         console.error("Error fetching suppliers:", error);
@@ -210,7 +211,7 @@ export default {
     },
   },
   computed: {
-    filteredRisks() {
+    filteredRisks() { 
       return this.suppliers.filter((supplier) =>
         JSON.stringify(supplier)
           .toLowerCase()
