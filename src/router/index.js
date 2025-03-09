@@ -1,10 +1,10 @@
 import { createRouter, createWebHistory } from "vue-router";
 import UserLogin from "@/components/public/UserLogin.vue";
 import Supplier from "@/components/private/supplier/supplier.vue";
-import Dashboard from "@/components/Dashboard.vue";
+import DashboardComponent from "@/components/DashboardComponent.vue";
 import NotFound from "@/components/NotFound.vue";
 import Home from "@/components/private/Home.vue";
-import RiskAssessment from "@/components/private/riskAssessment/risk-assessment.vue";
+// import RiskAssessment from "@/components/private/riskAssessment/risk-assessment.vue";
 import CreateRisk from "@/components/private/riskAssessment/menu/create-risk.vue"; // Import your actual component here
 // import CreateControl from "@/components/private/riskAssessment/menu/create-control.vue";
 import CreateControl from "@/components/private/riskAssessment/menu/create-control.vue";
@@ -20,6 +20,9 @@ import QuestionsManagement from "@/components/private/questionsManagement/questi
 import PrivacyPolicy from "@/components/public/PrivacyPolicy.vue";
 import CreateControlAssessment from "@/components/private/riskAssessment/menu/create-controll-assessment.vue";
 import Assessment from "@/components/public/assessment.vue";
+import RiskCategory from "@/components/private/riskAssessment/risk-category/risk-category.vue"
+import AssetCategory from "@/components/private/riskAssessment/asset-category/asset-category.vue"
+import RiskTreatment from "@/components/private/riskAssessment/risk-treatment/risk-treatment.vue";
 
 // Define your routes
 const routes = [
@@ -33,60 +36,70 @@ const routes = [
   {
     path: "/dashboard",
     name: "dashboard",
-    component: Dashboard,
+    component: DashboardComponent,
     children: [
       { path: "/", redirect: "/dashboard/home" }, // Redirect root dashboard to home
       { path: "home", name: "home", component: Home },
-      { path: "supplier", name: "supplier", component: Supplier },
-      {
-        path: "risk-assessment",
-        name: "Risk Assessment",
-        component: RiskAssessment,
-      },
+      { path: "supplier", name: "supplier", component: Supplier }, 
       // {
-      //   path: "risk-assessment/create-control",
+      //   path: "/create-control",
       //   name: "Create Control",
       //   component: CreateControl,
       // },
       {
-        path: "risk-assessment/create-control",
+        path: "/dashboard/create-control",
         name: "Control Assessment",
         component: CreateControl,
       },
       {
-        path: "risk-assessment/create-control-assessment",
+        path: "/dashboard/create-control-assessment",
         name: "New Control Assessment",
         component: CreateControlAssessment,
       },
       {
-        path: "risk-assessment/create-control/new-control",
+        path: "/dashboard/create-control/new-control",
         name: "New Assessment Checklist",
         component: NewAssessmentChecklist,
       },
       {
-        path: "risk-assessment/create-information-asset",
+        path: "/dashboard/create-information-asset",
         name: "Information Asset",
         component: CreateInformationAsset,
       },
       {
-        path: "risk-assessment/risk",
+        path: "/dashboard/risk",
         name: "Risk",
         component: CreateRisk,
       },
       {
-        path: "risk-assessment/create-risk-category",
+        path: "/dashboard/create-risk-category",
         name: "Risk Category",
         component: CreateRiskCategory,
       },
       {
-        path: "risk-assessment/create-risk-treatment",
+        path: "/dashboard/create-risk-treatment",
         name: "Risk Treatment",
         component: CreateTemplate,
       },
       {
-        path: "risk-assessment/risk-register",
+        path: "/dashboard/risk-register",
         name: "Risks List",
         component: RiskRegistered,
+      },
+      {
+        path: "/dashboard/risk-category",
+        name: "New Risk Category",
+        component: RiskCategory,
+      },
+      {
+        path: "/dashboard/asset-category",
+        name: "New Asset Category",
+        component: AssetCategory,
+      },
+      {
+        path: "/dashboard/risk-treatment",
+        name: "New Risk Treatment",
+        component: RiskTreatment,
       },
       {
         path: "customer-management",
@@ -109,6 +122,7 @@ const routes = [
         component: QuestionsManagement,
       },
       { path: "/:catchAll(.*)", name: "NotFound", component: NotFound },
+      
     ],
   },
   { path: "/:catchAll(.*)", name: "NotFound", component: NotFound },

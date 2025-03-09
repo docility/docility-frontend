@@ -1,14 +1,12 @@
 <template>
-  <div class="container mx-auto p-6 bg-white shadow-lg rounded-lg">
-    <!-- Add Customer Modal -->
-    <AddCustomerModal
+  <div class="mx-auto p-4">
+    <!-- Add Category Modal (Update) -->
+    <AddCategoryModal
       v-if="showUpdateModal"
       @close="showUpdateModal = false"
-      :existingCustomer="selectedCustomer"
-      :callback="updateCustomer()"
+      :existingCategory="selectedCategory"
+      :callback="updateCategory"
     />
-
-    <ExportButtons :headers="headers" :data="filteredCustomers" />
 
     <!-- Page Size and Search -->
     <div class="flex justify-between items-center mb-4">
@@ -17,7 +15,7 @@
         <select
           id="pageSize"
           v-model="pageSize"
-          @change="fetchCustomers"
+          @change="fetchCategories(1)"
           class="border-gray-300 rounded-lg text-sm focus:ring-blue-500 focus:border-blue-500"
         >
           <option v-for="size in [10, 20, 30, 50]" :key="size" :value="size">
@@ -30,7 +28,7 @@
         <input
           type="text"
           v-model="searchQuery"
-          placeholder="Search for items"
+          placeholder="Search for categories"
           id="table-search"
           class="w-80 h-10 px-10 border border-gray-300 rounded-lg text-sm bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
         />
@@ -51,54 +49,44 @@
       </div>
     </div>
 
-    <!-- Customer Table -->
+    <!-- Category Table -->
     <div
       class="overflow-x-auto max-h-[600px] overflow-y-auto bg-white shadow rounded-lg"
     >
       <table class="w-full text-left text-sm text-gray-700">
-        <thead class="bg-blue-600 text-white text-xs uppercase flex-nowrap text-nowrap">
+        <thead class="bg-blue-600 text-white text-xs uppercase">
           <tr>
             <th class="p-4">Actions</th>
-            <th class="p-4">Customer Name</th>
-            <th class="p-4">Trading As</th>
-            <th class="p-4">ABN</th>
-            <th class="p-4">ACN</th>
-            <th class="p-4">Website</th>
-            <th class="p-4">Customer Address</th>
-            <th class="p-4">Country</th>
-            <th class="p-4">Contact Person</th>
-            <th class="p-4">Email</th>
+            <th class="p-4">Id</th>
+            <th class="p-4">Category</th>
+            <th class="p-4">Category Type</th>
+            <th class="p-4">Description</th> 
           </tr>
         </thead>
         <tbody>
           <tr
-            v-for="customer in filteredCustomers"
-            :key="customer.id"
-            class="border-b hover:bg-gray-50 text-nowrap"
+            v-for="category in filteredCategories"
+            :key="category.id"
+            class="border-b hover:bg-gray-200 text-nowrap"
           >
             <td class="p-4 space-x-2">
               <button
-                @click="UpdateAction(customer)"
+                @click="updateCategoryAction(category)"
                 class="px-3 py-1 bg-blue-600 text-white text-xs rounded-md hover:bg-blue-700 transition"
               >
                 Edit
               </button>
               <button
-                @click="selectCustomer(customer)"
-                 class="px-3 py-1 bg-red-600 text-white text-xs rounded-md hover:bg-red-700 transition"
+                @click="deleteCategoryAction(category)"
+               class="px-3 py-1 bg-red-600 text-white text-xs rounded-md hover:bg-red-700 transition"
               >
                 Delete
               </button>
             </td>
-            <td class="p-4">{{ customer.attributes.name }}</td>
-            <td class="p-4">{{ customer.attributes.trading_as }}</td>
-            <td class="p-4">{{ customer.attributes.abn_no }}</td>
-            <td class="p-4">{{ customer.attributes.acn_no }}</td>
-            <td class="p-4">{{ customer.attributes.website }}</td>
-            <td class="p-4">{{ customer.attributes.address }}</td>
-            <td class="p-4">{{ customer.attributes.country }}</td>
-            <td class="p-4">{{ customer.attributes.contact_person_name }}</td>
-            <td class="p-4">{{ customer.attributes.email }}</td>
+            <td class="p-4">{{ category.id }}</td>
+            <td class="p-4">{{ category.attributes.category }}</td> 
+            <td class="p-4">{{ category.attributes.categoryType }}</td> 
+            <td class="p-4">{{ category.attributes.description }}</td> 
           </tr>
         </tbody>
       </table>
@@ -127,13 +115,11 @@
 
 <script>
 import http from "@/helpers/http";
-import AddCustomerModal from "./create-customer.vue";
-import ExportButtons from "@/components/reuseable/ExportButtons.vue";
+import AddCategoryModal from "./create.vue";
 
 export default {
   components: {
-    AddCustomerModal,
-    ExportButtons,
+    AddCategoryModal,
   },
   props: {
     Update: {
@@ -148,19 +134,12 @@ export default {
   data() {
     return {
       headers: {
-        name: "Customer Name",
-        trading_as: "Trading As",
-        abn_no: "ABN",
-        acn_no: "ACN",
-        website: "Website",
-        address: "Customer Address",
-        country: "Country",
-        contact_person_name: "Contact Person",
-        email: "Email",
+        name: "Title",
+        address: "Description",
       },
-      customers: [],
+      categories: [],
       searchQuery: "",
-      selectedCustomer: null,
+      selectedCategory: null,
       showUpdateModal: false,
       currentPage: 1,
       pageSize: 10,
@@ -168,39 +147,40 @@ export default {
     };
   },
   mounted() {
-    this.fetchCustomers();
+    this.fetchCategories(this.currentPage || 1);
   },
   methods: {
-    async fetchCustomers() {
+    async fetchCategories(page) {
+      this.currentPage = page
       try {
         const response = await http.get(
-          `/api/customer-managements?pagination[page]=${this.currentPage}&pagination[pageSize]=${this.pageSize}`,
+          `/api/information-asset-categories?pagination[page]=${page}&pagination[pageSize]=${this.pageSize}`,
         );
-        this.customers = response.data.data;
+        this.categories = response.data.data;
         this.totalPages = response.data.meta.pagination.pageCount;
       } catch (error) {
-        console.error("Error fetching customers:", error);
+        console.error("Error fetching categories:", error);
       }
     },
-    selectCustomer(customer) {
-      this.selectedCustomer = customer;
-      this.showUpdateModal = true;
+    updateCategoryAction(category) {
+      console.log("update", category);
+      this.Update(category);
     },
-    UpdateAction(customer) {
-      this.Update(customer);
+    deleteCategoryAction(category) {
+      this.Delete(category); 
     },
     changePage(page) {
       if (page < 1 || page > this.totalPages) return;
       this.currentPage = page;
-      this.fetchCustomers();
+      this.fetchCategories(this.currentPage);
     },
   },
   computed: {
-    filteredCustomers() {
-      return this.customers.filter((customer) =>
-        JSON.stringify(customer)
+    filteredCategories() {
+      return this.categories.filter((category) =>
+        JSON.stringify(category)
           .toLowerCase()
-          .includes(this.searchQuery.toLowerCase()),
+          .includes(this.searchQuery.toLowerCase())
       );
     },
   },
