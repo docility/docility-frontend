@@ -77,9 +77,9 @@
               </button>
             </td>
             <td class="p-4">{{ category.id }}</td>
-            <td class="p-4">{{ category.attributes.treatmentOption }}</td>
-            <td class="p-4">{{ category.attributes.whenToUse }}</td>
-            <td class="p-4">{{ category.attributes.description }}</td>
+            <td class="p-4">{{ category.treatmentOption }}</td>
+            <td class="p-4">{{ category.whenToUse }}</td>
+            <td class="p-4">{{ category.description }}</td>
           </tr>
         </tbody>
       </table>

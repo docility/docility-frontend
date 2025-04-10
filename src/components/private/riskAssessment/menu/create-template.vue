@@ -22,7 +22,7 @@
               :key="company.id"
               :value="company.id"
             >
-              {{ company.attributes.name }}
+              {{ company.name }}
             </option>
           </select>
         </div>

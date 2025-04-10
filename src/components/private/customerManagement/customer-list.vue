@@ -90,15 +90,15 @@
                 Delete
               </button>
             </td>
-            <td class="p-4">{{ customer.attributes.name }}</td>
-            <td class="p-4">{{ customer.attributes.trading_as }}</td>
-            <td class="p-4">{{ customer.attributes.abn_no }}</td>
-            <td class="p-4">{{ customer.attributes.acn_no }}</td>
-            <td class="p-4">{{ customer.attributes.website }}</td>
-            <td class="p-4">{{ customer.attributes.address }}</td>
-            <td class="p-4">{{ customer.attributes.country }}</td>
-            <td class="p-4">{{ customer.attributes.contact_person_name }}</td>
-            <td class="p-4">{{ customer.attributes.email }}</td>
+            <td class="p-4">{{ customer.name }}</td>
+            <td class="p-4">{{ customer.trading_as }}</td>
+            <td class="p-4">{{ customer.abn_no }}</td>
+            <td class="p-4">{{ customer.acn_no }}</td>
+            <td class="p-4">{{ customer.website }}</td>
+            <td class="p-4">{{ customer.address }}</td>
+            <td class="p-4">{{ customer.country }}</td>
+            <td class="p-4">{{ customer.contact_person_name }}</td>
+            <td class="p-4">{{ customer.email }}</td>
           </tr>
         </tbody>
       </table>

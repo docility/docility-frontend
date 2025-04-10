@@ -17,7 +17,7 @@ export const useSidebarStore = defineStore('Sidebar', () => {
         { name: 'Asset Category New', to: '/dashboard/asset-category' },
         { name: 'Risk Category New', to: '/dashboard/risk-category' },
         { name: 'New Risk Treatment', to: '/dashboard/risk-treatment' },
-        { name: 'Control Assessment', to: '/dashboard/create-control' },
+        // { name: 'Control Assessment', to: '/dashboard/create-control' },
         // { name: 'New Control Assessment', to: '/dashboard/create-control-assessment' },
         // { name: 'New Assessment Checklist', to: '/dashboard/create-control-assessment' },
         // { name: 'Information Asset', to: '/dashboard/create-information-asset' },

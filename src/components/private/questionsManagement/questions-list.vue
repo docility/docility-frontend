@@ -59,6 +59,7 @@
         <thead class="bg-blue-600 text-white text-xs uppercase flex-nowrap text-nowrap">
           <tr>
             <th class="p-4">Actions</th>
+            <th class="p-4">Id</th>
             <th class="p-4">Topics</th>
             <th class="p-4">Question</th>
             <th class="p-4">Note</th>
@@ -85,12 +86,13 @@
                 Delete
               </button>
             </td>
-            <td class="p-4">{{ customer.attributes.topic }}</td>
-            <td class="p-4">{{ customer.attributes.question }}</td>
-            <td class="p-4">{{ customer.attributes.notes }}</td>
+            <td class="p-4">{{ customer.id }}</td>
+            <td class="p-4">{{ customer.topic }}</td>
+            <td class="p-4">{{ customer.question }}</td>
+            <td class="p-4">{{ customer.notes }}</td>
             <td class="p-4">
               {{
-                JSON.parse(customer.attributes.options)
+                JSON.parse(customer.options)
                   .options.join(", ")
                   .toUpperCase()
               }}

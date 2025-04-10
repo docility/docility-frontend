@@ -4,7 +4,7 @@ const http = axios.create({
   baseURL:
     process.env.VUE_APP_ENVI === "production"
       ? process.env.VUE_APP_API_URL_PROD
-      : process.env.VUE_APP_API_URL || "https://api.example.com", // Use your API URL
+      : process.env.VUE_APP_API_URL, // Use your API URL
   headers: {
     "Content-Type": "application/json",
   },

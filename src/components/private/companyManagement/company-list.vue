@@ -84,9 +84,9 @@
                 Delete
               </button>
             </td>
-            <td class="p-4">{{ customer.attributes.name }}</td>
-            <td class="p-4">{{ customer.attributes.address }}</td>
-            <td class="p-4">{{ customer.attributes.email }}</td>
+            <td class="p-4">{{ customer.name }}</td>
+            <td class="p-4">{{ customer.address }}</td>
+            <td class="p-4">{{ customer.email }}</td>
           </tr>
         </tbody>
       </table>

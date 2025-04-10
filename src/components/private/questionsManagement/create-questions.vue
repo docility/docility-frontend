@@ -161,6 +161,7 @@ export default {
   },
   methods: {
     initializeCompanyData(company = null) {
+      console.log("company", company);
       return company
         ? {
             ...company,
@@ -198,8 +199,8 @@ export default {
         if (topics?.data?.data.length > 0) {
           topics.data.data.forEach((item) => {
             topicData.push({
-              text: item.attributes.title,
-              value: item.attributes.title,
+              text: item.title,
+              value: item.title,
             });
           });
         }

@@ -90,9 +90,9 @@
                 Delete
               </button>
             </td>
-            <td class="p-4">{{ customer.attributes.title }}</td>
-            <td class="p-4">{{ customer.attributes.description }}</td>
-            <td class="p-4">{{ customer.attributes.type }}</td>
+            <td class="p-4">{{ customer.title }}</td>
+            <td class="p-4">{{ customer.description }}</td>
+            <td class="p-4">{{ customer.type }}</td>
           </tr>
         </tbody>
       </table>
@@ -177,8 +177,8 @@ export default {
         path: "questions-management",
         query: {
           questionaireId: customer.id,
-          name: customer.attributes.title.toUpperCase(),
-          type: customer.attributes.type.toUpperCase(),
+          name: customer.title.toUpperCase(),
+          type: customer.type.toUpperCase(),
         },
       });
     },
