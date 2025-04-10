@@ -46,7 +46,7 @@ export default {
 
       // Dynamically extract headers from the first risk object
       if (this.risks.length > 0) {
-        this.headers = Object.keys(this.risks[0].attributes);
+        this.headers = Object.keys(this.risks[0]);
 
         // Check if sessionStorage contains saved header visibility settings
         const storedVisibility = sessionStorage.getItem("headerVisibility");

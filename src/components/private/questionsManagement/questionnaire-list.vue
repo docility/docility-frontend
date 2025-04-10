@@ -184,7 +184,7 @@ export default {
       }
     },
     ViewAction(customer) {
-      this.selectedQuestionnaire = { ...customer.attributes, id: customer.id };
+      this.selectedQuestionnaire = { ...customer, id: customer.id };
       this.showViewModal = true;
     },
     UpdateAction(customer) {

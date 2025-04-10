@@ -45,7 +45,7 @@ export default {
       const formattedData = this.data.map((row) => {
         const formattedRow = {};
         Object.keys(this.headers).forEach((header) => {
-          formattedRow[this.headers[header]] = row.attributes[header] || ""; // Ensure data matches headers
+          formattedRow[this.headers[header]] = row[header] || ""; // Ensure data matches headers
         });
         return formattedRow;
       });
@@ -66,7 +66,7 @@ export default {
       // Extract table data based on headers
       const tableData = this.data.map((item) =>
         Object.keys(this.headers).map(
-          (headerKey) => item.attributes[headerKey] || "",
+          (headerKey) => item[headerKey] || "",
         ),
       );
 
@@ -90,7 +90,7 @@ export default {
       const rows = this.data.map((item) => {
         let row = {};
         Object.keys(this.headers).forEach((header) => {
-          row[header] = item.attributes[header] || "";
+          row[header] = item[header] || "";
         });
         return row;
       });

@@ -431,8 +431,8 @@ export default {
             if (v.id == "customerCategory") {
               categoryIndex = i;
               this.formFields[i].options.push({
-                text: category.attributes.category,
-                value: category.attributes.category,
+                text: category.category,
+                value: category.category,
               });
               console.log(this.formFields[i]);
             }

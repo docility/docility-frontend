@@ -188,7 +188,7 @@ export default {
     },
     updateCustomer(customer) {
       console.log("updating customer", customer);
-      this.existingCustomerData = customer.attributes;
+      this.existingCustomerData = customer;
       this.showAddModal = true;
     },
     openAddCustomerModal() {

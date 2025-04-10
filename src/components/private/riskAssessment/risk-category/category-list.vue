@@ -83,9 +83,9 @@
               </button>
             </td>
             <td class="p-4">{{ category.id }}</td>
-            <td class="p-4">{{ category.attributes.categoryType }}</td>
-            <td class="p-4">{{ category.attributes.category_domain }}</td>
-            <td class="p-4">{{ category.attributes.description }}</td>
+            <td class="p-4">{{ category.categoryType }}</td>
+            <td class="p-4">{{ category.category_domain }}</td>
+            <td class="p-4">{{ category.description }}</td>
           </tr>
         </tbody>
       </table>

@@ -68,7 +68,7 @@
                 :key="owner.id"
                 :value="owner.id"
               >
-                {{ owner.attributes.name }}
+                {{ owner.name }}
               </option>
             </select>
           </div>
@@ -86,8 +86,8 @@
                 :key="category.id"
                 :value="category.id"
               >
-                {{ category.attributes.annexCategory }}
-                {{ category.attributes.category_domain }}
+                {{ category.annexCategory }}
+                {{ category.category_domain }}
               </option>
             </select>
           </div>
@@ -244,7 +244,7 @@
                 :key="group"
                 :value="group.id"
               >
-                {{ group.attributes.controlHeading }}
+                {{ group.controlHeading }}
               </option>
             </select>
           </div>
@@ -295,7 +295,7 @@
                   :key="option.id"
                   :value="option.id"
                 >
-                  {{ option.attributes.treatmentOption }}
+                  {{ option.treatmentOption }}
                 </option>
               </select>
             </div>
@@ -343,7 +343,7 @@
                   :key="group"
                   :value="group.id"
                 >
-                  {{ group.attributes.controlHeading }}
+                  {{ group.controlHeading }}
                 </option>
               </select>
             </div>
@@ -358,10 +358,10 @@
               >
                 <option
                   v-for="owner in riskOwnerList"
-                  :key="owner.attributes.user_id"
-                  :value="owner.attributes.user_id"
+                  :key="owner.user_id"
+                  :value="owner.user_id"
                 >
-                  {{ owner.attributes.name }}
+                  {{ owner.name }}
                 </option>
               </select>
             </div>
@@ -720,7 +720,7 @@ export default {
       // Group items by a category property
       return this.controlCategoryList.reduce((groups, item) => {
         console.log(item);
-        const category = item.attributes.controlHeading || "Others";
+        const category = item.controlHeading || "Others";
         if (!groups[category]) groups[category] = [];
         groups[category].push(item);
         return groups;
@@ -730,7 +730,7 @@ export default {
       // Group items by a category property
       return this.controlCategoryList.reduce((groups, item) => {
         const category =
-          item.attributes.annexControl + "|" + item.attributes.domain;
+          item.annexControl + "|" + item.domain;
 
         if (groups[category]) return groups;
 
@@ -745,8 +745,8 @@ export default {
       const domain = this.controlDomain.split("|")[1];
       return this.controlCategoryList.filter(
         (item) =>
-          item.attributes.domain == domain &&
-          item.attributes.annexControl == annexControl,
+          item.domain == domain &&
+          item.annexControl == annexControl,
       );
     },
     riskControlMapping() {
@@ -756,8 +756,8 @@ export default {
       console.log(annexControl, domain);
       return this.controlCategoryList.filter(
         (item) =>
-          item.attributes.domain == domain &&
-          item.attributes.annexControl == annexControl,
+          item.domain == domain &&
+          item.annexControl == annexControl,
       );
     },
     visibleHeaderKeys() {
@@ -935,7 +935,7 @@ export default {
       if (this.riskTreatment && this.riskTreatmentListOptions) {
         this.selectedRiskTreatment = this.riskTreatmentListOptions.filter(
           (f) => f.id == this.riskTreatment,
-        )[0].attributes;
+        )[0];
 
         this.isModalOpen = true;
       }
@@ -1234,43 +1234,43 @@ export default {
       try {
         let riskDetails = await http.get(`/api/risks/${this.$route.query.id}`);
         const risk = riskDetails.data.data;
-        this.dateCreated = risk.attributes.dateCreated;
-        this.riskOwner = risk.attributes.riskOwner;
-        this.riskCategory = risk.attributes.riskCategory;
-        this.threat = risk.attributes.threat;
-        this.vulnerability = risk.attributes.vulnerability;
-        this.informationAsset = risk.attributes.informationAsset;
-        this.ciaImpact = risk.attributes.ciaImpact;
-        this.matrix = risk.attributes.matrix;
-        this.likelihood = risk.attributes.likelihood;
-        this.initialImpact = risk.attributes.initialImpact;
-        this.residualImpact = risk.attributes.risidualImpact;
-        this.residualLikelihood = risk.attributes.residualLikelihood;
-        this.riskLevel = risk.attributes.riskLevel;
-        this.residualRiskLevel = risk.attributes.residualRiskLevel;
-        this.riskAcceptable = risk.attributes.riskAcceptable;
-        this.riskApprovalDate = risk.attributes.riskApprovalDate;
-        this.riskApprovalEvidence = risk.attributes.riskApprovalEvidence;
-        this.riskAssessmentCompleted = risk.attributes.riskAssessmentCompleted;
-        this.riskTreatment = risk.attributes.riskTreatment;
-        this.controlDomain = risk.attributes.controlDomain;
+        this.dateCreated = risk.dateCreated;
+        this.riskOwner = risk.riskOwner;
+        this.riskCategory = risk.riskCategory;
+        this.threat = risk.threat;
+        this.vulnerability = risk.vulnerability;
+        this.informationAsset = risk.informationAsset;
+        this.ciaImpact = risk.ciaImpact;
+        this.matrix = risk.matrix;
+        this.likelihood = risk.likelihood;
+        this.initialImpact = risk.initialImpact;
+        this.residualImpact = risk.risidualImpact;
+        this.residualLikelihood = risk.residualLikelihood;
+        this.riskLevel = risk.riskLevel;
+        this.residualRiskLevel = risk.residualRiskLevel;
+        this.riskAcceptable = risk.riskAcceptable;
+        this.riskApprovalDate = risk.riskApprovalDate;
+        this.riskApprovalEvidence = risk.riskApprovalEvidence;
+        this.riskAssessmentCompleted = risk.riskAssessmentCompleted;
+        this.riskTreatment = risk.riskTreatment;
+        this.controlDomain = risk.controlDomain;
         this.personResponsibleToImplement =
-          risk.attributes.personResponsibleToImplement;
-        this.treatmentApprovalDate = risk.attributes.treatmentApprovalDate;
-        this.treatmentCompletionDate = risk.attributes.treatmentCompletionDate;
+          risk.personResponsibleToImplement;
+        this.treatmentApprovalDate = risk.treatmentApprovalDate;
+        this.treatmentCompletionDate = risk.treatmentCompletionDate;
         this.residualTreatmentApprovalDate =
-          risk.attributes.residualTreatmentApprovalDate;
-        this.approvalEvidence = risk.attributes.approvalEvidence;
-        this.nextReviewDate = risk.attributes.nextReviewDate;
-        this.riskTreatmentPlan = risk.attributes.riskTreatmentPlan;
+          risk.residualTreatmentApprovalDate;
+        this.approvalEvidence = risk.approvalEvidence;
+        this.nextReviewDate = risk.nextReviewDate;
+        this.riskTreatmentPlan = risk.riskTreatmentPlan;
         this.treatmentApprovalEvidence =
-          risk.attributes.treatmentApprovalEvidence;
-        this.controlMapped = risk.attributes.controlMapped;
-        this.notes = risk.attributes.notes;
-        this.treatmentStatus = risk.attributes.treatmentStatus;
-        this.riskControlMap = risk.attributes.riskControlMap;
-        this.currentControlEffective = risk.attributes.currentControlEffective;
-        this.currentControlInPlace = risk.attributes.currentControlInPlace;
+          risk.treatmentApprovalEvidence;
+        this.controlMapped = risk.controlMapped;
+        this.notes = risk.notes;
+        this.treatmentStatus = risk.treatmentStatus;
+        this.riskControlMap = risk.riskControlMap;
+        this.currentControlEffective = risk.currentControlEffective;
+        this.currentControlInPlace = risk.currentControlInPlace;
       } catch (error) {
         toast.error("Error: " + error.response?.data?.error?.message);
       } finally {

@@ -181,7 +181,7 @@ export default {
       }
     },
     ViewAction(customer) {
-      this.selectedQuestionnaire = { ...customer.attributes, id: customer.id };
+      this.selectedQuestionnaire = { ...customer, id: customer.id };
 
       this.$router.push({
         path: "/questions-management",

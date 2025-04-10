@@ -1496,7 +1496,7 @@ export default {
             supplier_name = "",
             supplier_purpose = "",
             country = "",
-          } = supplier.attributes;
+          } = supplier;
 
           if (supplier_name === null) {
             supplier_name = "";

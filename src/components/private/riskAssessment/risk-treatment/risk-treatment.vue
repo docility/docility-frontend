@@ -131,7 +131,7 @@ export default {
     },
     updateRiskCategory(riskCategory) {
       console.log("Updating Risk Category", riskCategory);
-      this.existingRiskCategoryData = { ...riskCategory.attributes, id: riskCategory.id };
+      this.existingRiskCategoryData = { ...riskCategory, id: riskCategory.id };
       this.showAddModal = true;
       console.log("show modal", this.showAddModal)
     },

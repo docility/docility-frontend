@@ -13,7 +13,7 @@
         :key="group.controlHeading"
       >
         <option v-for="item in group.items" :key="item.id" :value="item.id">
-          {{ item.attributes.controlHeading }}
+          {{ item.controlHeading }}
         </option>
       </optgroup>
     </select>

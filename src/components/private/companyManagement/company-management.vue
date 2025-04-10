@@ -134,7 +134,7 @@ export default {
     },
     updateCompany(company) {
       console.log("updating Company", company);
-      this.existingCompanyData = company.attributes;
+      this.existingCompanyData = company;
       this.showAddModal = true;
     },
     async deleteCompany(company) {

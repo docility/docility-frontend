@@ -81,7 +81,7 @@
               :key="index"
               class="p-4"
             >
-              {{ headerKeys === "riskOwner" ? risk.attributes[headerKeys].data?.attributes?.name : headerKeys === "riskCategory" ? risk.attributes[headerKeys].data?.attributes?.description : risk.attributes[headerKeys]   }}
+              {{ headerKeys === "riskOwner" ? risk[headerKeys].data?.name : headerKeys === "riskCategory" ? risk[headerKeys].data?.description : risk[headerKeys]   }}
             </td>
           </tr>
         </tbody>
@@ -186,7 +186,7 @@ export default {
 
         console.log("Suppliers:", response.data.data);
         this.suppliers = response.data.data;
-        this.suppliers.riskOwner = this.suppliers.attributes.riskOwner.data.attributes.name
+        this.suppliers.riskOwner = this.suppliers.riskOwner.data.name
         this.totalPages = response.data.meta.pagination.pageCount;
       } catch (error) {
         console.error("Error fetching suppliers:", error);

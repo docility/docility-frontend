@@ -161,8 +161,8 @@ export default {
         this.formFields[0].options = response.data.data.map((item) => ({
           text:
             this.$route.query.type === "SUPPLIER"
-              ? item.attributes.supplier_name
-              : item.attributes.name,
+              ? item.supplier_name
+              : item.name,
           value: item.id,
         }));
       } catch (error) {

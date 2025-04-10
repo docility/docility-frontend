@@ -153,7 +153,7 @@ export default {
     },
     updateCompany(company) {
       console.log("updating Company", company);
-      this.existingCompanyData = { ...company.attributes, id: company.id };
+      this.existingCompanyData = { ...company, id: company.id };
       this.showAddModal = true;
     },
     async deleteCompany(company) {
