@@ -164,6 +164,7 @@ export default {
     },
     updateCategoryAction(category) {
       console.log("update", category);
+     
       this.Update(category);
     },
     deleteCategoryAction(category) {

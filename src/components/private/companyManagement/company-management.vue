@@ -150,7 +150,8 @@ export default {
     async addNewCompany(newCompany) {
       console.log("adding new Company", newCompany);
       const res = await http.post("api/companies", { data: newCompany });
-      if (res.status == 200) {
+      console.log(res)
+      if (res.status == 200 || res.status == 201) {
         this.companyListKey++;
       }
     },

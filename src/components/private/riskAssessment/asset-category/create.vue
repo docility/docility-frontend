@@ -172,9 +172,9 @@ export default {
       }
 
       // Convert options to JSON before submission
-      this.newCategory.options = JSON.stringify({
-        options: this.newCategory.options,
-      });
+      // this.newCategory.options = JSON.stringify({
+      //   options: this.newCategory.options,
+      // });
 
       this.newCategory.id = this.existingAssetCategory?.id;
       console.log("submited", this.existingAssetCategory)

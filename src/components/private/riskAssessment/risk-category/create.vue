@@ -168,16 +168,16 @@ export default {
       }
 
       // Convert options to JSON before submission
-      this.newCategory.options = JSON.stringify({
-        options: this.newCategory.options,
-      });
+      // this.newCategory.options = JSON.stringify({
+      //   options: this.newCategory.options,
+      // });
 
       this.newCategory.id = this.existingRiskCategory?.id;
       console.log("submited", this.existingRiskCategory)
       this.callback({ ...this.newCategory });
       this.$emit("close");
     },
- 
+
   },
   mounted() {
     // this.fetchTopics();

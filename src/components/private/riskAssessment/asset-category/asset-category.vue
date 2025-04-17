@@ -151,7 +151,11 @@ export default {
       console.log("Adding new Risk Category", newRiskCategory);
       if (newRiskCategory?.id) {
         const res = await http.put(`api/information-asset-categories/${newRiskCategory.id}`, {
-          data: newRiskCategory,
+          data: {
+            category_domain: newRiskCategory.category_domain,
+            description: newRiskCategory.description,
+            categoryType: newRiskCategory.categoryType,
+          },
         });
         if (res.status == 200) {
           this.riskCategoryListKey++;
