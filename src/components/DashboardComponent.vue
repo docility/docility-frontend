@@ -60,11 +60,14 @@
           @click="sidebarStore.showLogoutModal = true"
           class="w-full flex items-center justify-center px-4 py-2 rounded-md bg-red-600 text-white hover:bg-red-700 transition-all duration-200"
         >
-          Logout
+          Logout 
         </button>
+        <small class="text-center text-gray-400 mt-2">
+          version 1.0.0
+        </small>
       </div>
     </aside>
-
+   
     <!-- Toggle Sidebar Button (Mobile) -->
     <button
       @click="sidebarStore.toggleSidebar"
