@@ -143,6 +143,17 @@
           </div>
           <div class="mb-4">
             <label class="block text-lg font-medium text-gray-700"
+              >Asset category
+            </label>
+            <input
+              v-model="assetCategory"
+              type="text"
+              required
+              class="mt-1 block w-full p-2 border border-gray-300 rounded"
+            />
+          </div>
+          <div class="mb-4">
+            <label class="block text-lg font-medium text-gray-700"
               >CIA Impact
             </label>
             <input
@@ -201,6 +212,18 @@
                 {{ option.text }}
               </option>
             </select>
+          </div>
+          <div class="mb-4">
+            <label class="block text-lg font-medium text-gray-700"
+              >Inherent Risk level/rating
+            </label>
+            <input
+              required
+              type="text"
+              :value="calculateRiskLevel()"
+              readonly
+              class="mt-1 block w-full p-2 border border-gray-300 rounded bg-gray-100"
+            />
           </div>
           <div class="mb-4">
             <label class="block text-lg font-medium text-gray-700"
@@ -264,19 +287,7 @@
                 {{ group.controlHeading }}
               </option>
             </select>
-          </div>
-          <div class="mb-4">
-            <label class="block text-lg font-medium text-gray-700"
-              >Inherent Risk level/rating
-            </label>
-            <input
-              required
-              type="text"
-              :value="calculateRiskLevel()"
-              readonly
-              class="mt-1 block w-full p-2 border border-gray-300 rounded bg-gray-100"
-            />
-          </div>
+          </div> 
           <div class="mb-4">
             <label class="block text-lg font-medium text-gray-700"
               >Risk acceptable
@@ -832,6 +843,7 @@ export default {
       threat: "",
       vulnerability: "",
       informationAsset: "",
+      assetCategory: "",
       ciaImpact: "",
       matrix: "",
       likelihood: "",
@@ -913,6 +925,7 @@ export default {
         threat: row["Threat"],
         vulnerability: row["Vulnerability"],
         informationAsset: row["Information Asset category"],
+        assetCategory: row["Asset category"],
         ciaImpact: row["CIA Impact"],
         matrix: row["Matrix to be used for risk assessment"],
         likelihood: row["Initial Likelihood"],
@@ -1064,6 +1077,7 @@ export default {
               threat: this.threat || "",
               vulnerability: this.vulnerability || "",
               informationAsset: this.informationAsset || "",
+              assetCategory: this.assetCategory || "",
               ciaImpact: this.ciaImpact || "",
               matrix: this.matrix || "",
               likelihood: this.likelihood ? this.likelihood.toString() : "",
@@ -1127,10 +1141,10 @@ export default {
             response = await http.post("/api/risks", data);
           }
           // const response = await http.post("/api/risks", );
-          if (response.status == 200) {
+          if (response.status == 200 || response.status == 201) {
             toast.success("New Category Successfully Saved");
           } else {
-            toast.success("Error on Saving Category");
+            toast.error("Error on Saving Category");
           }
         } catch (error) {
           console.log(error);
@@ -1151,6 +1165,7 @@ export default {
               threat: item["Threat"],
               vulnerability: item["Vulnerability"],
               informationAsset: item["Information Asset category"],
+              assetCategory: item["Asset category"],
               ciaImpact: item["CIA Impact"],
               matrix: item["Matrix to be used for risk assessment"],
               likelihood: item["Initial Likelihood"],
@@ -1262,6 +1277,7 @@ export default {
         this.threat = risk.threat;
         this.vulnerability = risk.vulnerability;
         this.informationAsset = risk.informationAsset;
+        this.assetCategory = risk.assetCategory;
         this.ciaImpact = risk.ciaImpact;
         this.matrix = risk.matrix;
         this.likelihood = risk.likelihood;

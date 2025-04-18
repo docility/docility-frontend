@@ -135,6 +135,13 @@ export default {
           type: "text",
           required: true,
           placeholder: "Enter Description",
+        },  {
+          id: "options",
+          label: "Options",
+          model: "options",
+          type: "text",
+          required: true,
+          placeholder: "Enter Options",
         }, 
       ],
     };
@@ -156,11 +163,13 @@ export default {
           category_domain: category.category_domain,
           categoryType: category.categoryType,
           description: category.description,
+          options: category.options,
           }
         : {
             category_domain: "",
             categoryType: "",
             description: "", 
+            options: ""
           };
     },
     submitForm() {

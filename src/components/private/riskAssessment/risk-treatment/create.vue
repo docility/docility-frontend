@@ -88,20 +88,43 @@ export default {
           required: true,
           placeholder: "Enter Description",
         },
+        {
+          id: "options",
+          label: "Options",
+          model: "options",
+          type: "textarea",
+          rows: 4,
+          required: false,
+          placeholder: "Options",
+        },
       ],
     };
   },
   watch: {
-    existingAssetCategory: {
-      immediate: true,
-      handler(newVal) {
-        this.newCategory = this.initializeCategoryData(newVal);
-      },
-    },
-  },
-  methods: {
+    // existingAssetCategory: {
+    //   immediate: true,
+    //   handler(newVal) {
+    //     // this.newCategory = this.initializeCategoryData(newVal);
+    //   },
+    // },
+  }, 
+  methods: { 
     initializeCategoryData(category = null) {
-      return category ? { ...category } : { treatmentOption: "", whenToUse: "", description: "" };
+      console.log("category", category) 
+      return category
+        ? {
+          id: category.documentId, 
+           treatmentOption: category.treatmentOption,
+            whenToUse: category.whenToUse,
+            description: category.description,
+            options: category.options, 
+          }
+        : {
+            treatmentOption: "",
+            whenToUse: "",
+            description: "", 
+            options: ""
+          };
     },
     submitForm() {
       if (Object.values(this.newCategory).some(value => value === "")) {
