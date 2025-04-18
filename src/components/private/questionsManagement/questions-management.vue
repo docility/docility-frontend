@@ -184,7 +184,7 @@ export default {
           console.log(res);
           this.companyListKey++;
         });
-      
+         
       } else {
         await http.post("api/questions", { data: newCompany }).then((res) => {
           console.log(res);
