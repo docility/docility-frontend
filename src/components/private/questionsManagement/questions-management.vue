@@ -181,11 +181,13 @@ export default {
         http.put(`api/questions/${id}`, {
           data: newCompany,
         }).then((res) => {
+          console.log(res);
           this.companyListKey++;
         });
       
       } else {
         await http.post("api/questions", { data: newCompany }).then((res) => {
+          console.log(res);
           this.companyListKey++;
         });
       }
