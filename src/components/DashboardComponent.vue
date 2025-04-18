@@ -85,7 +85,7 @@
         </div>
       </div>
     </main>
-
+     
     <!-- Logout Modal -->
     <div
       v-if="sidebarStore.showLogoutModal"
