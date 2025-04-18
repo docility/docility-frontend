@@ -153,7 +153,7 @@ export default {
     },
     updateCompany(company) {
       console.log("updating Company", company);
-      this.existingCompanyData = { ...company, id: company.id };
+      this.existingCompanyData = { ...company, id: company.documentId };
       this.showAddModal = true;
     },
     async deleteCompany(company) {
@@ -164,6 +164,7 @@ export default {
       }
     },
     openAddCompanyModal() {
+      this.existingCompanyData = null
       this.showAddModal = true;
     },
     openSendEmailModal() {
@@ -172,17 +173,21 @@ export default {
     async addNewCompany(newCompany) {
       console.log("adding new Company", newCompany);
       if (newCompany?.id) {
-        const res = await http.put(`api/questions/${newCompany.id}`, {
+        const id = newCompany.id;
+        delete newCompany.id;
+        delete newCompany.createdAt;
+        delete newCompany.updatedAt;
+        delete newCompany.documentId;
+        http.put(`api/questions/${id}`, {
           data: newCompany,
+        }).then((res) => {
+          this.companyListKey++;
         });
-        if (res.status == 200) {
-          this.companyListKey++;
-        }
+      
       } else {
-        const res = await http.post("api/questions", { data: newCompany });
-        if (res.status == 200) {
+        await http.post("api/questions", { data: newCompany }).then((res) => {
           this.companyListKey++;
-        }
+        });
       }
     },
   },

@@ -84,7 +84,7 @@
                 Edit
               </button>
               <button
-                @click="selectCustomer(customer)"
+                @click="deleteCustomer(customer)"
                  class="px-3 py-1 bg-red-600 text-white text-xs rounded-md hover:bg-red-700 transition"
               >
                 Delete
@@ -188,6 +188,9 @@ export default {
     },
     UpdateAction(customer) {
       this.Update(customer);
+    },
+    deleteCustomer(customer) {
+      this.Delete(customer);
     },
     changePage(page) {
       if (page < 1 || page > this.totalPages) return;

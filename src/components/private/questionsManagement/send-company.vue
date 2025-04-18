@@ -129,6 +129,8 @@ export default {
     },
 
     async submitForm() {
+      console.log("Submitting form with data:", this.newCompany);
+      
       if (Object.values(this.newCompany).some((value) => !value)) {
         alert("Please fill in all required fields.");
         return;

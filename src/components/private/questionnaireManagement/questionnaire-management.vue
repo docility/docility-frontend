@@ -138,20 +138,44 @@ export default {
     },
     async deleteCompany(company) {
       console.log(company);
-      const res = await http.delete(`api/questionnaires/${company.id}`);
-      if (res.status == 200) {
-        this.companyListKey++;
-      }
+      http.delete(`api/questionnaires/${company.documentId }`).then((response) => {
+        toast.success("Company deleted successfully");
+        if (response.status == 200 || response.status == 204) {
+          toast.success("Company deleted successfully");
+          this.companyListKey++;
+        } else {
+          toast.error("Error deleting company");
+        }
+      }); 
     },
     openAddCompanyModal() {
       this.showAddModal = true;
     },
     async addNewCompany(newCompany) {
       console.log("adding new Company", newCompany);
-      const res = await http.post("api/questionnaires", { data: newCompany });
-      if (res.status == 200) {
-        this.companyListKey++;
+      if (newCompany.id) { 
+        const id = newCompany.id;  
+        delete newCompany.id;
+        console.log("updating company", newCompany);
+        http.put(`api/questionnaires/${id}`, { data: newCompany }).then((res) => {
+          if (res.status == 200 || res.status == 201) {
+            toast.success("Company updated successfully");
+            this.companyListKey++;
+          } else {
+            toast.error("Error updating company");
+          }
+        });
+        return;
       }
+        http.post("api/questionnaires", { data: newCompany }).then((res) => {
+          if (res.status == 200 || res.status == 201) {
+            toast.success("Company created successfully");
+            this.companyListKey++;
+          } else {
+            toast.error("Error creating company");
+          }
+      });
+      
     },
   },
 };

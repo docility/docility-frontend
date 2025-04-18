@@ -191,13 +191,39 @@ export default {
       this.existingCustomerData = customer;
       this.showAddModal = true;
     },
+    deleteCustomer(customer) {
+      console.log(customer); 
+      http
+        .delete(`api/customer-managements/${customer.documentId}`)
+        .then((response) => {
+          toast.success("Customer imported successfully");
+          if (response.status == 200 || response.status == 204) {
+            toast.success("Customer deleted successfully");
+            this.customerListKey++;
+          } else {
+            toast.error("Error deleting customer");
+          }
+          this.customerListKey++;
+        })
+        .catch((error) => {
+          console.error(error);
+          toast.error("Error importing customers");
+        });
+     
+    },
     openAddCustomerModal() {
       this.showAddModal = true;
     },
     addNewCustomer(newCustomer) {
       console.log("adding new customer", newCustomer);
-      http.post("api/customer-managements", { data: newCustomer });
-      this.customerListKey++;
+      http.post("api/customer-managements", { data: newCustomer }).then((res) => { 
+        if (res.status == 200 || res.status == 201) {
+          toast.success("Customer added successfully");
+          this.customerListKey++;
+        } else {
+          toast.error("Error adding customer");
+        }
+      }); 
     },
   },
 };

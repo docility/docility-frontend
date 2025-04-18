@@ -43,12 +43,7 @@
         <form class="h-[80%]" @submit.prevent="handleSubmit">
           <div class="overflow-auto h-full p-3">
             <h2 class="text-lg font-semibold mt-6 mb-2">Supplier Details</h2>
-            <div class="grid grid-cols-4 gap-4">
-              <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700">Supplier ID:</label>
-                <input type="text" v-model="createSupplier.supplier_id"
-                  class="mt-1 block w-full p-2 border border-gray-300 rounded" />
-              </div>
+            <div class="grid grid-cols-4 gap-4"> 
 
               <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700">Supplier Name:</label>
@@ -618,8 +613,7 @@ export default {
         "Decision Date",
       ],
       importData: null,
-      createSupplier: {
-        "supplier_id": "",
+      createSupplier: { 
         "supplier_name": "",
         "supplier_trading_as": "",
         "abn_no": "",
@@ -709,8 +703,7 @@ export default {
     },
     handleSubmitImport() {
       console.log(this.excelData);
-      const mapped = this.excelData.map((curr) => ({
-        supplier_id: curr["Supplier ID"],
+      const mapped = this.excelData.map((curr) => ({ 
         supplier_name: curr["Supplier Name"],
         trading_as: curr["Supplier Trading As"],
         abn_no: curr["ABN No"],
@@ -775,7 +768,7 @@ export default {
       console.log(mapped);
       // Assuming you want to send this data to the server
       http
-        .post("/api/create-bulk/supplier", mapped)
+        .post("/api/create-bulk/supplier-managements", mapped)
         .then((response) => {
           toast.success("Suppliers imported successfully");
           this.isImportModalVisible = false;
@@ -789,8 +782,7 @@ export default {
     },
     resetData() {
       (this.selectedSupplierId = null), (this.updateData = false);
-      this.createSupplier = {
-        "supplier_id": "",
+      this.createSupplier = { 
         "supplier_name": "",
         "supplier_trading_as": "",
         "abn_no": "",
@@ -873,12 +865,12 @@ export default {
           delete payload.createdAt
           delete payload.updatedAt
 
-          await http.put(`api/suppliers/${this.selectedSupplierId}`, {
+          await http.put(`api/supplier-managements/${this.selectedSupplierId}`, {
             data: payload,
           });
           toast.success("Supplier Details Updated");
         } else {
-          await http.post("api/suppliers", { data: payload });
+          await http.post("api/supplier-managements", { data: payload });
           toast.success("New Supplier Added");
         }
         this.fetchSupplier();
@@ -893,7 +885,7 @@ export default {
     async editSupplier(supplierData) {
       this.showModal = true;
       this.updateData = true;
-      this.selectedSupplierId = supplierData.id;
+      this.selectedSupplierId = supplierData.documentId;
       const supplier = supplierData;
       this.createSupplier = {
         ...supplier
@@ -959,7 +951,7 @@ export default {
     },
     async fetchSupplier() {
       try {
-        const suppliers = await http.get("api/suppliers", "");
+        const suppliers = await http.get("api/supplier-managements", "");
         console.log(suppliers);
         this.supplierList = suppliers.data;
       } catch (error) {
@@ -968,7 +960,7 @@ export default {
     },
     async deleteSupplier(id) {
       try {
-        const suppliers = await http.delete(`api/suppliers/${id}`);
+        const suppliers = await http.delete(`api/supplier-managements/${id}`);
         console.log(suppliers);
         this.supplierList = suppliers.data;
         toast.success("Supplier Successfully Deleted");

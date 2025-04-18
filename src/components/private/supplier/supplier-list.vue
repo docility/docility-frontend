@@ -72,7 +72,7 @@
                 Edit
               </button>
               <button
-                @click="DeleteAction(supplier.id)"
+                @click="DeleteAction(supplier.documentId)"
                 class="px-3 py-1 bg-red-600 text-white text-xs rounded-md hover:bg-red-700 transition"
               >
                 Delete
@@ -134,6 +134,7 @@ export default {
     return {
       headers: {
         id: "ID",
+        documentId: "Document ID", 
         supplier_id: "Supplier Id",
         supplier_name: "Supplier Name",
         supplier_trading_as: "Supplier Trading As",
@@ -219,7 +220,7 @@ export default {
     async fetchSupplier() {
       try {
         const response = await http.get(
-          `/api/suppliers?pagination[page]=${this.currentPage}&pagination[pageSize]=${this.pageSize}`
+          `/api/supplier-managements?pagination[page]=${this.currentPage}&pagination[pageSize]=${this.pageSize}`
         );
 
         console.log("Suppliers:", response.data.data);

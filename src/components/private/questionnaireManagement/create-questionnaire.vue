@@ -12,50 +12,52 @@
         @submit.prevent="submitForm"
         class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
       >
-        <div v-for="field in formFields" :key="field.id" class="form-group">
-          <label :for="field.id" class="block text-sm font-medium">
-            {{ field.label }}
-            <span v-if="field.required" class="text-red-500">*</span>
-          </label>
-          <component
-            :is="
-              field.type === 'textarea'
-                ? 'textarea'
-                : field.type === 'select'
-                  ? 'select'
-                  : 'input'
-            "
-            :id="field.id"
-            v-model="newCompany[field.model]"
-            :type="
-              field.type === 'textarea' || field.type === 'select'
-                ? undefined
-                : field.type
-            "
-            :class="[
-              'form-input',
-              'mt-1',
-              'block',
-              'w-full',
-              'border',
-              'rounded-md',
-              'shadow-sm',
-            ]"
-            :required="field.required"
-            :aria-required="field.required"
-            :placeholder="field.placeholder"
-            @change="logChange(field.model, $event)"
-            @click="logChange(field.model, $event)"
+      <div v-for="field in formFields" :key="field.id" class="form-group">
+        <label :for="field.id" class="block text-sm font-medium">
+          {{ field.label }}
+          <span v-if="field.required" class="text-red-500">*</span>
+        </label>
+      
+        <!-- Select Field -->
+        <select
+          v-if="field.type === 'select'"
+          :id="field.id"
+          v-model="newCompany[field.model]"
+          :required="field.required"
+          :class="['form-input', 'mt-1', 'block', 'w-full', 'border', 'rounded-md', 'shadow-sm']"
+        >
+          <option disabled value="">Select Questionnaire Type</option>
+          <option
+            v-for="option in field.options"
+            :key="option.value"
+            :value="option.value"
           >
-            <option
-              v-for="option in field.options || []"
-              :key="option.value"
-              :value="option.value"
-            >
-              {{ option.text }}
-            </option>
-          </component>
-        </div>
+            {{ option.text }}
+          </option>
+        </select>
+      
+        <!-- Textarea Field -->
+        <textarea
+          v-else-if="field.type === 'textarea'"
+          :id="field.id"
+          v-model="newCompany[field.model]"
+          :placeholder="field.placeholder"
+          :required="field.required"
+          :class="['form-input', 'mt-1', 'block', 'w-full', 'border', 'rounded-md', 'shadow-sm']"
+        ></textarea>
+      
+        <!-- Input Field -->
+        <input
+          v-else
+          :id="field.id"
+          :type="field.type"
+          v-model="newCompany[field.model]"
+          :placeholder="field.placeholder"
+          :required="field.required"
+          :class="['form-input', 'mt-1', 'block', 'w-full', 'border', 'rounded-md', 'shadow-sm']"
+        />
+      </div>
+      
         <div class="modal-actions col-span-full flex justify-end mt-6">
           <button
             type="submit"
@@ -143,8 +145,14 @@ export default {
     initializeCompanyData(company = null) {
       console.log(company);
       return company
-        ? { ...company }
+        ? {
+            id: company.documentId,
+            title: company.title,
+            description: company.description,
+            type: company.type,
+          }
         : {
+            id: null,
             title: "",
             description: "",
             type: "",

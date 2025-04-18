@@ -137,23 +137,32 @@ export default {
       this.existingCompanyData = company;
       this.showAddModal = true;
     },
-    async deleteCompany(company) {
+    deleteCompany(company) {
       console.log(company);
-      const res = await http.delete(`api/companies/${company.id}`);
-      if (res.status == 200) {
-        this.companyListKey++;
-      }
+      http.delete(`api/companies/${company.documentId}`).then((response) => {
+        toast.success("Company deleted successfully");
+        if (response.status == 200 || response.status == 204) {
+          toast.success("Company deleted successfully");
+          this.companyListKey++;
+        } else {
+          toast.error("Error deleting Company");
+        }
+      }); 
     },
     openAddCompanyModal() {
       this.showAddModal = true;
     },
     async addNewCompany(newCompany) {
       console.log("adding new Company", newCompany);
-      const res = await http.post("api/companies", { data: newCompany });
-      console.log(res)
-      if (res.status == 200 || res.status == 201) {
-        this.companyListKey++;
-      }
+      http.post("api/companies", { data: newCompany }).then((res) => {
+        console.log(res);
+        if (res.status == 200 || res.status == 201) {
+          toast.success("Company added successfully");
+          this.companyListKey++;
+        } else {
+          toast.error("Error adding Company");
+        }
+      }); 
     },
   },
 };
