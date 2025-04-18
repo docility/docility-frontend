@@ -130,16 +130,25 @@ export default {
     },
     updateRiskCategory(riskCategory) {
       console.log("Updating Risk Category", riskCategory);
-      this.existingRiskCategoryData = { ...riskCategory, id: riskCategory.id };
+      this.existingRiskCategoryData = { ...riskCategory, id: riskCategory.documentId };
       this.showAddModal = true;
       console.log("show modal", this.showAddModal)
     },
     async deleteRiskCategory(riskCategory) {
       console.log(riskCategory);
-      const res = await http.delete(`api/risk-categories/${riskCategory.id}`);
-      if (res.status == 200) {
-        this.riskCategoryListKey++;
-      }
+      http.delete(`api/risk-categories/${riskCategory.documentId}`).then((response) => {
+        toast.success("Risk Category deleted successfully");
+        if (response.status == 200 || response.status == 204) {
+          toast.success("Risk Category deleted successfully");
+          this.riskCategoryListKey++;
+        } else {
+          toast.error("Error deleting Risk Category");
+        }
+      }).catch((error) => {
+        console.error(error);
+        toast.error("Error deleting Risk Category");
+      });
+    
     },
     openAddRiskCategoryModal() {
       this.showAddModal = true;
@@ -150,17 +159,33 @@ export default {
     async addNewRiskCategory(newRiskCategory) {
       console.log("Adding new Risk Category", newRiskCategory);
       if (newRiskCategory?.id) {
-        const res = await http.put(`api/risk-categories/${newRiskCategory.id}`, {
+        const id = newRiskCategory.id;
+        delete newRiskCategory.id;
+        http.put(`api/risk-categories/${id}`, {
           data: newRiskCategory,
-        });
-        if (res.status == 200) {
+        }).then((res) => {
+          if (res.status == 200) {
+            toast.success("Risk Category updated successfully");
+          } else {
+            toast.error("Error updating Risk Category");
+          }
           this.riskCategoryListKey++;
-        }
+        }).catch((error) => {
+          console.error(error);
+          toast.error("Error updating Risk Category");
+        }); 
       } else {
-        const res = await http.post("api/risk-categories", { data: newRiskCategory });
-        if (res.status == 200) {
+        http.post("api/risk-categories", { data: newRiskCategory }).then((res) => {
+          if (res.status == 200 || res.status == 201) {
+            toast.success("Risk Category added successfully");
+          } else {
+            toast.error("Error adding Risk Category");
+          }
           this.riskCategoryListKey++;
-        }
+        }).catch((error) => {
+          console.error(error);
+          toast.error("Error adding Risk Category");
+        }); 
       }
     },
   },

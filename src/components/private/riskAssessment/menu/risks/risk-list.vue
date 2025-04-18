@@ -64,13 +64,13 @@
           >
             <td class="p-4 space-x-2">
               <button
-                @click="updateAction(risk.id)"
+                @click="updateAction(risk.documentId)"
                 class="px-3 py-1 bg-blue-600 text-white text-xs rounded-md hover:bg-blue-700 transition"
               >
                 Edit
               </button>
               <button
-                @click="deleteAction(risk.id)"
+                @click="deleteAction(risk.documentId)"
                 class="px-3 py-1 bg-red-600 text-white text-xs rounded-md hover:bg-red-700 transition"
               >
                 Delete
@@ -81,7 +81,7 @@
               :key="index"
               class="p-4"
             >
-              {{ headerKeys === "riskOwner" ? risk[headerKeys].data?.name : headerKeys === "riskCategory" ? risk[headerKeys].data?.description : risk[headerKeys]   }}
+              {{ risk[headerKeys] }}
             </td>
           </tr>
         </tbody>
@@ -132,6 +132,7 @@ export default {
     return {
       headers: {
         riskOwner: "Risk Owner",
+        riskOwnerEmail: "Risk Owner Email",
         riskCategory: "Risk Category",
         threat: "Threat",
         vulnerability: "Vulnerability",

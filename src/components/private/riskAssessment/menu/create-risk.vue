@@ -58,7 +58,7 @@
             <label class="block text-lg font-medium text-gray-700"
               >Risk Owner
             </label>
-            <select
+            <!-- <select
               required
               v-model="riskOwner"
               class="mt-1 block w-full p-2 border border-gray-300 rounded"
@@ -70,7 +70,24 @@
               >
                 {{ owner.name }}
               </option>
-            </select>
+            </select> -->
+            <input
+              type="text"
+              required
+              v-model="riskOwner"
+              class="mt-1 block w-full p-2 border border-gray-300 rounded"
+            />
+          </div>
+          <div class="mb-4">
+            <label class="block text-lg font-medium text-gray-700"
+              >Risk Owner Email
+            </label>
+            <input
+              type="text"
+              required
+              v-model="riskOwnerEmail"
+              class="mt-1 block w-full p-2 border border-gray-300 rounded"
+            />
           </div>
           <div class="mb-4">
             <label class="block text-lg font-medium text-gray-700"
@@ -452,7 +469,7 @@
               </label>
               <select
                 required
-                v-model="residualImpact"
+                v-model="risidualImpact"
                 class="mt-1 block w-full p-2 border border-gray-300 rounded"
               >
                 <option
@@ -810,6 +827,7 @@ export default {
       isModalOpen: false,
       dateCreated: "",
       riskOwner: "",
+      riskOwnerEmail: "",
       riskCategory: "",
       threat: "",
       vulnerability: "",
@@ -890,6 +908,7 @@ export default {
       const mappedData = this.excelData.map((row) => ({
         dateCreated: row["Date Created"],
         riskOwner: row["Risk Owner"],
+        riskOwnerEmail: row["Risk Owner Email"],
         riskCategory: row["Risk Category / Domain"],
         threat: row["Threat"],
         vulnerability: row["Vulnerability"],
@@ -1038,6 +1057,7 @@ export default {
             data: {
               dateCreated: this.dateCreated || "",
               riskOwner: this.riskOwner || "",
+              riskOwnerEmail: this.riskOwnerEmail || "",
               riskCategory: this.riskCategory
                 ? this.riskCategory.toString()
                 : "",
@@ -1126,6 +1146,7 @@ export default {
             risks.push({
               dateCreated: item["Date Created"],
               riskOwner: item["Risk Owner"],
+              riskOwnerEmail: item["Risk Owner Email"],
               riskCategory: item["Risk Category / Domain"],
               threat: item["Threat"],
               vulnerability: item["Vulnerability"],
@@ -1236,6 +1257,7 @@ export default {
         const risk = riskDetails.data.data;
         this.dateCreated = risk.dateCreated;
         this.riskOwner = risk.riskOwner;
+        this.riskOwnerEmail = risk.riskOwnerEmail;
         this.riskCategory = risk.riskCategory;
         this.threat = risk.threat;
         this.vulnerability = risk.vulnerability;

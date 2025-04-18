@@ -133,6 +133,14 @@ export default {
           ]
         }, 
         {
+          id: "option",
+          label: "options",
+          model: "options",
+          type: "text",
+          required: true,
+          placeholder: "Enter Option",
+        }, 
+        {
           id: "description",
           label: "Description",
           model: "description",
@@ -176,7 +184,7 @@ export default {
       //   options: this.newCategory.options,
       // });
 
-      this.newCategory.id = this.existingAssetCategory?.id;
+      this.newCategory.id = this.existingAssetCategory?.documentId;
       console.log("submited", this.existingAssetCategory)
       this.callback({ ...this.newCategory });
       this.$emit("close");

@@ -136,10 +136,15 @@ export default {
     },
     async deleteRiskCategory(riskCategory) {
       console.log(riskCategory);
-      const res = await http.delete(`api/information-asset-categories/${riskCategory.id}`);
-      if (res.status == 200) {
+      http.delete(`api/information-asset-categories/${riskCategory.documentId}`).then((response) => {
+        console.log(response);
+        if (response.status == 200 || response.status == 204) {
+          toast.success("Risk Category deleted successfully");
+        } else {
+          toast.error("Error deleting Risk Category");
+        }
         this.riskCategoryListKey++;
-      }
+      });
     },
     openAddRiskCategoryModal() {
       this.showAddModal = true;
@@ -150,21 +155,33 @@ export default {
     async addNewAssetCategory(newRiskCategory) {
       console.log("Adding new Risk Category", newRiskCategory);
       if (newRiskCategory?.id) {
-        const res = await http.put(`api/information-asset-categories/${newRiskCategory.id}`, {
+
+        http.put(`api/information-asset-categories/${newRiskCategory.id}`, {
           data: {
+            category: newRiskCategory.category,
             category_domain: newRiskCategory.category_domain,
             description: newRiskCategory.description,
             categoryType: newRiskCategory.categoryType,
+            options: newRiskCategory.options,
           },
-        });
-        if (res.status == 200) {
+        }).then((res) => { 
+          if (res.status == 200 || res.status == 201) {
+            toast.success("Risk Category updated successfully");
+          } else {
+            toast.error("Error updating Risk Category");
+          }
           this.riskCategoryListKey++;
-        }
+        }); 
       } else {
-        const res = await http.post("api/information-asset-categories", { data: newRiskCategory });
-        if (res.status == 200) {
+       http.post("api/information-asset-categories", { data: newRiskCategory }).then((res) => {
+          console.log(res);
+          if (res.status == 200 || res.status == 201) {
+            toast.success("Risk Category added successfully");
+          } else {
+            toast.error("Error adding Risk Category");
+          }
           this.riskCategoryListKey++;
-        }
+        }); 
       }
     },
   },

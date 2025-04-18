@@ -143,16 +143,19 @@ export default {
     existingCategory: {
       immediate: true,
       handler(newVal) {
-        this.newCategory = this.initializeCategoryData(newVal);
+        console.log("newVal", newVal)
+        // this.newCategory = this.initializeCategoryData(newVal);
       },
     },
   },
   methods: {
     initializeCategoryData(category = null) {
-      console.log("category", category)
+      console.log("category", category) 
       return category
         ? {
-            ...category, 
+          category_domain: category.category_domain,
+          categoryType: category.categoryType,
+          description: category.description,
           }
         : {
             category_domain: "",
