@@ -189,7 +189,7 @@ export default {
         await http.post("api/questions", { data: newCompany }).then((res) => {
           console.log(res);
           this.companyListKey++;
-        });
+        });   
       }
     },
   },
