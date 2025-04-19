@@ -63,7 +63,7 @@
           Logout 
         </button>
         <small class="text-center text-gray-400 mt-2">
-          version 1.0.2
+          version 1.0.3
         </small>
       </div>
     </aside>
