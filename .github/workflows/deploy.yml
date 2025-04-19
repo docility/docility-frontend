@@ -122,7 +122,7 @@ jobs:
           script: |
             IMAGE_NAME="${{ env.DOCKER_IMAGE_PREFIX }}-master"
             IMAGE_TAG="${{ github.run_number }}"
-            FRONTEND_PORT=1337
+            FRONTEND_PORT=8080
 
             echo "Pulling frontend image: $IMAGE_NAME:$IMAGE_TAG"
             sudo docker pull $IMAGE_NAME:$IMAGE_TAG
