@@ -60,14 +60,14 @@
           @click="sidebarStore.showLogoutModal = true"
           class="w-full flex items-center justify-center px-4 py-2 rounded-md bg-red-600 text-white hover:bg-red-700 transition-all duration-200"
         >
-          Logout 
+          Logout
         </button>
         <small class="text-center text-gray-400 mt-2">
           version 1.0.3
         </small>
       </div>
     </aside>
-   
+
     <!-- Toggle Sidebar Button (Mobile) -->
     <button
       @click="sidebarStore.toggleSidebar"
@@ -85,7 +85,7 @@
         </div>
       </div>
     </main>
-     
+
     <!-- Logout Modal -->
     <div
       v-if="sidebarStore.showLogoutModal"
@@ -162,5 +162,12 @@ onUnmounted(() => {
 <style>
 .top-most {
   z-index: 9999 !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  aside {
+    width: 100%; /* Full width for mobile */
+  }
 }
 </style>
