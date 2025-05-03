@@ -954,7 +954,7 @@ export default {
       vulnerability: "",
       informationAsset: "",
       assetCategory: "",
-      ciaImpact: "",
+      // ciaImpact: "",
       matrix: "",
       likelihood: "",
       initialImpact: "",

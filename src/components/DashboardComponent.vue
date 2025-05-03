@@ -43,7 +43,7 @@
                     :class="{
                       'bg-gray-200': sidebarStore.activeMenu === sub.name,
                     }"
-                    @click="closeSubMenu"
+                    @click="setActiveMenu(sub.name)"
                   >
                     {{ sub.name }}
                   </router-link>
@@ -130,8 +130,15 @@ const handleMenuClick = (index, item) => {
   if (item.subMenu.length) {
     activeSubMenu.value = activeSubMenu.value === index ? null : index;
   } else {
+    sidebarStore.activeMenu = item.name; // Set active menu for main menu
     router.push(item.to); // Redirect if no submenu
   }
+};
+
+// Set active menu for submenus
+const setActiveMenu = (menuName) => {
+  sidebarStore.activeMenu = menuName; // Set active menu for submenus
+  activeSubMenu.value = null; // Close the submenu
 };
 
 // Close submenu when clicking outside
