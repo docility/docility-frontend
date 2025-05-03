@@ -3,7 +3,10 @@ import axios from "axios";
 console.log(process.env.VUE_APP_ENVI);
 
 const http = axios.create({
-  baseURL: "/v1", // Use the proxy URL instead of the backend API URL
+  // baseURL: "/v1", // Use the proxy URL instead of the backend API URL
+  baseURL: process.env.VUE_APP_ENVI === "production"
+  ? process.env.VUE_APP_API_URL_PROD
+  : process.env.VUE_APP_API_URL,
   headers: {
     "Content-Type": "application/json",
   },
