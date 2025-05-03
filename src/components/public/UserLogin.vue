@@ -1,74 +1,95 @@
 <template>
-  <div
-    class="flex items-center justify-center min-h-screen bg-gradient-to-r from-purple-200 to-[#42f5e0]"
-  >
-    <div class="w-full max-w-md p-8 bg-white shadow-lg">
-      <img
-        src="@/assets/logo.png"
-        alt="Profile Picture"
-        class="w-full h-full border-4 border-white object-cover"
-      />
-    </div>
-    <div class="w-full max-w-md p-8 bg-white rounded-lg shadow-lg">
-      <h2 class="text-4xl text-default text-center mb-6 drop-shadow-md">
-        Welcome Back!
-      </h2>
-      <p class="text-center text-gray-600 mb-8">
-        Please sign in to your account
-      </p>
-      <form @submit.prevent="UserLogin">
-        <div class="mb-6">
-          <label for="username" class="text-default">Username</label>
-          <input
-            v-model="username"
-            id="username"
-            placeholder="Enter your username"
-            class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-150"
-          />
-        </div>
+  <div class="min-h-screen bg-gradient-to-r from-purple-200 to-[#42f5e0] flex items-center justify-center px-4">
+    <!-- 3D Login Card -->
+    <div
+      class="w-full max-w-md bg-white rounded-lg shadow-2xl transform transition-transform hover:scale-105 hover:shadow-3xl"
+    >
+      <!-- Logo Section -->
+      <div class="flex justify-center py-6 bg-gradient-to-r from-gray-100 to-gray-200 rounded-t-lg">
+        <img
+          src="@/assets/logo.png"
+          alt="Logo"
+          class="h-16 w-auto object-contain"
+        />
+      </div>
 
-        <div class="mb-6">
-          <label for="password" class="text-default">Password</label>
-          <input
-            v-model="password"
-            id="password"
-            type="password"
-            placeholder="Enter your password"
-            class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-150"
-          />
-        </div>
+      <!-- Login Form Section -->
+      <div class="p-8">
+        <h2 class="text-3xl font-bold text-center text-gray-800 mb-4">
+          Welcome Back!
+        </h2>
+        <p class="text-center text-gray-600 mb-6">
+          Please log in to access your account.
+        </p>
 
-        <button
-          type="submit"
-          class="w-full secondary-button-style text-default"
-          :disabled="isSubmitting"
-        >
-          <span v-if="isSubmitting">Logging in...</span>
-          <span v-else>Login</span>
-        </button>
+        <form @submit.prevent="UserLogin">
+          <!-- Username Field -->
+          <div class="mb-6">
+            <label for="username" class="block text-sm font-medium text-gray-700">
+              Username
+            </label>
+            <input
+              v-model="username"
+              id="username"
+              placeholder="Enter your username"
+              class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-inner focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-150"
+            />
+          </div>
 
-        <div class="mt-6 text-center">
-          <router-link to="/register" class="link-text-primary"
-            >Create an Account</router-link
+          <!-- Password Field -->
+          <div class="mb-6">
+            <label for="password" class="block text-sm font-medium text-gray-700">
+              Password
+            </label>
+            <input
+              v-model="password"
+              id="password"
+              type="password"
+              placeholder="Enter your password"
+              class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-inner focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-150"
+            />
+          </div>
+
+          <!-- Submit Button -->
+          <button
+            type="submit"
+            class="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-medium py-3 rounded-lg shadow-lg transition duration-200 transform hover:translate-y-[-2px]"
+            :disabled="isSubmitting"
           >
-        </div>
+            <span v-if="isSubmitting">Logging in...</span>
+            <span v-else>Login</span>
+          </button>
 
+          <!-- Error Message -->
+          <p v-if="errorMessage" class="mt-4 text-red-600 text-center">
+            {{ errorMessage }}
+          </p>
+        </form>
+
+        <!-- Additional Links -->
         <div class="mt-6 text-center">
-          <button @click.prevent="showModal = true" class="link-text-secondary">
+          <router-link
+            to="/register"
+            class="text-indigo-500 hover:underline font-medium"
+          >
+            Create an Account
+          </router-link>
+        </div>
+        <div class="mt-4 text-center">
+          <button
+            @click.prevent="showModal = true"
+            class="text-gray-500 hover:underline font-medium"
+          >
             Privacy Policy
           </button>
         </div>
-
-        <p v-if="errorMessage" class="mt-4 text-red-600 text-center">
-          {{ errorMessage }}
-        </p>
-      </form>
+      </div>
     </div>
 
     <!-- Privacy Policy Modal -->
     <div
       v-if="showModal"
-      class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 scroll-smooth"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
     >
       <div
         class="bg-white p-8 rounded-lg shadow-lg w-11/12 max-w-lg h-[700px] overflow-auto flex flex-col"
@@ -76,7 +97,7 @@
         <PrivacyPolicy />
         <button
           @click="showModal = false"
-          class="mt-4 px-4 py-2 rounded-lg self-end transition button-style"
+          class="mt-4 px-4 py-2 rounded-lg self-end bg-indigo-500 text-white hover:bg-indigo-600 transition duration-200"
         >
           Close
         </button>
@@ -101,7 +122,6 @@ export default {
       errorMessage: "",
       isSubmitting: false,
       showModal: false, // To control modal visibility
-      apiUrl: process.env.VUE_APP_API_URL,
     };
   },
   methods: {
@@ -128,3 +148,10 @@ export default {
   },
 };
 </script>
+
+<style>
+/* Custom shadow for 3D effect */
+.shadow-3xl {
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2), 0 15px 35px rgba(0, 0, 0, 0.15);
+}
+</style>
