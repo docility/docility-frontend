@@ -274,7 +274,7 @@ export default {
             } 
           } catch (error) {
             // If parsing fails, keep the original string value
-            processedSupplier[key] = processedSupplier[key];
+            processedSupplier[key] = String(processedSupplier[key]);
           }
         }
       });

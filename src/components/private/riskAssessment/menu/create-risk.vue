@@ -791,45 +791,45 @@ export default {
         return groups;
       }, {});
     },
-    riskTreatmentDomain() {
-      // console.log("riskTreatment", this.controlDomain);
-      // // Group items by a category property
-      // return this.controlCategoryList.reduce((groups, item) => {
-      //   const category =
-      //     item.annexControl + "|" + item.domain;
+    // riskTreatmentDomain() {
+    //   // console.log("riskTreatment", this.controlDomain);
+    //   // // Group items by a category property
+    //   // return this.controlCategoryList.reduce((groups, item) => {
+    //   //   const category =
+    //   //     item.annexControl + "|" + item.domain;
 
-      //   if (groups[category]) return groups;
+    //   //   if (groups[category]) return groups;
 
-      //   groups[category] = [];
-      //   groups[category].push(category);
+    //   //   groups[category] = [];
+    //   //   groups[category].push(category);
 
-      //   return groups;
-      // }, {});
-    },
-    // riskTreatmentControlMapping() {
-    //   console.log("risk control mapping", this.riskControlDomain);
-    //   console.log("categorys", this.riskControlDomain[0]?.value);
-    //   const annexControl = this.riskControlDomain[0]?.value.split("|")[0];
-    //   const domain = this.riskControlDomain[0]?.value.split("|")[1];
-    //   console.log(annexControl, domain);
-    //   return this.controlCategoryList.filter(
-    //     (item) =>
-    //       item.domain == domain &&
-    //       item.annexControl == annexControl,
-    //   );
+    //   //   return groups;
+    //   // }, {});
     // },
-    // riskControlMapping() {
-    //   console.log("risk control mapping", this.riskControlDomain);
-    //   console.log("categorys", this.riskControlDomain[0]?.value);
-    //   const annexControl = this.riskControlDomain[0]?.value.split("|")[0];
-    //   const domain = this.riskControlDomain[0]?.value.split("|")[1];
-    //   console.log(annexControl, domain);
-    //   return this.controlCategoryList.filter(
-    //     (item) =>
-    //       item.domain == domain &&
-    //       item.annexControl == annexControl,
-    //   );
-    // },
+    // // riskTreatmentControlMapping() {
+    // //   console.log("risk control mapping", this.riskControlDomain);
+    // //   console.log("categorys", this.riskControlDomain[0]?.value);
+    // //   const annexControl = this.riskControlDomain[0]?.value.split("|")[0];
+    // //   const domain = this.riskControlDomain[0]?.value.split("|")[1];
+    // //   console.log(annexControl, domain);
+    // //   return this.controlCategoryList.filter(
+    // //     (item) =>
+    // //       item.domain == domain &&
+    // //       item.annexControl == annexControl,
+    // //   );
+    // // },
+    // // riskControlMapping() {
+    // //   console.log("risk control mapping", this.riskControlDomain);
+    // //   console.log("categorys", this.riskControlDomain[0]?.value);
+    // //   const annexControl = this.riskControlDomain[0]?.value.split("|")[0];
+    // //   const domain = this.riskControlDomain[0]?.value.split("|")[1];
+    // //   console.log(annexControl, domain);
+    // //   return this.controlCategoryList.filter(
+    // //     (item) =>
+    // //       item.domain == domain &&
+    // //       item.annexControl == annexControl,
+    // //   );
+    // // },
     riskControlMapping() {
       try {
         console.log("risk control mapping", this.riskControlDomain);
