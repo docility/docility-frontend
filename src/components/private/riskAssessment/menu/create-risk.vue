@@ -133,13 +133,19 @@
           <div class="mb-4">
             <label class="block text-lg font-medium text-gray-700"
               >Information Asset category
-            </label>
-            <input
-              v-model="informationAsset"
-              type="text"
-              required
-              class="mt-1 block w-full p-2 border border-gray-300 rounded"
-            />
+            </label> 
+            <Multiselect
+                v-model="informationAsset.category"
+                :options="informationAsset"
+                :multiple="false"
+                :close-on-select="true"
+                :clear-on-select="true"
+                :preserve-search="true"
+                placeholder="Select Information Asset"
+                label="label"
+                track-by="value"
+                class="w-full"
+              /> 
           </div>
           <div class="mb-4">
             <label class="block text-lg font-medium text-gray-700"
@@ -156,12 +162,25 @@
             <label class="block text-lg font-medium text-gray-700"
               >CIA Impact
             </label>
-            <input
+            <!-- <input
               v-model="ciaImpact"
               type="text"
               required
               class="mt-1 block w-full p-2 border border-gray-300 rounded"
-            />
+            /> --> 
+              <Multiselect
+                v-model="ciaImpact"
+                :options="ciaOptions"
+                :multiple="true"
+                :close-on-select="false"
+                :clear-on-select="false"
+                :preserve-search="true"
+                placeholder="Select CIA Impact"
+                label="label"
+                track-by="value"
+                class="w-full"
+              /> 
+            
           </div>
           <div class="mb-4">
             <label class="block text-lg font-medium text-gray-700"
@@ -258,35 +277,37 @@
             <label class="block text-lg font-medium text-gray-700"
               >Control domain
             </label>
-            <select
-              v-model="riskControlDomain"
-              class="mt-1 h-10 block w-full p-2 border border-gray-300 rounded"
-            >
-              <option
-                v-for="group in riskTreatmentDomain"
-                :key="group"
-                :value="group[0]"
-              >
-                {{ group[0] }}
-              </option>
-            </select>
+            
+            <Multiselect
+            v-model="riskControlDomain"
+            :options="controlDomain"
+            :multiple="true"
+            :close-on-select="false"
+            :clear-on-select="false"
+            :preserve-search="true"
+            placeholder="Select CIA Impact"
+            label="label"
+            track-by="value"
+            class="w-full"
+          /> 
           </div>
           <div class="mb-4">
             <label class="block text-lg font-medium text-gray-700"
               >Controls mapped
             </label>
-            <select
+            
+            <Multiselect
               v-model="controlMapped"
-              class="mt-1 h-10 block w-full p-2 border border-gray-300 rounded"
-            >
-              <option
-                v-for="group in riskControlMapping"
-                :key="group"
-                :value="group.id"
-              >
-                {{ group.controlHeading }}
-              </option>
-            </select>
+              :options="riskControlMapping"
+              :multiple="true"
+              :close-on-select="false"
+              :clear-on-select="false"
+              :preserve-search="true"
+              placeholder="Select Control Mapped"
+              label="label"
+              track-by="value"
+              class="w-full"
+            /> 
           </div> 
           <div class="mb-4">
             <label class="block text-lg font-medium text-gray-700"
@@ -342,27 +363,28 @@
 
             <div class="mb-4">
               <label class="block text-lg font-medium text-gray-700"
-                >Control domain
-              </label>
-              <select
-                v-model="controlDomain"
-                class="mt-1 h-10 block w-full p-2 border border-gray-300 rounded"
-              >
-                <option
-                  v-for="group in riskTreatmentDomain"
-                  :key="group"
-                  :value="group[0]"
-                >
-                  {{ group[0] }}
-                </option>
-              </select>
+                >Risk Treatment Control domain
+              </label> 
+
+              <Multiselect
+                v-model="treatmentControlDomain"
+                :options="controlDomain"
+                :multiple="true"
+                :close-on-select="false"
+                :clear-on-select="false"
+                :preserve-search="true"
+                placeholder="Select Control Domain"
+                label="label"
+                track-by="value"
+                class="w-full"
+              />
             </div>
 
             <div class="mb-4">
               <label class="block text-lg font-medium text-gray-700"
-                >Controls mapped
+                >Treatment Controls mapped
               </label>
-              <select
+              <!-- <select
                 v-model="controlMapped"
                 class="mt-1 h-10 block w-full p-2 border border-gray-300 rounded"
               >
@@ -373,7 +395,20 @@
                 >
                   {{ group.controlHeading }}
                 </option>
-              </select>
+              </select> -->
+              <Multiselect
+              v-model="riskControlMapping"
+              :options="riskTreatmentControlMapping"
+              :multiple="true"
+              :close-on-select="false"
+              :clear-on-select="false"
+              :preserve-search="true"
+              placeholder="Select Control Domain"
+              label="label"
+              track-by="value"
+              class="w-full"
+            />
+              
             </div>
             <div class="mb-4">
               <label class="block text-lg font-medium text-gray-700"
@@ -736,12 +771,14 @@ import http from "@/helpers/http";
 import ExcelUpload from "@/components/reuseable/ExcelUpload.vue";
 import { toast } from "vue3-toastify";
 import TableComponent from "@/components/reuseable/TableComponent.vue";
+import Multiselect from 'vue-multiselect'
 
 export default {
   components: {
     HeaderButton,
     ExcelUpload,
     TableComponent,
+    Multiselect
   },
   computed: {
     groupedItems() {
@@ -755,38 +792,105 @@ export default {
       }, {});
     },
     riskTreatmentDomain() {
-      // Group items by a category property
-      return this.controlCategoryList.reduce((groups, item) => {
-        const category =
-          item.annexControl + "|" + item.domain;
+      // console.log("riskTreatment", this.controlDomain);
+      // // Group items by a category property
+      // return this.controlCategoryList.reduce((groups, item) => {
+      //   const category =
+      //     item.annexControl + "|" + item.domain;
 
-        if (groups[category]) return groups;
+      //   if (groups[category]) return groups;
 
-        groups[category] = [];
-        groups[category].push(category);
+      //   groups[category] = [];
+      //   groups[category].push(category);
 
-        return groups;
-      }, {});
+      //   return groups;
+      // }, {});
+    },
+    // riskTreatmentControlMapping() {
+    //   console.log("risk control mapping", this.riskControlDomain);
+    //   console.log("categorys", this.riskControlDomain[0]?.value);
+    //   const annexControl = this.riskControlDomain[0]?.value.split("|")[0];
+    //   const domain = this.riskControlDomain[0]?.value.split("|")[1];
+    //   console.log(annexControl, domain);
+    //   return this.controlCategoryList.filter(
+    //     (item) =>
+    //       item.domain == domain &&
+    //       item.annexControl == annexControl,
+    //   );
+    // },
+    // riskControlMapping() {
+    //   console.log("risk control mapping", this.riskControlDomain);
+    //   console.log("categorys", this.riskControlDomain[0]?.value);
+    //   const annexControl = this.riskControlDomain[0]?.value.split("|")[0];
+    //   const domain = this.riskControlDomain[0]?.value.split("|")[1];
+    //   console.log(annexControl, domain);
+    //   return this.controlCategoryList.filter(
+    //     (item) =>
+    //       item.domain == domain &&
+    //       item.annexControl == annexControl,
+    //   );
+    // },
+    riskControlMapping() {
+      try {
+        console.log("risk control mapping", this.riskControlDomain);
+      let data = this.riskControlDomain?.map(item => {
+        console.log("item", item);
+        const annexControl = item.value.split("|")[0];
+        const domain = item.value.split("|")[1];
+        console.log(annexControl, domain);
+        return this.controlCategoryList.filter(
+          (item) =>
+            item.domain == domain &&
+            item.annexControl == annexControl,
+        );
+      });
+ 
+       data = data.map((item) => {
+        console.log("item", item);
+        return { 
+          label: item[0].controlHeading, 
+          value: item[0].documentId,
+        }; 
+      })
+
+      console.log(data);
+      return data
+      } catch (error) {
+        console.error("Error in riskControlMapping:", error);
+        return [];
+      }
+      
     },
     riskTreatmentControlMapping() {
-      const annexControl = this.controlDomain.split("|")[0];
-      const domain = this.controlDomain.split("|")[1];
-      return this.controlCategoryList.filter(
-        (item) =>
-          item.domain == domain &&
-          item.annexControl == annexControl,
-      );
-    },
-    riskControlMapping() {
-      console.log("categorys", this.riskControlDomain);
-      const annexControl = this.riskControlDomain.split("|")[0];
-      const domain = this.riskControlDomain.split("|")[1];
-      console.log(annexControl, domain);
-      return this.controlCategoryList.filter(
-        (item) =>
-          item.domain == domain &&
-          item.annexControl == annexControl,
-      );
+      try {
+        console.log("risk control mapping", this.treatmentControlDomain);
+      let data = this.treatmentControlDomain?.map(item => {
+        console.log("item", item);
+        const annexControl = item.value.split("|")[0];
+        const domain = item.value.split("|")[1];
+        console.log(annexControl, domain);
+        return this.controlCategoryList.filter(
+          (item) =>
+            item.domain == domain &&
+            item.annexControl == annexControl,
+        );
+      });
+ 
+       data = data.map((item) => {
+        console.log("item", item);
+        return { 
+          label: item[0].controlHeading, 
+          value: item[0].documentId,
+        }; 
+      })
+
+      console.log(data);
+      return data
+      } catch (error) {
+        console.error("Error in riskControlMapping:", error);
+        return [];
+      }
+      
     },
     visibleHeaderKeys() {
       return this.headers.filter((header) => this.visibleHeaders[header]);
@@ -794,6 +898,12 @@ export default {
   },
   data() {
     return {
+      ciaImpact: [],
+      ciaOptions: [
+        { label: 'Confidentiality', value: 'Confidentiality' },
+        { label: 'Integrity', value: 'Integrity' },
+        { label: 'Availability', value: 'Availability' },
+      ],
       isImportModalVisible: false,
       importData: null,
       ImportFileHeaders: [
@@ -867,6 +977,7 @@ export default {
       riskTreatmentPlan: "",
       treatmentApprovalEvidence: "",
       controlMapped: "",
+      treatmentControlMapped: "",
       notes: "",
       treatmentStatus: "",
       riskControlMap: "",
@@ -883,6 +994,7 @@ export default {
       impactOptions: [],
       residualImpactOptions: [],
       selectedRiskTreatment: null,
+      treatmentControlDomain: "",
 
       fetchData: false,
       updateRisk: false,
@@ -955,6 +1067,7 @@ export default {
         riskTreatmentPlan: row["Risk Treatment Plan"],
         treatmentApprovalEvidence: row["Treatment approval evidence"],
         controlMapped: row["Controls mapped"],
+        treatmentControlMapped: row["Treatment Control Mapped"],
         notes: row["Notes"],
       }));
       const response = await http.post("/api/create-bulk/risks", mappedData);
@@ -1078,7 +1191,7 @@ export default {
               vulnerability: this.vulnerability || "",
               informationAsset: this.informationAsset || "",
               assetCategory: this.assetCategory || "",
-              ciaImpact: this.ciaImpact || "",
+              ciaImpact: JSON.stringify(this.ciaImpact) || "",
               matrix: this.matrix || "",
               likelihood: this.likelihood ? this.likelihood.toString() : "",
               initialImpact: this.initialImpact
@@ -1096,6 +1209,9 @@ export default {
               riskApprovalDate: this.riskApprovalDate || "",
               riskApprovalEvidence: this.riskApprovalEvidence || "",
               riskAssessmentCompleted: this.riskAssessmentCompleted || "",
+              treatmentControlDomain: this.treatmentControlDomain
+                ? this.treatmentControlDomain.toString()
+                : "",
               riskTreatment: this.riskTreatment
                 ? this.riskTreatment.toString()
                 : "",
@@ -1127,6 +1243,9 @@ export default {
               controlMapped: this.controlMapped
                 ? this.controlMapped.toString()
                 : "",
+              treatmentControlMapped: this.treatmentControlMapped
+              ? this.treatmentControlMapped.toString()
+              : "",
               notes: this.notes || "",
             },
           };
@@ -1166,7 +1285,7 @@ export default {
               vulnerability: item["Vulnerability"],
               informationAsset: item["Information Asset category"],
               assetCategory: item["Asset category"],
-              ciaImpact: item["CIA Impact"],
+              ciaImpact: String(item["CIA Impact"]),
               matrix: item["Matrix to be used for risk assessment"],
               likelihood: item["Initial Likelihood"],
               initialImpact: item["Initial Impact"],
@@ -1199,6 +1318,7 @@ export default {
               riskTreatmentPlan: item["Risk Treatment Plan"],
               treatmentApprovalEvidence: item["Risk Owner"],
               controlMapped: item["Control Mapping"],
+              treatmentControlMapped: item["Treatment Control Mapped"],
               notes: item["Notes"],
             });
           }
@@ -1217,8 +1337,25 @@ export default {
     },
     async fetchRiskOwnerList() {
       try {
+        console.log("fetchRiskOwnerList");
         const ownerList = await http.get("/api/risk-owners");
         this.riskOwnerList = ownerList.data.data;
+      } catch (error) {
+        toast.error(
+          "Internal Server Error: " + error.response?.data?.error?.message,
+        );
+      }
+    },
+    async fetchControlDomainList() {
+      try {
+        console.log("fetchControlDomainList");
+        const ownerList = await http.get("/api/control-domains");
+        this.controlDomain = ownerList.data.data.map((item) => {
+          return {
+            label: item.control_no,
+            value: item.control_no + "|" + item.domain,
+          };
+        });
       } catch (error) {
         toast.error(
           "Internal Server Error: " + error.response?.data?.error?.message,
@@ -1256,6 +1393,21 @@ export default {
         );
       }
     },
+    async fetchInformationAssetCategory() {
+      try {
+        const informationAssetCategory = await http.get("/api/information-asset-categories");
+        this.informationAsset = informationAssetCategory.data.data.map((item) => {
+          return {
+            label: item.category,
+            value: item.id,
+          };
+        });
+      } catch (error) {
+        toast.error(
+          "Internal Server Error: " + error.response?.data?.error?.message,
+        );
+      }
+    },
     async fetchControlDomain() {
       try {
         const controlDomains = await http.get("/api/control-domains");
@@ -1268,7 +1420,9 @@ export default {
     },
     async fetchRiskDetails() {
       try {
+        console.log("fetchRiskDetails");
         let riskDetails = await http.get(`/api/risks/${this.$route.query.id}`);
+        
         const risk = riskDetails.data.data;
         this.dateCreated = risk.dateCreated;
         this.riskOwner = risk.riskOwner;
@@ -1278,7 +1432,7 @@ export default {
         this.vulnerability = risk.vulnerability;
         this.informationAsset = risk.informationAsset;
         this.assetCategory = risk.assetCategory;
-        this.ciaImpact = risk.ciaImpact;
+        this.ciaImpact = JSON.parse(risk.ciaImpact);
         this.matrix = risk.matrix;
         this.likelihood = risk.likelihood;
         this.initialImpact = risk.initialImpact;
@@ -1304,6 +1458,8 @@ export default {
         this.treatmentApprovalEvidence =
           risk.treatmentApprovalEvidence;
         this.controlMapped = risk.controlMapped;
+        this.treatmentControlMapped =
+          risk.treatmentControlMapped;
         this.notes = risk.notes;
         this.treatmentStatus = risk.treatmentStatus;
         this.riskControlMap = risk.riskControlMap;
@@ -1324,6 +1480,8 @@ export default {
     this.fetchRiskTreatment();
     this.fetchControlDomain();
     this.fetchControl();
+    this.fetchControlDomainList();
+    this.fetchInformationAssetCategory();
     if (this.$route.query.id) {
       this.fetchData = true;
       this.updateRisk = true;
@@ -1335,6 +1493,8 @@ export default {
 </script>
 
 <style>
+@import "vue-multiselect/dist/vue-multiselect.min.css";
+
 .fixed {
   position: fixed;
 }

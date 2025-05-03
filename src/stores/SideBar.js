@@ -27,6 +27,7 @@ export const useSidebarStore = defineStore('Sidebar', () => {
         { name: 'Risks List', to: '/dashboard/risk-register' }, 
       ],
     },
+    { name: 'Risk Register', to: '/dashboard/create-risk', subMenu: [] },
     { name: 'Customer Management', to: '/dashboard/customer-management', subMenu: [] },
     { name: 'Company Management', to: '/dashboard/company-management', subMenu: [] },
     { name: 'Questionnaire', to: '/dashboard/questionnaire-management', subMenu: [] },

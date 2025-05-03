@@ -23,6 +23,7 @@ import Assessment from "@/components/public/assessment.vue";
 import RiskCategory from "@/components/private/riskAssessment/risk-category/risk-category.vue"
 import AssetCategory from "@/components/private/riskAssessment/asset-category/asset-category.vue"
 import RiskTreatment from "@/components/private/riskAssessment/risk-treatment/risk-treatment.vue";
+import CreateRisk2 from "@/components/private/risk/risk-management.vue";
 
 // Define your routes
 const routes = [
@@ -56,6 +57,11 @@ const routes = [
         path: "/dashboard/create-control-assessment",
         name: "New Control Assessment",
         component: CreateControlAssessment,
+      },
+      {
+        path: "/dashboard/create-risk",
+        name: "New Risks",
+        component: CreateRisk2,
       },
       {
         path: "/dashboard/create-control/new-control",
