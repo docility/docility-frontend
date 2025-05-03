@@ -33,8 +33,12 @@ jobs:
   # Step 2: Trigger Dependabot and Wait for PR Merge (Manual Check)
   dependabot:
     runs-on: ubuntu-latest
+    needs: checkout 
+    permissions:
+      pull-requests: write
+    environment: prod
     env:
-      GH_TOKEN: ${{ secrets.TOKEN }}  # Use the PAT from GitHub Secrets
+      GH_TOKEN: ${{ github.token }}  # Use the GitHub token for authentication
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
