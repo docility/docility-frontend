@@ -55,7 +55,7 @@ jobs:
   # Step 3: OSS Vulnerability Scan (Snyk)
   snyk-scan:
     runs-on: ubuntu-latest
-    needs: dependabot
+    needs: checkout
     environment: prod
     steps:
       - name: Checkout repository
@@ -76,7 +76,7 @@ jobs:
   # Step 4: Build Docker Image
   build:
     runs-on: ubuntu-latest
-    needs: snyk-scan  # Make sure the OSS scan finishes first
+    needs: checkout  # Make sure the OSS scan finishes first
     environment: prod
     steps:
       - name: Checkout code
