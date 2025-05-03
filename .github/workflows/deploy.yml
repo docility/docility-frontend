@@ -37,6 +37,10 @@ jobs:
     env:
       GH_TOKEN: ${{ github.token }}  # Provide the GitHub token for authentication with GitHub CLI
     steps:
+      # Step to checkout the code to ensure we're in a valid git repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
       - name: Check if there are open Dependabot PRs
         run: |
           pr_count=$(gh pr list --state open --label "dependencies" --json number --jq '. | length')
@@ -47,6 +51,7 @@ jobs:
           else
             echo "No Dependabot PRs found"
           fi
+
 
   # Step 3: Build Docker Image
   build:
