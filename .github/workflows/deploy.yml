@@ -68,8 +68,7 @@ jobs:
         run: snyk auth 2af98f41-6245-4369-bc68-e2ef619cb203
 
       - name: Run Snyk Vulnerability Scan
-        run: |
-          snyk test --all-projects  # You can adjust based on your project type (npm, python, etc.)
+        run: snyk test --all-projects --json > snyk-results.json
 
       - name: Generate Snyk Summary
         run: |
@@ -77,10 +76,8 @@ jobs:
           echo "\`\`\`json" >> $GITHUB_STEP_SUMMARY
           cat snyk-results.json >> $GITHUB_STEP_SUMMARY
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-            - name: Monitor Snyk (optional)
-              run: |
-                snyk monitor  # This sends the results to Snyk dashboard for monitoring
-
+      - name: Monitor Snyk (optional)
+        run: snyk monitor --all-projects
   # Step 4: Build Docker Image
   build:
     runs-on: ubuntu-latest
