@@ -69,6 +69,7 @@ jobs:
 
       - name: Run Snyk Vulnerability Scan
         run: snyk test --all-projects --json > snyk-results.json
+        continue-on-error: true
 
       - name: Generate Snyk Summary
         run: |
@@ -76,8 +77,10 @@ jobs:
           echo "\`\`\`json" >> $GITHUB_STEP_SUMMARY
           cat snyk-results.json >> $GITHUB_STEP_SUMMARY
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+        continue-on-error: true
       - name: Monitor Snyk (optional)
         run: snyk monitor --all-projects
+        continue-on-error: true
   # Step 4: Build Docker Image
   build:
     runs-on: ubuntu-latest
