@@ -152,7 +152,8 @@ router.beforeEach((to, from, next) => {
     !isAuthenticated &&
     to.name !== "register" &&
     to.name !== "privacy-policy" &&
-    to.name !== "assessment"
+    to.name !== "assessment" &&
+    to.name !== "v1/api/auth/local"
   ) {
     next({ name: "signin" });
   } else if (to.name === "signin" && isAuthenticated) {
