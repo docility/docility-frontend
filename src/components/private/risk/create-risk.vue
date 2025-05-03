@@ -1,6 +1,15 @@
 <template>
   <div class="modal-overlay flex justify-center items-center fixed inset-0 bg-black bg-opacity-50 z-[99999]">
-    <div class="modal-content bg-white p-8 rounded-lg max-w-5xl w-full overflow-y-auto h-full shadow-lg">
+    <div
+      v-if="loading"
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[100000]"
+    >
+      <div class="flex flex-col items-center">
+        <span class="loader w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></span>
+        <p class="text-white mt-4 text-lg font-semibold">Loading...</p>
+      </div>
+    </div>
+    <div  v-else class="modal-content bg-white p-8 rounded-lg max-w-5xl w-full overflow-y-auto h-full shadow-lg">
       <h3 class="text-2xl font-bold mb-6 text-gray-800">
         {{ existingCompany ? "Update Risk" : "New Risk" }}
       </h3>
@@ -11,7 +20,7 @@
             {{ field.label }}
             <span v-if="field.required" class="text-red-500">*</span>
           </label>
-
+ 
           <!-- Textarea -->
           <textarea v-if="field.type === 'textarea'" :id="field.id" v-model="newCompany[field.model]"
             :placeholder="field.placeholder" :required="field.required"
@@ -143,10 +152,11 @@ export default {
   },
   data() {
     return {
+      loading: false, 
       loadingFiles: {}, 
       uploadedFiles: {},
       topics: [], // Initially empty, will be filled after fetch
-      newCompany: this.initializeCompanyData(this.existingCompany),
+      newCompany: {},
       controlCategoryList: [],
       formFields: createRiskFields.fields,
     };
@@ -249,16 +259,49 @@ export default {
         },
       });
     },
-    initializeCompanyData(company = null) {
-      console.log("company", company);
-      return company
-        ? {
-          ...company,
-          // options: Array.isArray(company.options) ? company.options : [],
+    async initializeCompanyData(company = null) {
+  if (!company) {
+    return {}; // Return an empty object if no company is provided
+  }
+
+  try {
+    this.loading = true;
+    const data = await this.fetchRisk(company.documentId);
+    console.log("Fetched risk data:", data);
+
+    // Parse JSON-stringified fields
+    const parsedData = { ...data };
+    const jsonFields = ["riskCategory", "informationAsset", "ciaImpact", "matrix", "riskAcceptable", "riskTreatment","controlDomain", "controlMapped", "riskControlMap", "currentControlEffective", "riskControlDomain", "treatmentPlanFile", "treatmentApprovalEvidenceFile", "residualRiskApprovalFile"]; // Replace with actual field names that are JSON-stringified
+
+    jsonFields.forEach((field) => {
+      if (parsedData[field] && typeof parsedData[field] === "string") {
+        try {
+          parsedData[field] = JSON.parse(parsedData[field]);
+        } catch (error) {
+          console.error(`Error parsing JSON for field ${field}:`, error);
         }
-        : {
-        };
-    },
+      }
+    });
+    this.loading = false;
+    return parsedData;
+  } catch (error) {
+    console.error("Error initializing company data:", error);
+    return {}; // Return an empty object on error
+  }
+},
+    async fetchRisk(riskId) {
+    try {
+      const response = await http.get(
+        `/api/risks/${riskId}`,
+      );
+
+      console.log("risk (after fetching):", response.data.data);
+
+       return response.data.data
+    } catch (error) {
+      console.error("Error fetching suppliers:", error);
+    }
+  },
     submitForm() {
       // Convert all values in newCompany to strings
       // Convert all values in newCompany to strings
@@ -705,6 +748,13 @@ export default {
     this.fetchControlDomainList();
     this.fetchControl();
     this.fetchRiskTreatment();
+
+    // Initialize newCompany asynchronously
+    if (this.existingCompany) {
+      this.initializeCompanyData(this.existingCompany).then((data) => {
+        this.newCompany = data;
+      });
+    }
   },
 };
 </script>

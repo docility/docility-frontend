@@ -64,7 +64,7 @@
           >
             <td class="p-4 space-x-2">
               <button
-                @click="updateAction(risk.documentId)"
+                @click="updateAction(risk)"
                 class="px-3 py-1 bg-blue-600 text-white text-xs rounded-md hover:bg-blue-700 transition"
               >
                 Edit
