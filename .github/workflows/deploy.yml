@@ -1,183 +1,35 @@
-name: Build and Deploy frontend Docker Image
+name: Use Private GitHub Actions Workflow
 
 on:
   push:
     branches:
-      - '**'  # Triggers on any push to any branch
-
-env:
-  DOCKER_IMAGE_PREFIX: reneboy/docility-frontend
-  SSH_HOST: ${{ secrets.SERVER_IP }}
-  SSH_USER: ${{ secrets.SSH_USER }}
-  SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      - "**"
+      - main  # or any branch you'd like to monitor
+      - master
 
 jobs:
-  # Step 1: Checkout Code
-  checkout:
+  checkout-workflow-repository:
+    name: Checkout workflow repository
     runs-on: ubuntu-latest
-    outputs:
-      branch_name: ${{ steps.vars.outputs.branch_name }}
-      image_tag: ${{ steps.vars.outputs.image_tag }}
     steps:
-      - name: Checkout code
+      - name: Checkout current repository
         uses: actions/checkout@v3
 
-      - name: Set Branch Variables
-        id: vars
-        run: |
-          echo "branch_name=${GITHUB_REF#refs/heads/}" >> $GITHUB_OUTPUT
-          echo "image_tag=${{ github.run_number }}" >> $GITHUB_OUTPUT
-
-  # Step 2: Trigger Dependabot and Wait for PR Merge (Manual Check)
-  dependabot:
-    runs-on: ubuntu-latest
-    needs: checkout 
-    permissions:
-      pull-requests: write
-    environment: prod
-    env:
-      GH_TOKEN: ${{ github.token }}  # Use the GitHub token for authentication
-    steps:
-      - name: Checkout repository
+      - name: Checkout workflow repository (private)
         uses: actions/checkout@v3
-
-      - name: Check if there are open Dependabot PRs
-        run: |
-          pr_count=$(gh pr list --state open --label "dependencies" --json number --jq '. | length')
-          echo "Number of open Dependabot PRs: $pr_count"
-          if [ "$pr_count" -gt 0 ]; then
-            echo "Dependabot PR exists, merging..."
-            gh pr merge $(gh pr list --state open --label "dependencies" --json number --jq '.[0].number') --merge --admin
-          else
-            echo "No Dependabot PRs found"
-          fi
-
-
-  # Step 3: Build Docker Image
-  build:
-    runs-on: ubuntu-latest
-    needs: checkout  # Make sure Dependabot finishes first
-    environment: prod
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3    
-
-      - name: Login to Docker Hub
-        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Cache Docker layers
-        uses: actions/cache@v4
         with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-buildx-
+          repository: docility/githubActionsWorkflow  # Replace with your private repo name
+          token: ${{ secrets.GH_TOKEN }}  # Authentication token for private repo
 
-      - name: Build Docker Image
-        run: |
-          IMAGE_NAME=${{ env.DOCKER_IMAGE_PREFIX }}-master
-          IMAGE_TAG=${{ github.run_number }}
-          docker buildx build \
-            --pull \
-            --cache-from=type=local,src=/tmp/.buildx-cache \
-            --cache-to=type=local,dest=/tmp/.buildx-cache-new \
-            --push \
-            -t $IMAGE_NAME:$IMAGE_TAG .
-
-          rm -rf /tmp/.buildx-cache
-          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
-
-      - name: Save Docker image to tar
-        run: |
-          IMAGE_NAME=${{ env.DOCKER_IMAGE_PREFIX }}-master
-          IMAGE_TAG=${{ github.run_number }}
-          docker pull $IMAGE_NAME:$IMAGE_TAG
-          docker save -o image.tar $IMAGE_NAME:$IMAGE_TAG
-
-      - name: Upload Image Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: docker-image
-          path: image.tar
-
-  # Step 4: Push to Docker Hub
-  push-artifactory:
-    runs-on: ubuntu-latest
-    needs: [build, dependabot]
-    environment: prod
-    steps:
-      - name: Download Image Artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: docker-image
-
-      - name: Load Docker Image
-        run: |
-          IMAGE_NAME=${{ env.DOCKER_IMAGE_PREFIX }}-master
-          IMAGE_TAG=${{ github.run_number }}
-          docker load -i image.tar
-          docker tag $IMAGE_NAME:$IMAGE_TAG $IMAGE_NAME:$IMAGE_TAG
-
-      - name: Login to Docker Hub
-        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-
-      - name: Push Docker Image
-        run: |
-          IMAGE_NAME=${{ env.DOCKER_IMAGE_PREFIX }}-master
-          IMAGE_TAG=${{ github.run_number }}
-          docker push $IMAGE_NAME:$IMAGE_TAG
-
-   # Step 5: Deploy to Server via SSH
-  deploy:
-    runs-on: ubuntu-latest
-    needs: push-artifactory
-    environment: prod
-    steps:
-      - name: Deploy to Server via SSH
-        uses: appleboy/ssh-action@v1.0.0
-        with:
-          host: ${{ secrets.SERVER_IP }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            IMAGE_NAME="${{ env.DOCKER_IMAGE_PREFIX }}-master"
-            IMAGE_TAG="${{ github.run_number }}"
-            FRONTEND_PORT=8080
-
-            echo "Pulling frontend image: $IMAGE_NAME:$IMAGE_TAG"
-            sudo docker pull $IMAGE_NAME:$IMAGE_TAG
-
-            echo "Removing existing frontend container..."
-            if [ "$(sudo docker ps -a -q -f name=frontend-app)" ]; then
-              sudo docker stop frontend-app
-              sudo docker rm frontend-app
-            fi
-
-            if [ "$(sudo docker ps -q -f publish=$FRONTEND_PORT)" ]; then
-              sudo docker rm -f $(sudo docker ps -q -f publish=$FRONTEND_PORT)
-            fi
-
-            echo "Starting frontend container..."
-            sudo docker run -d --name frontend-app -p $FRONTEND_PORT:80 $IMAGE_NAME:$IMAGE_TAG
-
-            echo "Restarting Nginx..."
-            sudo systemctl restart nginx
-
-            sudo docker ps | grep frontend-app
-
-  # Step 6: Cleanup Docker Image (Optional)
-  cleanup:
-    runs-on: ubuntu-latest
-    needs: deploy
-    if: always()
-    steps:
-      - name: Cleanup Docker Image
-        run: |
-          IMAGE_NAME="${{ env.DOCKER_IMAGE_PREFIX }}-master"
-          IMAGE_TAG="${{ github.run_number }}"
-          docker rmi $IMAGE_NAME:$IMAGE_TAG || true
+  # run-dependabot-scan:
+  #   name: Run Dependabot Scan from Private Repo Workflow
+  #   runs-on: ubuntu-latest
+  #   needs: checkout-workflow-repository
+  #   steps:
+  #     - name: Trigger dependabot scan workflow in private repo
+  #       uses: peter-evans/workflow-dispatch@v1
+  #       with:
+  #         repository: docility/githubActionsWorkflow  # Your private repository containing the workflow
+  #         workflow: dependabot-scan.yml  # The specific workflow file in your private repo
+  #         ref: main  # Or the branch containing the workflow
+  #         token: ${{ secrets.GH_TOKEN }}  # Use your GH_TOKEN to authenticate
