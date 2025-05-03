@@ -22,7 +22,7 @@
             <div
               @click="handleMenuClick(index, item)"
               class="flex items-center justify-between px-4 py-2 rounded-md cursor-pointer transition-all duration-200 hover:bg-blue-700"
-              :class="{ 'bg-blue-800': sidebarStore.activeMenu === item.name }"
+              :class="{ 'bg-blue-200': sidebarStore.activeMenu === item.name }"
             >
               <span class="text-lg font-medium">{{ item.name }}</span>
               <span v-if="item.subMenu.length">{{

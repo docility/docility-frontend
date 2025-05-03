@@ -59,7 +59,7 @@ const routes = [
         component: CreateControlAssessment,
       },
       {
-        path: "/dashboard/create-risk",
+        path: "/dashboard/risks",
         name: "New Risks",
         component: CreateRisk2,
       },
