@@ -71,11 +71,34 @@ jobs:
         run: snyk test --all-projects --json > snyk-results.json
         continue-on-error: true
 
-      - name: Generate Snyk Summary
+      - name: Generate Snyk Severity Summary
         run: |
           echo "### 🛡️ Snyk Vulnerability Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+      
+          # Severity breakdown
+          SEVERITY_COUNTS=$(jq -r '
+            [.[]?.vulnerabilities[]? | .severity] 
+            | group_by(.) 
+            | map({(.[0]): length}) 
+            | add' snyk-results.json)
+      
+          echo "#### 📊 Severity Breakdown" >> $GITHUB_STEP_SUMMARY
           echo "\`\`\`json" >> $GITHUB_STEP_SUMMARY
-          cat snyk-results.json >> $GITHUB_STEP_SUMMARY
+          echo "$SEVERITY_COUNTS" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+      
+          # Package and fix info
+          echo "#### 📦 Affected Packages & Fix Availability" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+      
+          jq -r '
+            .[]?.vulnerabilities[]? 
+            | "\(.severity | ascii_upcase) | \(.packageName) | Fix Available: \((.fix?.upgradePath and (.fix.upgradePath | length > 0)) // false)"' snyk-results.json \
+            | sort \
+            | uniq \
+            >> $GITHUB_STEP_SUMMARY
+      
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
         continue-on-error: true
       - name: Monitor Snyk (optional)
