@@ -172,8 +172,8 @@ export default {
     },
     async addNewCompany(newCompany) {
       console.log("adding new Company", newCompany);
-      if (newCompany?.id) {
-        const id = newCompany.id;
+      if (newCompany?.documentId) {
+        const id = newCompany.documentId;
         delete newCompany.id;
         delete newCompany.createdAt;
         delete newCompany.updatedAt;

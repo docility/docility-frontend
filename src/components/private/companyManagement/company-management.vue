@@ -151,18 +151,31 @@ export default {
     },
     openAddCompanyModal() {
       this.showAddModal = true;
+      this.existingCompanyData = null;
     },
     async addNewCompany(newCompany) {
+      
       console.log("adding new Company", newCompany);
-      http.post("api/companies", { data: newCompany }).then((res) => {
-        console.log(res);
-        if (res.status == 200 || res.status == 201) {
+      if (newCompany?.documentId) {
+        const id = newCompany.documentId;
+        delete newCompany.id;
+        delete newCompany.createdAt;
+        delete newCompany.updatedAt;
+        delete newCompany.documentId;
+        http.put(`api/companies/${id}`, {
+          data: newCompany,
+        }).then((res) => {
+          console.log(res);
           toast.success("Company added successfully");
           this.companyListKey++;
-        } else {
-          toast.error("Error adding Company");
-        }
-      }); 
+        });
+      } else { 
+        await http.post("api/companies", { data: newCompany }).then((res) => {
+          console.log(res); 
+          toast.success("Company added successfully");
+          this.companyListKey++;
+        });   
+      }
     },
   },
 };

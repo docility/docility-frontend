@@ -213,17 +213,31 @@ export default {
     },
     openAddCustomerModal() {
       this.showAddModal = true;
+      this.existingCustomerData = null;
     },
-    addNewCustomer(newCustomer) {
-      console.log("adding new customer", newCustomer);
-      http.post("api/customer-managements", { data: newCustomer }).then((res) => { 
-        if (res.status == 200 || res.status == 201) {
-          toast.success("Customer added successfully");
+    async addNewCustomer(newCustomer) {
+      
+      console.log("adding new Company", newCustomer);
+      if (newCustomer?.documentId) {
+        const id = newCustomer.documentId;
+        delete newCustomer.id;
+        delete newCustomer.createdAt;
+        delete newCustomer.updatedAt;
+        delete newCustomer.documentId;
+        http.put(`api/customer-managements/${id}`, {
+          data: newCustomer,
+        }).then((res) => {
+          console.log(res);
+          toast.success("Company added successfully");
           this.customerListKey++;
-        } else {
-          toast.error("Error adding customer");
-        }
-      }); 
+        });
+      } else { 
+        await http.post("api/customer-managements", { data: newCustomer }).then((res) => {
+          console.log(res); 
+          toast.success("Company added successfully");
+          this.customerListKey++;
+        });   
+      }
     },
   },
 };

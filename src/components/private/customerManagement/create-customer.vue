@@ -1,103 +1,128 @@
 <template>
-  <div
-    class="modal-overlay flex justify-center items-center fixed inset-0 bg-black bg-opacity-50 z-[99999]"
-  >
+  <div class="modal-overlay flex justify-center items-center fixed inset-0 bg-black bg-opacity-50 z-[99999]">
     <div
-      class="modal-content bg-white p-8 rounded-lg max-w-7xl w-full overflow-y-auto"
+      v-if="loading"
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[100000]"
     >
-      <h3 class="text-xl font-semibold mb-6">
-        {{ existingCustomer ? "Update Customer" : "Add New Customer" }}
+      <div class="flex flex-col items-center">
+        <span class="loader w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></span>
+        <p class="text-white mt-4 text-lg font-semibold">Loading...</p>
+      </div>
+    </div>
+    <div  v-else class="modal-content bg-white p-8 rounded-lg max-w-5xl w-full overflow-y-auto h-full shadow-lg">
+      <h3 class="text-2xl font-bold mb-6 text-gray-800">
+        {{ existingCustomer ? "Update Customer" : "New Customer" }}
       </h3>
-      <form
-        @submit.prevent="submitForm"
-        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
-      >
-        <div v-for="field in formFields" :key="field.id" class="form-group">
-          <label :for="field.id" class="block text-sm font-medium">
+      <form @submit.prevent="submitForm" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Dynamic Form Fields -->
+        <div v-for="field in formFields" :key="field.id" class="form-group flex flex-col">
+          <label :for="field.id" class="block text-sm font-medium text-gray-700 mb-1">
             {{ field.label }}
             <span v-if="field.required" class="text-red-500">*</span>
           </label>
-          <component
-            :is="
-              field.type === 'textarea'
-                ? 'textarea'
-                : field.type === 'select'
-                  ? 'select'
-                  : 'input'
-            "
-            :id="field.id"
-            v-model="newCustomer[field.model]"
-            :type="
-              field.type === 'textarea' || field.type === 'select'
-                ? undefined
-                : field.type
-            "
-            :class="[
-              'form-input',
-              'mt-1',
-              'block',
-              'w-full',
-              'border',
-              'rounded-md',
-              'shadow-sm',
-            ]"
+ 
+ 
+          <!-- Textarea -->
+          <textarea v-if="field.type === 'textarea'" :id="field.id" v-model="newCustomer[field.model]"
+            :placeholder="field.placeholder" :required="field.required"
+            class="form-input mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-300 focus:outline-none"></textarea>
+
+          <!-- Text Input -->
+          <input v-else-if="field.type === 'text'" :id="field.id" v-model="newCustomer[field.model]" :type="field.type"
+            :placeholder="field.placeholder" :required="field.required" :readonly="field['read-only']"
+            class="form-input mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-300 focus:outline-none" />
+
+          <!-- Date Input -->
+          <input v-else-if="field.type === 'date'" :id="field.id" v-model="newCustomer[field.model]" type="date"
+            :placeholder="field.placeholder" :required="field.required"
+            class="form-input mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-300 focus:outline-none" />
+
+          <!-- Select Dropdown -->
+          <select v-else-if="field.type === 'select'" :id="field.id" v-model="newCustomer[field.model]"
             :required="field.required"
-            :aria-required="field.required"
-            :placeholder="field.placeholder"
-            @change="logChange(field.model, $event)"
-            @click="logChange(field.model, $event)"
-          >
-            <option
-              v-for="option in field.options || []"
-              :key="option.value"
-              :value="option.value"
-            >
+            class="form-input mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-300 focus:outline-none">
+            <option v-for="option in field.options" :key="option.value" :value="option.value">
               {{ option.text }}
             </option>
-          </component>
+          </select>
+
+          <!-- Checkbox Group -->
+          <div v-else-if="field.type === 'checkbox'" class="mt-2 space-y-2">
+            <label v-for="option in field.options" :key="option.value" class="flex items-center space-x-2">
+              <input type="checkbox" :value="option.value" v-model="newCustomer[field.model]"
+                class="form-checkbox h-4 w-4 text-blue-500" />
+              <span>{{ option.text }}</span>
+            </label>
+          </div>
+
+
+
+          <!-- Multiselect -->
+          <Multiselect v-else-if="field.type === 'multi'" v-model="newCustomer[field.model]" :options="field.options"
+            :multiple="field['multiple-select']" :close-on-select="!field['multiple-select']" :clear-on-select="false"
+            :preserve-search="true" placeholder="Select Options" label="label" track-by="value" class="w-full mt-1" />
+
+            <div v-else-if="field.type === 'file'" class="flex flex-col w-full">
+              <input
+                :id="field.id"
+                type="file"
+                class="hidden"
+                :accept="field.fileTypes || '*'"
+                @change="handleFileUpload($event, field.model)"
+              />
+              <label
+                :for="field.id"
+                :class="[
+                  'flex flex-col items-center justify-center w-full h-40 border-2 border-dashed rounded-lg cursor-pointer',
+                  uploadedFiles[field.model] ? 'bg-green-100 border-green-500' : 'bg-gray-50 border-gray-300 hover:bg-gray-100'
+                ]"
+              >
+                <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                  <svg
+                    v-if="!loadingFiles[field.model]"
+                    class="w-8 h-8 mb-4 text-gray-500"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 20 16"
+                  >
+                    <path
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
+                    />
+                  </svg>
+                  <div v-else class="flex items-center space-x-2">
+                    <span class="loader w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></span>
+                    <span class="text-sm text-gray-500">Uploading...</span>
+                  </div>
+                  <p class="mb-2 text-sm text-gray-500">
+                    <span class="font-semibold">
+                      {{ uploadedFiles[field.model]?.name ? "File Uploaded" : "Click to upload or drag and drop" }}
+                    </span>
+                  </p>
+                  <p class="text-xs text-gray-500">
+                    {{ uploadedFiles[field.model]?.name ? uploadedFiles[field.model]?.name  : field.fileTypes ? `Accepted: ${field.fileTypes}` : "All file types accepted" }}
+                  </p>
+                </div>
+              </label>
+            </div>
         </div>
-        <div class="modal-actions col-span-full flex justify-end mt-6">
-          <button
-            type="submit"
-            class="btn bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md"
-          >
+
+        <!-- Form Actions -->
+        <div class="modal-actions col-span-full flex justify-end mt-6 space-x-4">
+          <button type="submit"
+            class="btn bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-md shadow-md transition duration-200">
             Save
           </button>
-          <button
-            type="button"
-            @click="$emit('close')"
-            class="btn bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-md ml-2"
-          >
+          <button type="button" @click="$emit('close')"
+            class="btn bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-md shadow-md transition duration-200">
             Cancel
           </button>
         </div>
       </form>
-      <div v-if="showCreateCustomerCategory" class="modal-backdrop">
-        <div class="modal">
-          <h3>Create New Customer Category</h3>
-          <form @submit.prevent="submitNewCategory">
-            <div class="flex flex-row">
-              <label class="text-nowrap" for="newCategoryName"
-                >Category Name:</label
-              >
-              <input
-                class="border-2"
-                id="newCategoryName"
-                v-model="newCategoryName"
-                type="text"
-                required
-              />
-            </div>
-
-            <div class="modal-buttons">
-              <button type="submit" class="btn-save">Save</button>
-              <button type="button" class="btn-cancel" @click="closeModal">
-                Cancel
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
     </div>
   </div>
 </template>
@@ -118,7 +143,7 @@ export default {
   },
   data() {
     return {
-      newCustomer: this.initializeCustomerData(this.existingCustomer),
+      newCustomer: {},
       showCreateCustomerCategory: false,
       customerCategoryList: null,
       formFields: [
@@ -225,7 +250,7 @@ export default {
           id: "email",
           label: "Email",
           model: "email",
-          type: "email",
+          type: "text",
           required: true,
           placeholder: "Enter email",
         },
@@ -247,7 +272,7 @@ export default {
           id: "altEmail",
           label: "Alternate Email",
           model: "alt_email",
-          type: "email",
+          type: "text",
           placeholder: "Enter alternate email",
         },
         {
@@ -333,12 +358,12 @@ export default {
     };
   },
   watch: {
-    existingCustomer: {
-      immediate: true,
-      handler(newVal) {
-        this.newCustomer = this.initializeCustomerData(newVal);
-      },
+    existingCompany: {
+    immediate: true,
+    handler(newVal) {
+      this.newCompany = this.initializeCustomerData(newVal);
     },
+  },
   },
   methods: {
     logChange(model, event) {
@@ -376,7 +401,7 @@ export default {
         this.closeModal();
       }
     },
-    initializeCustomerData(customer = null) {
+    initializeCustomerData(customer = null) { 
       console.log(customer);
       return customer
         ? { ...customer }
@@ -450,6 +475,8 @@ export default {
   mounted() {
     this.fetchCustomerCategory();
     console.log("Existing Customer:", this.customerCategoryList);
+    this.newCustomer = this.initializeCustomerData(this.existingCustomer);
+    console.log("New Customer Data:", this.newCustomer);
   },
 };
 </script>

@@ -73,7 +73,7 @@
             <td class="p-4 space-x-2">
               <button
                 @click="ViewAction(customer)"
-                class="text-primaryText hover:underline"
+                class="px-3 py-1 bg-blue-900 text-white text-xs rounded-md hover:bg-yellow-700 transition"
               >
                 View
               </button>
