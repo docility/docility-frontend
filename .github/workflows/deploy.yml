@@ -134,7 +134,7 @@ jobs:
   # Step 5: Push to Docker Hub
   push-artifactory:
     runs-on: ubuntu-latest
-    needs: [build, dependabot]
+    needs: [build, dependabot, snyk-scan]
     environment: prod
     steps:
       - name: Download Image Artifact
