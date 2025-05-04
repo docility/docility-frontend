@@ -8,6 +8,7 @@ on:
     branches:
       - '**'
  
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -37,6 +38,73 @@ jobs:
           IMAGE_TAG=${{ github.run_number }}
           echo "branch_name=$BRANCH_NAME" >> $GITHUB_OUTPUT
           echo "image_tag=$IMAGE_TAG" >> $GITHUB_OUTPUT
+
+  build:
+    runs-on: ubuntu-latest
+    needs: checkout
+    environment: prod
+    steps:
+      - uses: actions/checkout@v3
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          registry: docker.io
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      - uses: docker/setup-buildx-action@v3
+      - uses: actions/cache@v4
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+      - name: Build and Push Docker Image
+        run: |
+          IMAGE_NAME=${{ env.DOCKER_IMAGE_PREFIX }}-${{ needs.checkout.outputs.branch_name }}
+          IMAGE_TAG=${{ needs.checkout.outputs.image_tag }}
+          docker buildx build \
+            --cache-from=type=local,src=/tmp/.buildx-cache \
+            --cache-to=type=local,dest=/tmp/.buildx-cache-new \
+            -t $IMAGE_NAME:$IMAGE_TAG \
+            -f ./Dockerfile \
+            --push \
+            .
+      - name: Add Image Info to Summary
+        run: |
+          echo "### 🚀 Docker Image Built and Pushed" >> $GITHUB_STEP_SUMMARY
+          echo "- ${{ env.DOCKER_IMAGE_PREFIX }}-${{ needs.checkout.outputs.branch_name }}:${{ needs.checkout.outputs.image_tag }}" >> $GITHUB_STEP_SUMMARY
+
+  deploy:
+    if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop'
+    runs-on: ubuntu-latest
+    needs: build
+    environment: prod
+    steps:
+      - name: Deploy to Server via SSH
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            IMAGE_NAME="${{ env.DOCKER_IMAGE_PREFIX }}-${{ needs.checkout.outputs.branch_name }}"
+            IMAGE_TAG="${{ needs.checkout.outputs.image_tag }}"
+            FRONTEND_PORT=8080
+            sudo docker system prune -af --volumes || true
+            sudo docker pull $IMAGE_NAME:$IMAGE_TAG
+            if sudo docker ps -a --format '{{.Names}}' | grep -q 'frontend-app'; then
+              sudo docker stop frontend-app && sudo docker rm frontend-app
+            fi
+            sudo docker run -d --name frontend-app -p $FRONTEND_PORT:80 $IMAGE_NAME:$IMAGE_TAG
+            sudo systemctl restart nginx
+
+  cleanup:
+    runs-on: ubuntu-latest
+    needs: deploy
+    if: always()
+    environment: prod
+    steps:
+      - run: docker rmi ${{ env.DOCKER_IMAGE_PREFIX }}-${{ needs.checkout.outputs.branch_name }}:${{ needs.checkout.outputs.image_tag }} || true
 
   dependabot:
     runs-on: ubuntu-latest
@@ -70,96 +138,3 @@ jobs:
           echo "$SEVERITY_COUNTS" >> $GITHUB_STEP_SUMMARY
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
         continue-on-error: true
-
-  build:
-    runs-on: ubuntu-latest
-    needs: checkout
-    environment: prod
-    steps:
-      - uses: actions/checkout@v3
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          registry: docker.io
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-      - uses: docker/setup-buildx-action@v3
-      - uses: actions/cache@v4
-        with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-buildx-
-      - name: Build Docker Image (No Push Yet)
-        run: |
-          IMAGE_NAME=${{ env.DOCKER_IMAGE_PREFIX }}-${{ needs.checkout.outputs.branch_name }}
-          IMAGE_TAG=${{ needs.checkout.outputs.image_tag }}
-          docker buildx build \
-            --cache-from=type=local,src=/tmp/.buildx-cache \
-            --cache-to=type=local,dest=/tmp/.buildx-cache-new \
-            -t $IMAGE_NAME:$IMAGE_TAG \
-            -f ./Dockerfile \
-            --load \
-            .
-      - name: Save image artifact
-        run: |
-          docker save -o image.tar ${{ env.DOCKER_IMAGE_PREFIX }}-${{ needs.checkout.outputs.branch_name }}:${{ needs.checkout.outputs.image_tag }}
-      - uses: actions/upload-artifact@v4
-        with:
-          name: docker-image
-          path: image.tar
-
-  push-artifactory:
-    if: |
-      github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop'
-    runs-on: ubuntu-latest
-    needs: [checkout, build, dependabot, snyk-scan]
-    environment: prod
-    steps:
-      - uses: actions/download-artifact@v4
-        with:
-          name: docker-image
-
-      - name: Load and Tag Image
-        run: docker load -i image.tar
-
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          registry: docker.io
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-
-      - name: Push Docker Image
-        run: |
-          IMAGE_NAME=${{ env.DOCKER_IMAGE_PREFIX }}-${{ needs.checkout.outputs.branch_name }}
-          IMAGE_TAG=${{ needs.checkout.outputs.image_tag }}
-          docker push $IMAGE_NAME:$IMAGE_TAG
-
-      - name: Add Image Info to Summary
-        run: |
-          echo "### 🚀 Docker Image Published" >> $GITHUB_STEP_SUMMARY
-          echo "- ${{ env.DOCKER_IMAGE_PREFIX }}-${{ needs.checkout.outputs.branch_name }}:${{ needs.checkout.outputs.image_tag }}" >> $GITHUB_STEP_SUMMARY
-
-  deploy:
-    if: |
-      github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop'
-    runs-on: ubuntu-latest
-    needs: [checkout, push-artifactory]
-    environment: prod
-    steps:
-      - name: Deploy to Server via SSH
-        uses: appleboy/ssh-action@v1.0.0
-        with:
-          host: ${{ secrets.SERVER_IP }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: ./deployer.sh
-
-  cleanup:
-    runs-on: ubuntu-latest
-    needs: [checkout, deploy]
-    if: always()
-    environment: prod
-    steps:
-      - run: docker rmi ${{ env.DOCKER_IMAGE_PREFIX }}-${{ needs.checkout.outputs.branch_name }}:${{ needs.checkout.outputs.image_tag }} || true
