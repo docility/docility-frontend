@@ -1,9 +1,9 @@
 <template>
-  <div class="container mx-auto p-8 bg-white shadow-lg rounded-lg">
+  <div class="container mx-auto p-8  rounded-lg">
     <!-- Header Section -->
-    <h1 class="text-4xl font-bold mb-8 text-center text-gray-800">
+    <!-- <h1 class="text-4xl font-bold mb-8 text-center text-gray-800">
       {{ questionnaire.type }} Assessment
-    </h1>
+    </h1> -->
 
     <!-- Company Details Section -->
     <div
@@ -39,14 +39,27 @@
       </div>
     </div>
    
-    <!-- Thank You Message -->
-    <div
-      v-if="questionnaireCompleted"
-      class="bg-green-100 p-8 text-center text-green-700 rounded-lg shadow-md"
-    >
-      <h2 class="text-3xl font-semibold">Assessment Completed!</h2>
-      <p class="mt-2">Your questionnaire has been submitted successfully.</p>
-    </div>
+   <!-- Thank You Message -->
+<div
+v-if="questionnaireCompleted"
+class="bg-white border border-green-300 p-6 md:p-8 text-center rounded-2xl shadow-lg max-w-xl mx-auto"
+>
+<div class="flex flex-col items-center space-y-3 self-center">
+  <!-- Check Icon -->
+  <div class="bg-green-100 text-green-600 rounded-full p-3">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+    </svg>
+  </div>
+
+  <!-- Heading -->
+  <h2 class="text-2xl md:text-3xl font-bold text-green-700">Assessment Completed!</h2>
+
+  <!-- Message -->
+  <p class="text-gray-600">Your responses have been submitted successfully. Thank you for your participation!</p>
+</div>
+</div>
+
 
     <!-- Form Submitted Message -->
     <div
