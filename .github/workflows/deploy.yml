@@ -63,7 +63,7 @@ jobs:
         run: |
           npm install -g snyk
       - name: Authenticate with Snyk
-        run: snyk auth 2af98f41-6245-4369-bc68-e2ef619cb203
+        run: snyk auth ${{ secrets.SNYK_AUTH }}
 
       - name: Run Snyk Vulnerability Scan
         run: snyk test --all-projects --json > snyk-results.json
