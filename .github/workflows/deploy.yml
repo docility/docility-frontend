@@ -87,16 +87,24 @@ jobs:
           echo "$SEVERITY_COUNTS" >> $GITHUB_STEP_SUMMARY
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
       
-          # Package info with fix availability
-          echo "#### 📦 Affected Packages & Fix Availability" >> $GITHUB_STEP_SUMMARY
-          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          # Detailed package info
+          echo "#### 📦 Affected Packages & Fix Recommendations" >> $GITHUB_STEP_SUMMARY
+          echo "| Severity | Package | Version | Fix Available | Recommended Fix |" >> $GITHUB_STEP_SUMMARY
+          echo "|----------|---------|---------|----------------|------------------|" >> $GITHUB_STEP_SUMMARY
       
           jq -r '
             .vulnerabilities[] 
-            | "\(.severity | ascii_upcase) | \(.packageName)@\(.version) | Fix Available: \((.upgradePath | length > 0) // false)"
-          ' snyk-results.json | sort | uniq >> $GITHUB_STEP_SUMMARY
-      
-          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+            | [
+                (.severity | ascii_upcase), 
+                .packageName, 
+                .version, 
+                ((.upgradePath | length > 0) // false), 
+                ((.upgradePath[1] // "") | tostring)
+              ] 
+            | @tsv
+          ' snyk-results.json | while IFS=$'\t' read -r severity package version fix_available recommended_fix; do
+            echo "| $severity | $package | $version | $fix_available | ${recommended_fix:-N/A} |" >> $GITHUB_STEP_SUMMARY
+          done
         continue-on-error: true
       
       - name: Monitor Snyk (optional)
