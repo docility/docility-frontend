@@ -54,7 +54,7 @@ jobs:
   # Step 3: OSS Vulnerability Scan (Snyk)
   snyk-scan:
     runs-on: ubuntu-latest
-    needs: checkout 
+    needs: checkout  
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -74,11 +74,9 @@ jobs:
           echo "### 🛡️ Snyk Vulnerability Summary" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
       
-          # Get severity count
-          SEVERITY_COUNTS=$(jq -r '
-            map(select(type == "object" and has("vulnerabilities"))) 
-            | map(.vulnerabilities) 
-            | flatten 
+          # Severity count
+          SEVERITY_COUNTS=$(jq '
+            .vulnerabilities 
             | group_by(.severity) 
             | map({(.[0].severity): length}) 
             | add
@@ -89,21 +87,18 @@ jobs:
           echo "$SEVERITY_COUNTS" >> $GITHUB_STEP_SUMMARY
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
       
-          # Affected packages and fix availability
+          # Package info with fix availability
           echo "#### 📦 Affected Packages & Fix Availability" >> $GITHUB_STEP_SUMMARY
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
       
           jq -r '
-            map(select(type == "object" and has("vulnerabilities"))) 
-            | map(.vulnerabilities) 
-            | flatten 
-            | map("\(.severity | ascii_upcase) | \(.packageName) | Fix Available: \((.fix?.upgradePath | length > 0) // false)") 
-            | unique 
-            | .[]
-          ' snyk-results.json >> $GITHUB_STEP_SUMMARY
+            .vulnerabilities[] 
+            | "\(.severity | ascii_upcase) | \(.packageName)@\(.version) | Fix Available: \((.upgradePath | length > 0) // false)"
+          ' snyk-results.json | sort | uniq >> $GITHUB_STEP_SUMMARY
       
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
         continue-on-error: true
+      
       - name: Monitor Snyk (optional)
         run: snyk monitor --all-projects
         continue-on-error: true
