@@ -207,20 +207,15 @@ jobs:
             FRONTEND_PORT=8080
 
             echo "Pulling frontend image: $IMAGE_NAME:$IMAGE_TAG"
-            if ! sudo docker pull $IMAGE_NAME:$IMAGE_TAG; then
-              echo "❌ Docker pull failed. Attempting cleanup..."
-              sudo docker system prune -af --volumes
-              echo "🔁 Retrying docker pull..."
-              sudo docker pull $IMAGE_NAME:$IMAGE_TAG
+            sudo docker pull $IMAGE_NAME:$IMAGE_TAG
+
+            echo "Removing existing frontend container..."
+            if [ "$(sudo docker ps -a -q -f name=frontend-app)" ]; then
+              sudo docker stop frontend-app
+              sudo docker rm frontend-app
             fi
 
-            echo "Stopping and removing existing frontend container (if any)..."
-            if sudo docker ps -a --format '{{.Names}}' | grep -q '^frontend-app$'; then
-              sudo docker stop frontend-app && sudo docker rm frontend-app
-            fi
-
-            if sudo docker ps -q -f publish=$FRONTEND_PORT | grep -q '.'; then
-              echo "Freeing up port $FRONTEND_PORT..."
+            if [ "$(sudo docker ps -q -f publish=$FRONTEND_PORT)" ]; then
               sudo docker rm -f $(sudo docker ps -q -f publish=$FRONTEND_PORT)
             fi
 
@@ -230,13 +225,7 @@ jobs:
             echo "Restarting Nginx..."
             sudo systemctl restart nginx
 
-            echo "✅ Running containers:"
-            sudo docker ps | grep frontend-app || echo "⚠️ frontend-app not running!"
-            echo "✅ Docker image $IMAGE_NAME:$IMAGE_TAG deployed successfully!"
-
-      - name: Check Deployment Status
-        run: |
-          ssh -i ${{ secrets.SSH_PRIVATE_KEY }} ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} "docker ps | grep frontend-app || echo '⚠️ frontend-app not running!'" 
+            sudo docker ps | grep frontend-app
 
   # Step 7: Cleanup Docker Image (Optional)
   cleanup:
