@@ -33,8 +33,7 @@ jobs:
   # Step 2: Trigger Dependabot and Wait for PR Merge (Manual Check)
   dependabot:
     runs-on: ubuntu-latest
-    needs: checkout 
-    environment: prod
+    needs: checkout  
     env:
       GH_TOKEN: ${{ github.token }}  # Use the GitHub token for authentication
     steps:
@@ -55,8 +54,7 @@ jobs:
   # Step 3: OSS Vulnerability Scan (Snyk)
   snyk-scan:
     runs-on: ubuntu-latest
-    needs: checkout
-    environment: prod
+    needs: checkout 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -76,28 +74,33 @@ jobs:
           echo "### 🛡️ Snyk Vulnerability Summary" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
       
-          # Severity breakdown
+          # Get severity count
           SEVERITY_COUNTS=$(jq -r '
-            [.[]?.vulnerabilities[]? | .severity] 
-            | group_by(.) 
-            | map({(.[0]): length}) 
-            | add' snyk-results.json)
+            map(select(type == "object" and has("vulnerabilities"))) 
+            | map(.vulnerabilities) 
+            | flatten 
+            | group_by(.severity) 
+            | map({(.[0].severity): length}) 
+            | add
+          ' snyk-results.json)
       
           echo "#### 📊 Severity Breakdown" >> $GITHUB_STEP_SUMMARY
           echo "\`\`\`json" >> $GITHUB_STEP_SUMMARY
           echo "$SEVERITY_COUNTS" >> $GITHUB_STEP_SUMMARY
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
       
-          # Package and fix info
+          # Affected packages and fix availability
           echo "#### 📦 Affected Packages & Fix Availability" >> $GITHUB_STEP_SUMMARY
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
       
           jq -r '
-            .[]?.vulnerabilities[]? 
-            | "\(.severity | ascii_upcase) | \(.packageName) | Fix Available: \((.fix?.upgradePath and (.fix.upgradePath | length > 0)) // false)"' snyk-results.json \
-            | sort \
-            | uniq \
-            >> $GITHUB_STEP_SUMMARY
+            map(select(type == "object" and has("vulnerabilities"))) 
+            | map(.vulnerabilities) 
+            | flatten 
+            | map("\(.severity | ascii_upcase) | \(.packageName) | Fix Available: \((.fix?.upgradePath | length > 0) // false)") 
+            | unique 
+            | .[]
+          ' snyk-results.json >> $GITHUB_STEP_SUMMARY
       
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
         continue-on-error: true
