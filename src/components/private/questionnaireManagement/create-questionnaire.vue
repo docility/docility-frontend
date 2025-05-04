@@ -151,8 +151,7 @@ export default {
             description: company.description,
             type: company.type,
           }
-        : {
-            id: null,
+        : { 
             title: "",
             description: "",
             type: "",
