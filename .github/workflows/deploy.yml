@@ -206,6 +206,10 @@ jobs:
             IMAGE_TAG="${{ github.run_number }}"
             FRONTEND_PORT=8080
 
+            echo "🔄 Cleaning up old Docker resources..."
+            # This will remove unused containers, images, volumes, and networks
+            sudo docker system prune -af --volumes || true
+
             echo "Pulling frontend image: $IMAGE_NAME:$IMAGE_TAG"
             sudo docker pull $IMAGE_NAME:$IMAGE_TAG
 
@@ -225,6 +229,7 @@ jobs:
             echo "Restarting Nginx..."
             sudo systemctl restart nginx
 
+            echo "✅ Running containers:"
             sudo docker ps | grep frontend-app
 
   # Step 7: Cleanup Docker Image (Optional)
