@@ -24,6 +24,7 @@ import RiskCategory from "@/components/private/riskAssessment/risk-category/risk
 import AssetCategory from "@/components/private/riskAssessment/asset-category/asset-category.vue"
 import RiskTreatment from "@/components/private/riskAssessment/risk-treatment/risk-treatment.vue";
 import CreateRisk2 from "@/components/private/risk/risk-management.vue";
+import controlDomain from '@/components/private/controlDomain/domain-management.vue'
 
 // Define your routes
 const routes = [
@@ -84,6 +85,11 @@ const routes = [
         component: CreateRiskCategory,
       },
       {
+        path: "/dashboard/control-domain",
+        name: "Control Domain",
+        component: controlDomain
+      },
+      {
         path: "/dashboard/create-risk-treatment",
         name: "Risk Treatment",
         component: CreateTemplate,
@@ -129,7 +135,6 @@ const routes = [
         component: QuestionsManagement,
       },
       { path: "/:catchAll(.*)", name: "NotFound", component: NotFound },
-      
     ],
   },
   { path: "/:catchAll(.*)", name: "NotFound", component: NotFound },
