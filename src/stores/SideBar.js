@@ -25,7 +25,7 @@ export const useSidebarStore = defineStore('Sidebar', () => {
         // { name: 'New Risk', to: '/dashboard/risk' },
         { name: 'Risk Register', to: '/dashboard/risks'},
         // { name: 'Risk Category', to: '/dashboard/create-risk-category' },
-        { name: 'New Risk Treatment', to: '/dashboard/create-risk-treatment' },
+        // { name: 'New Risk Treatment', to: '/dashboard/create-risk-treatment' },
         // { name: 'Risks List', to: '/dashboard/risk-register' }, 
       ],
     },
