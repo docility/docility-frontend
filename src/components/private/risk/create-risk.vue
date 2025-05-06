@@ -165,7 +165,8 @@ export default {
     existingCompany: {
       immediate: true,
       handler(newVal) {
-        this.newCompany = this.initializeCompanyData(newVal);
+        console.log("existingCompany", newVal);
+        // this.newCompany = this.initializeCompanyData(newVal);
       },
     },
     "newCompany.matrix": {

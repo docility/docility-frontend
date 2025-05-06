@@ -131,6 +131,7 @@ export default {
   data() {
     return {
       headers: {
+        documentId: "Document ID",
         riskOwner: "Risk Owner",
         riskOwnerEmail: "Risk Owner Email",
         riskCategory: "Risk Category",
@@ -141,7 +142,7 @@ export default {
         matrix: "Matrix",
         likelihood: "Likelihood",
         initialImpact: "Initial Impact",
-        risidualImpact: "Residual Impact",
+        // risidualImpact: "Residual Impact",
         residualLikelihood: "Residual Likelihood",
         riskLevel: "Risk Level",
         residualRiskLevel: "Residual Risk Level",
