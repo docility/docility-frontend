@@ -128,10 +128,10 @@
 
 <script>
 import { createPinia } from "pinia";
-import { useCreateRiskField } from "@/stores/CreateRiskFields";
-import { nanoid } from 'nanoid';
+import { useControlDomain } from "@/stores/ControlDomain";
+// import { nanoid } from 'nanoid';
 const pinia = createPinia();
-const createRiskFields = useCreateRiskField(pinia);
+const createRiskFields = useControlDomain(pinia);
 import http from "@/helpers/http";
 import Multiselect from 'vue-multiselect';
 import { toast } from "vue3-toastify";
@@ -666,22 +666,20 @@ export default {
           );
         });
 
-        var result =[]
-         data.map((item) => {
+        data = data.map((item) => {
           console.log("item", item);
-          if (item.length == 0 || item.length == -1)  return
-          result.push({ 
-            label: item[0]?.controlHeading || "",
-            value: item[0]?.documentId || "",
-          });
+          return {
+            label: item[0].controlHeading,
+            value: item[0].documentId,
+          };
         })
 
         const controlMapped = this.formFields.find(
           (field) => field.id === "riskControlMap"
         );
 
-        if (controlMapped) {  
-          controlMapped.options = result;
+        if (controlMapped) {
+          controlMapped.options = data;
         }
       } catch (error) {
         console.error("Error in riskControlMapping:", error);
@@ -703,14 +701,12 @@ export default {
           );
         });
 
-        var result =[]
-         data.map((item) => {
+        data = data.map((item) => {
           console.log("item", item);
-          if (item.length == 0 || item.length == -1)  return
-          result.push({ 
-            label: item[0]?.controlHeading || "",
-            value: item[0]?.documentId || "",
-          });
+          return {
+            label: item[0].controlHeading,
+            value: item[0].documentId,
+          };
         })
 
         const controlMapped = this.formFields.find(
@@ -718,8 +714,7 @@ export default {
         );
 
         if (controlMapped) {
-          console.log("controlMapped", result);
-          controlMapped.options = result;
+          controlMapped.options = data;
         }
       } catch (error) {
         console.error("Error in riskControlMapping:", error);
@@ -767,8 +762,7 @@ export default {
     this.fetchInformationAsset();
     this.fetchControlDomainList();
     this.fetchControl();
-    this.fetchRiskTreatment();
-    this.newCompany["riskId"] = `RISKID-${nanoid(10)}`;
+    this.fetchRiskTreatment(); 
     // Initialize newCompany asynchronously
     if (this.existingCompany) {
       this.initializeCompanyData(this.existingCompany).then((data) => {

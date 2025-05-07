@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'; 
 
-export const useControlDomain = defineStore('ControlDomain', () => {
+export const useControlAssessment = defineStore('ControlAssessment', () => {
   const fields = [
     {
       "id": "domain",
@@ -11,21 +11,29 @@ export const useControlDomain = defineStore('ControlDomain', () => {
       "options": []
     },
     {
-      "id": "control_no",
-      "label": "Control Number",
-      "model": "control_no",
+      "id": "annexControl",
+      "label": "Annex Control",
+      "model": "annexControl",
       "type": "text",
       "required": true,
       "options": []
     },
     {
-      "id": "control_description",
-      "label": "Control Description",
-      "model": "control_description",
+      "id": "controlHeading",
+      "label": "Control Heading",
+      "model": "controlHeading",
       "type": "text",
       "required": true,
       "options": []
-    }, 
+    },
+    {
+      "id": "controlDescription",
+      "label": "Control Description",
+      "model": "controlDescription",
+      "type": "text",
+      "required": true,
+      "options": []
+    },
   ]
 
   return { 

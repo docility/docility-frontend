@@ -128,10 +128,10 @@
 
 <script>
 import { createPinia } from "pinia";
-import { useCreateRiskField } from "@/stores/CreateRiskFields";
-import { nanoid } from 'nanoid';
+import { useControlAssessment } from "@/stores/ControlAssessment";
+// import { nanoid } from 'nanoid';
 const pinia = createPinia();
-const createRiskFields = useCreateRiskField(pinia);
+const createRiskFields = useControlAssessment(pinia);
 import http from "@/helpers/http";
 import Multiselect from 'vue-multiselect';
 import { toast } from "vue3-toastify";
@@ -762,8 +762,7 @@ export default {
     this.fetchInformationAsset();
     this.fetchControlDomainList();
     this.fetchControl();
-    this.fetchRiskTreatment();
-    this.newCompany["riskId"] = `RISKID-${nanoid(10)}`;
+    this.fetchRiskTreatment(); 
     // Initialize newCompany asynchronously
     if (this.existingCompany) {
       this.initializeCompanyData(this.existingCompany).then((data) => {

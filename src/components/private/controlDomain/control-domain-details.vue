@@ -131,8 +131,8 @@
 <script>
 // import { ref } from "vue";
 import http from "@/helpers/http";
-import AddCustomerModal from "./create-domain.vue";
-import QuestionnaireModal from "./domain-details.vue";
+import AddCustomerModal from "./create-control-domain.vue";
+import QuestionnaireModal from "./control-domain-details.vue";
 import ExportButtons from "@/components/reuseable/ExportButtons.vue";
 
 export default {

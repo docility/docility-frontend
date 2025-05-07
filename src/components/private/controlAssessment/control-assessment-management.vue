@@ -80,9 +80,9 @@
 </template>
 
 <script>
-import CompanyList from "./domain-list.vue";
-import CompanyDetailsModal from "./domain-details.vue";
-import AddCompanyModal from "./create-domain.vue";
+import CompanyList from "./control-assessment-list.vue";
+import CompanyDetailsModal from "./control-assessment-details.vue";
+import AddCompanyModal from "./create-control-assessment.vue";
 import SendCompanyModal from "./send-company.vue";
 import http from "@/helpers/http";
 import ImageButton from "@/components/reuseable/ImageButton.vue";
@@ -178,14 +178,14 @@ export default {
         delete newCompany.createdAt;
         delete newCompany.updatedAt;
         delete newCompany.documentId;
-        http.put(`api/risks/${id}`, {
+        http.put(`api/control-assessments/${id}`, {
           data: newCompany,
         }).then((res) => {
           console.log(res);
           this.companyListKey++;
         });
       } else { 
-        await http.post("api/risks", { data: newCompany }).then((res) => {
+        await http.post("api/control-assessments", { data: newCompany }).then((res) => {
           console.log(res);
           this.companyListKey++;
         });   

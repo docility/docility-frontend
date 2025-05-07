@@ -16,7 +16,8 @@ export const useSidebarStore = defineStore('Sidebar', () => {
       subMenu: [
         { name: 'New Asset Category', to: '/dashboard/asset-category' },
         { name: 'New Risk Category', to: '/dashboard/risk-category' },
-        // { name: 'Control Domain', to: '/dashboard/control-domain' },
+        { name: 'Control Domain', to: '/dashboard/control-domain' },
+        { name: 'Control Assessment', to: '/dashboard/control-assessment' },
         { name: 'New Risk Treatment', to: '/dashboard/risk-treatment' },
         // { name: 'Control Assessment', to: '/dashboard/create-control' },
         // { name: 'New Control Assessment', to: '/dashboard/create-control-assessment' },

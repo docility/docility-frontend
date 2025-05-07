@@ -11,7 +11,7 @@
     </div>
     <div  v-else class="modal-content bg-white p-8 rounded-lg max-w-5xl w-full overflow-y-auto h-full shadow-lg">
       <h3 class="text-2xl font-bold mb-6 text-gray-800">
-        {{ existingCustomer ? "Update Customer" : "New Customer" }}
+        {{ existingCompany ? "Update Risk" : "New Risk" }}
       </h3>
       <form @submit.prevent="submitForm" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <!-- Dynamic Form Fields -->
@@ -20,8 +20,7 @@
             {{ field.label }}
             <span v-if="field.required" class="text-red-500">*</span>
           </label>
- 
- 
+ {{newCustomer[field.model]}}
           <!-- Textarea -->
           <textarea v-if="field.type === 'textarea'" :id="field.id" v-model="newCustomer[field.model]"
             :placeholder="field.placeholder" :required="field.required"
@@ -154,6 +153,15 @@ export default {
           type: "text",
           required: true,
           placeholder: "Enter customer name",
+        },
+        {
+          "id": "company",
+          "label": "Customer Company",
+          "model": "company",
+          "type": "multi",
+          "multiple-select": false,
+          "required": true,
+          "options": []
         },
         {
           id: "tradingAs",
@@ -407,7 +415,7 @@ export default {
         ? { ...customer }
         : {
             name: "",
-            trading_as: "",
+            trading_as: "", 
             abn_no: "",
             acn_no: "",
             website: "",
@@ -471,12 +479,39 @@ export default {
         console.error("Error fetching customers:", error);
       }
     },
+    fetchCompany() {
+      console.log("fetch company");
+      http
+        .get("/api/companies")
+        .then((response) => {
+          console.log(response);
+         const data = response.data.data.map((company) => ({
+            label: company.name,
+            value: company.name,
+          }));
+
+          const company = this.formFields.find(
+            (field) => field.model === "company"
+          );
+
+      if (company) {
+        company.options = data;
+        console.log("company main", company)
+      }
+ 
+        })
+        .catch((error) => {
+          console.error("Error fetching companies:", error);
+        });
+    },
   },
   mounted() {
     this.fetchCustomerCategory();
     console.log("Existing Customer:", this.customerCategoryList);
     this.newCustomer = this.initializeCustomerData(this.existingCustomer);
     console.log("New Customer Data:", this.newCustomer);
+
+    this.fetchCompany();
   },
 };
 </script>

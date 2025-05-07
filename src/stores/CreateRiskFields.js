@@ -357,18 +357,16 @@ export const useCreateRiskField = defineStore('CreateRiskFields', () => {
       "type": "date",
       "required": true,
       "options": []
-    },
-
+    }, 
     {
       "id": "riskApprovalEvidence",
-      "label": "Risidual Approval Evidence",
+      "label": "Residual Approval Evidence",
       "model": "riskApprovalEvidence",
       "type": "text",
       "read-only": false,
       "required": true,
       "options": []
-    },
-
+    }, 
     {
       "id": "nextReviewDate",
       "label": "Next Review Date",

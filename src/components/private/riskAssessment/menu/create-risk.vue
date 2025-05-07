@@ -1352,8 +1352,8 @@ export default {
         const ownerList = await http.get("/api/control-domains");
         this.controlDomain = ownerList.data.data.map((item) => {
           return {
-            label: item.control_no,
-            value: item.control_no + "|" + item.domain,
+            label: item?.control_no,
+            value: item?.control_no + "|" + item?.domain,
           };
         });
       } catch (error) {
