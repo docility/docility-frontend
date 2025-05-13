@@ -11,7 +11,7 @@
     </div>
     <div  v-else class="modal-content bg-white p-8 rounded-lg max-w-5xl w-full overflow-y-auto h-full shadow-lg">
       <h3 class="text-2xl font-bold mb-6 text-gray-800">
-        {{ existingCompany ? "Update Risk" : "New Risk" }}
+        {{ existingCompany ? "Update Record" : "New Record" }}
       </h3>
       <form @submit.prevent="submitForm" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <!-- Dynamic Form Fields -->
@@ -20,24 +20,24 @@
             {{ field.label }}
             <span v-if="field.required" class="text-red-500">*</span>
           </label>
- {{newCustomer[field.model]}}
+ {{newRecord[field.model]}}
           <!-- Textarea -->
-          <textarea v-if="field.type === 'textarea'" :id="field.id" v-model="newCustomer[field.model]"
+          <textarea v-if="field.type === 'textarea'" :id="field.id" v-model="newRecord[field.model]"
             :placeholder="field.placeholder" :required="field.required"
             class="form-input mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-300 focus:outline-none"></textarea>
 
           <!-- Text Input -->
-          <input v-else-if="field.type === 'text'" :id="field.id" v-model="newCustomer[field.model]" :type="field.type"
+          <input v-else-if="field.type === 'text'" :id="field.id" v-model="newRecord[field.model]" :type="field.type"
             :placeholder="field.placeholder" :required="field.required" :readonly="field['read-only']"
             class="form-input mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-300 focus:outline-none" />
 
           <!-- Date Input -->
-          <input v-else-if="field.type === 'date'" :id="field.id" v-model="newCustomer[field.model]" type="date"
+          <input v-else-if="field.type === 'date'" :id="field.id" v-model="newRecord[field.model]" type="date"
             :placeholder="field.placeholder" :required="field.required"
             class="form-input mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-300 focus:outline-none" />
 
           <!-- Select Dropdown -->
-          <select v-else-if="field.type === 'select'" :id="field.id" v-model="newCustomer[field.model]"
+          <select v-else-if="field.type === 'select'" :id="field.id" v-model="newRecord[field.model]"
             :required="field.required"
             class="form-input mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-300 focus:outline-none">
             <option v-for="option in field.options" :key="option.value" :value="option.value">
@@ -48,7 +48,7 @@
           <!-- Checkbox Group -->
           <div v-else-if="field.type === 'checkbox'" class="mt-2 space-y-2">
             <label v-for="option in field.options" :key="option.value" class="flex items-center space-x-2">
-              <input type="checkbox" :value="option.value" v-model="newCustomer[field.model]"
+              <input type="checkbox" :value="option.value" v-model="newRecord[field.model]"
                 class="form-checkbox h-4 w-4 text-blue-500" />
               <span>{{ option.text }}</span>
             </label>
@@ -57,7 +57,7 @@
 
 
           <!-- Multiselect -->
-          <Multiselect v-else-if="field.type === 'multi'" v-model="newCustomer[field.model]" :options="field.options"
+          <Multiselect v-else-if="field.type === 'multi'" v-model="newRecord[field.model]" :options="field.options"
             :multiple="field['multiple-select']" :close-on-select="!field['multiple-select']" :clear-on-select="false"
             :preserve-search="true" placeholder="Select Options" label="label" track-by="value" class="w-full mt-1" />
 
@@ -131,7 +131,7 @@ import http from "@/helpers/http";
 import { toast } from "vue3-toastify";
 export default {
   props: {
-    existingCustomer: {
+    existingRecord: {
       type: Object,
       default: null,
     },
@@ -142,21 +142,21 @@ export default {
   },
   data() {
     return {
-      newCustomer: {},
-      showCreateCustomerCategory: false,
-      customerCategoryList: null,
+      newRecord: {},
+      showCreateRecordCategory: false,
+      recordCategoryList: null,
       formFields: [
         {
-          id: "customerName",
-          label: "Customer Name",
+          id: "recordName",
+          label: "Record Name",
           model: "name",
           type: "text",
           required: true,
-          placeholder: "Enter customer name",
+          placeholder: "Enter record name",
         },
         {
           "id": "company",
-          "label": "Customer Company",
+          "label": "Record Company",
           "model": "company",
           "type": "multi",
           "multiple-select": false,
@@ -165,7 +165,7 @@ export default {
         },
         {
           id: "tradingAs",
-          label: "Customer Trading As",
+          label: "Record Trading As",
           model: "trading_as",
           type: "text",
           required: true,
@@ -284,33 +284,33 @@ export default {
           placeholder: "Enter alternate email",
         },
         {
-          id: "customerCategory",
-          label: "Customer Category",
-          model: "customer_category",
+          id: "recordCategory",
+          label: "Record Category",
+          model: "record_category",
           type: "select",
           options: [
-            { text: "Key Customer", value: "Key" },
-            { text: "Regular Customer", value: "Regular" },
-            { text: "One-off Customer", value: "One-off" },
+            { text: "Key Record", value: "Key" },
+            { text: "Regular Record", value: "Regular" },
+            { text: "One-off Record", value: "One-off" },
           ],
         },
         {
-          id: "customerType",
-          label: "Customer Type",
-          model: "customer_type",
+          id: "recordType",
+          label: "Record Type",
+          model: "record_type",
           type: "text",
-          placeholder: "Enter customer type",
+          placeholder: "Enter record type",
         },
         {
           id: "dataShared",
-          label: "Data Shared with Customer",
+          label: "Data Shared with Record",
           model: "data_shared",
           type: "textarea",
           placeholder: "Enter details about data shared",
         },
         {
           id: "department",
-          label: "Department Managing Customer",
+          label: "Department Managing Record",
           model: "department_managing",
           type: "text",
           placeholder: "Enter managing department",
@@ -369,50 +369,50 @@ export default {
     existingCompany: {
     immediate: true,
     handler(newVal) {
-      this.newCompany = this.initializeCustomerData(newVal);
+      this.newCompany = this.initializeRecordData(newVal);
     },
   },
   },
   methods: {
     logChange(model, event) {
       console.log(`Changed ${model}:`, event.target.value);
-      if (model == "customer_category" && event.target.value == "Action") {
-        // alert("Create New Customer Category");
-        this.showCreateCustomerCategory = true;
+      if (model == "record_category" && event.target.value == "Action") {
+        // alert("Create New Record Category");
+        this.showCreateRecordCategory = true;
       }
-      this.newCustomer[model] = event.target.value; // Ensure the model updates immediately
+      this.newRecord[model] = event.target.value; // Ensure the model updates immediately
     },
     closeModal() {
-      this.showCreateCustomerCategory = false;
+      this.showCreateRecordCategory = false;
       this.newCategoryName = "";
     },
     submitNewCategory() {
       if (this.newCategoryName.trim()) {
-        console.log(`New Customer Category: ${this.newCategoryName}`);
+        console.log(`New Record Category: ${this.newCategoryName}`);
         alert(`New Category "${this.newCategoryName}" has been created.`);
         http
-          .post("/api/customer-categories", {
+          .post("/api/record-categories", {
             data: { category: this.newCategoryName },
           })
           .then((response) => {
-            toast.success("Customer Category successfully saved");
+            toast.success("Record Category successfully saved");
             this.isImportModalVisible = false;
             console.log(response);
             // this.fetchSupplier();
-            this.customerListKey++;
-            this.fetchCustomerCategory();
+            this.recordListKey++;
+            this.fetchRecordCategory();
           })
           .catch((error) => {
             console.error(error);
-            toast.error("Error importing customers");
+            toast.error("Error importing records");
           });
         this.closeModal();
       }
     },
-    initializeCustomerData(customer = null) { 
-      console.log(customer);
-      return customer
-        ? { ...customer }
+    initializeRecordData(record = null) { 
+      console.log(record);
+      return record
+        ? { ...record }
         : {
             name: "",
             trading_as: "",
@@ -432,8 +432,8 @@ export default {
             alt_person_name: "",
             alt_phone_no: "",
             alt_email: "",
-            customer_category: "",
-            customer_type: "",
+            record_category: "",
+            record_type: "",
             data_shared: "",
             department_managing: "",
             manager: "",
@@ -445,24 +445,24 @@ export default {
           };
     },
     submitForm() {
-      console.log("Submitted Data:", this.newCustomer);
-      if (Object.values(this.newCustomer).some((value) => value === "")) {
+      console.log("Submitted Data:", this.newRecord);
+      if (Object.values(this.newRecord).some((value) => value === "")) {
         alert("Please fill in all required fields.");
         return;
       }
 
-      this.callback({ ...this.newCustomer });
+      this.callback({ ...this.newRecord });
       this.$emit("close");
     },
-    async fetchCustomerCategory() {
+    async fetchRecordCategory() {
       console.log("fetch ccategorys");
       try {
-        const response = await http.get(`/api/customer-categories`);
+        const response = await http.get(`/api/record-categories`);
         console.log(response);
         let categoryIndex = 0;
         response.data.data.forEach((category) => {
           this.formFields.forEach((v, i) => {
-            if (v.id == "customerCategory") {
+            if (v.id == "recordCategory") {
               categoryIndex = i;
               this.formFields[i].options.push({
                 text: category.category,
@@ -477,7 +477,7 @@ export default {
           value: "Action",
         });
       } catch (error) {
-        console.error("Error fetching customers:", error);
+        console.error("Error fetching records:", error);
       }
     },
     fetchCompany() {
@@ -507,10 +507,10 @@ export default {
     },
   },
   mounted() {
-    this.fetchCustomerCategory();
-    console.log("Existing Customer:", this.customerCategoryList);
-    this.newCustomer = this.initializeCustomerData(this.existingCustomer);
-    console.log("New Customer Data:", this.newCustomer);
+    this.fetchRecordCategory();
+    console.log("Existing Record:", this.recordCategoryList);
+    this.newRecord = this.initializeRecordData(this.existingRecord);
+    console.log("New Record Data:", this.newRecord);
 
     this.fetchCompany();
   },

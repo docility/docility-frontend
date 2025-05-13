@@ -26,6 +26,7 @@ import RiskTreatment from "@/components/private/riskAssessment/risk-treatment/ri
 import CreateRisk2 from "@/components/private/risk/risk-management.vue";
 import controlAssessment from '@/components/private/controlAssessment/control-assessment-management.vue'
 import controlDomain from '@/components/private/controlDomain/control-domain-management.vue'
+import recordManagement from "@/components/private/recordManagement/record-management.vue";
 
 // Define your routes
 const routes = [
@@ -124,6 +125,11 @@ const routes = [
         path: "customer-management",
         name: "Customer management",
         component: CustomerManagement,
+      },
+      {
+        path: "record-management",
+        name: "Record management",
+        component: recordManagement,
       },
       {
         path: "company-management",
