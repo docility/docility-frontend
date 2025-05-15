@@ -18,29 +18,20 @@ export const useSidebarStore = defineStore('Sidebar', () => {
         { name: 'New Risk Category', to: '/dashboard/risk-category' },
         { name: 'Control Domain', to: '/dashboard/control-domain' },
         { name: 'Control Assessment', to: '/dashboard/control-assessment' },
-        { name: 'New Risk Treatment', to: '/dashboard/risk-treatment' },
-        // { name: 'Control Assessment', to: '/dashboard/create-control' },
-        // { name: 'New Control Assessment', to: '/dashboard/create-control-assessment' },
-        // { name: 'New Assessment Checklist', to: '/dashboard/create-control-assessment' },
-        // { name: 'Information Asset', to: '/dashboard/create-information-asset' },
-        // { name: 'New Risk', to: '/dashboard/risk' },
-        { name: 'Risk Register', to: '/dashboard/risks'},
-        // { name: 'Risk Category', to: '/dashboard/create-risk-category' },
-        // { name: 'New Risk Treatment', to: '/dashboard/create-risk-treatment' },
-        // { name: 'Risks List', to: '/dashboard/risk-register' }, 
+        { name: 'New Risk Treatment', to: '/dashboard/risk-treatment' }, 
+        { name: 'Risk Register', to: '/dashboard/risks'}, 
       ],
     },
     {
       name: "Manage",
       to: '',
       subMenu: [
-           
-      { name: 'Customer', to: '/dashboard/customer-management', subMenu: [] },
-      { name: 'Record', to: '/dashboard/record-management', subMenu: [] },
-      { name: 'Company', to: '/dashboard/company-management', subMenu: [] },
+        { name: 'Customer', to: '/dashboard/customer-management', subMenu: [] },
+        { name: 'Record', to: '/dashboard/record-management', subMenu: [] },
+        { name: 'Company', to: '/dashboard/company-management', subMenu: [] },
+        {name: 'Subscription', to: '/dashboard/subscription-management', subMenu: []},
       ]
     },
- 
     { name: 'Questionnaire', to: '/dashboard/questionnaire-management', subMenu: [] },
   ];
 
@@ -50,6 +41,7 @@ export const useSidebarStore = defineStore('Sidebar', () => {
 
   function handleLogout(router) {
     sessionStorage.clear();
+    showLogoutModal.value = false;
     router.push('/signin');
   }
 

@@ -135,14 +135,15 @@ export default {
           type: "text",
           required: true,
           placeholder: "Enter Description",
-        },  {
-          id: "options",
-          label: "Options",
-          model: "options",
-          type: "text",
-          required: true,
-          placeholder: "Enter Options",
-        }, 
+        },
+        // {
+        //   id: "options",
+        //   label: "Options",
+        //   model: "options",
+        //   type: "text",
+        //   required: true,
+        //   placeholder: "Enter Options",
+        // }, 
       ],
     };
   },
@@ -162,22 +163,20 @@ export default {
         ? {
           category_domain: category.category_domain,
           categoryType: category.categoryType,
-          description: category.description,
-          options: category.options,
+          description: category.description, 
           }
         : {
             category_domain: "",
             categoryType: "",
-            description: "", 
-            options: ""
+            description: "",  
           };
     },
     submitForm() {
       console.log("Submitted Data:", this.newCategory);
-      if (Object.values(this.newCategory).some((value) => value === "")) {
-        alert("Please fill in all required fields.");
-        return;
-      }
+      // if (Object.values(this.newCategory).some((value) => value === "")) {
+      //   alert("Please fill in all required fields.");
+      //   return;
+      // }
 
       // Convert options to JSON before submission
       // this.newCategory.options = JSON.stringify({

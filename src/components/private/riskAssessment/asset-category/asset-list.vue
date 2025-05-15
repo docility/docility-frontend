@@ -61,7 +61,7 @@
             <th class="p-4">Category</th>
             <th class="p-4">Category Type</th>
             <th class="p-4">Description</th> 
-            <th class="p-4">Options</th> 
+            <!-- <th class="p-4">Options</th>  -->
           </tr>
         </thead>
         <tbody>
@@ -88,7 +88,7 @@
             <td class="p-4">{{ category.category }}</td> 
             <td class="p-4">{{ category.categoryType }}</td> 
             <td class="p-4">{{ category.description }}</td> 
-            <td class="p-4">{{ category.options }}</td> 
+            <!-- <td class="p-4">{{ category.options }}</td>  -->
           </tr>
         </tbody>
       </table>
@@ -185,7 +185,7 @@ export default {
           .toLowerCase()
           .includes(this.searchQuery.toLowerCase())
       );
-    },
+    },  
   },
 };
 </script>

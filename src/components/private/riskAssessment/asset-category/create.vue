@@ -132,14 +132,14 @@ export default {
             { text: "Sub-Category", value: "Sub Category" },
           ]
         }, 
-        {
-          id: "option",
-          label: "options",
-          model: "options",
-          type: "text",
-          required: true,
-          placeholder: "Enter Option",
-        }, 
+        // {
+        //   id: "option",
+        //   label: "options",
+        //   model: "options",
+        //   type: "text",
+        //   required: true,
+        //   placeholder: "Enter Option",
+        // }, 
         {
           id: "description",
           label: "Description",

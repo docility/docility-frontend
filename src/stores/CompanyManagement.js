@@ -1,0 +1,177 @@
+import { defineStore } from "pinia";
+
+export const useCompanyManagement = defineStore("CompanyManagement", () => {
+  const fields = [
+    {
+      id: "name",
+      label: "Organisation Name",
+      model: "name",
+      type: "text",
+      required: true,
+      placeholder: "Enter Organisation name",
+    },
+    {
+      id: "address",
+      label: "Address",
+      model: "address",
+      type: "text",
+      required: true,
+      placeholder: "Enter Address",
+    },
+
+    {
+      id: "busienessType",
+      label: "Business Type",
+      model: "busienessType",
+      type: "text",
+      required: true,
+      placeholder: "Enter Business Type",
+    },
+    {
+      id: "taxNo",
+      label: "Tax Number",
+      model: "taxNo",
+      type: "text",
+      required: true,
+      placeholder: "Enter Tax Number",
+    },
+    {
+      id: "acnNo",
+      label: "ACN Number",
+      model: "acnNo",
+      type: "text",
+      required: true,
+      placeholder: "Enter ACN Number",
+    },
+    {
+      id: "country",
+      label: "Country",
+      model: "country",
+      type: "text",
+      required: true,
+      placeholder: "Enter Country",
+    },
+    {
+      id: "state",
+      label: "State",
+      model: "state",
+      type: "text",
+      required: true,
+      placeholder: "Enter State",
+    },
+    {
+      id: "city",
+      label: "City",
+      model: "city",
+      type: "text",
+      required: true,
+      placeholder: "Enter City",
+    },
+    {
+      id: "zipCode",
+      label: "Zip Code",
+      model: "zipCode",
+      type: "text",
+      required: true,
+      placeholder: "Enter Zip Code",
+    },
+    {
+      id: "contactPerson",
+      label: "Contact Person",
+      model: "contactPerson",
+      type: "text",
+      required: true,
+      placeholder: "Enter Contact Person",
+    },
+    {
+      id: "phoneNo",
+      label: "Phone Number",
+      model: "phoneNo",
+      type: "text",
+      required: true,
+      placeholder: "Enter Phone Number",
+    },
+    {
+      id: "email",
+      label: "Contact Person Email",
+      model: "email",
+      type: "text",
+      required: true,
+      placeholder: "Enter Email Address",
+    },
+    {
+      id: "timeZone",
+      label: "Time Zone",
+      model: "timeZone",
+      type: "text",
+      required: true,
+      placeholder: "Enter Time Zone",
+    },
+    {
+      id: "domain",
+      label: "Domain",
+      model: "domain",
+      type: "text",
+      required: true,
+      placeholder: "Enter Domain",
+    },
+    {
+      id: "hasMultipleSites",
+      label: "Has Multiple Sites",
+      model: "hasMultipleSites",
+      "type": "multi",
+      "required": true,
+      "multiple-select": false,
+      "options": [
+        { label: 'Yes', value: 'Yes' },
+        { label: 'No', value: 'No' }, 
+      ]
+    },
+    {
+      id: "informationSecurityProducts",
+      label: "Information Security Products",
+      model: "informationSecurityProducts",
+      type: "text",
+      required: true,
+      placeholder: "Enter Information Security Products",
+    },
+    {
+      id: "subscriptionAllocated",
+      label: "Subscription Allocated",
+      model: "subscriptionAllocated",
+       "type": "multi",
+      "required": true,
+      "multiple-select": false,
+      "options": [
+        { label: 'Tier 1 - All Module', value: 'Tier 1' },
+        { label: 'Tier 2 - Basic + extra module', value: 'Tier 2' }, 
+        { label: 'Tier 3 - Basic module', value: 'Tier 3' }, 
+      ]
+    },
+    {
+      id: "moduleAssigned",
+      label: "Assign Module",
+      model: "moduleAssigned",
+      "type": "multi",
+      "required": true,
+      "multiple-select": true,
+      options: [
+        { value: "basic", label: "Basic" },
+        { value: "standard", label: "Standard" },
+        { value: "premium", label: "Premium" },
+      ],
+    },
+    {
+      id: "organisationStructure",
+      label: "Organisation Structure",
+      model: "organisationStructure",
+      type: "text",
+      required: true,
+      placeholder: "Enter Organisation Structure",
+    },
+  ];
+
+  return {
+    fields,
+  };
+});

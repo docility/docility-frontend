@@ -17,7 +17,7 @@ export const useCreateRiskField = defineStore('CreateRiskFields', () => {
       "type": "text",
       "read-only": true,
       "required": false,
-      "options": []
+      "options": [], 
     },
     {
       "id": "riskOwner",

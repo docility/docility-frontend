@@ -6,11 +6,11 @@
         <p class="text-white mt-4 text-lg font-semibold">Loading...</p>
       </div>
     </div>
-    <div v-else class="modal-content bg-white p-8 rounded-lg max-w-5xl w-full overflow-y-auto h-full shadow-lg">
+    <div v-else class="modal-content bg-white p-8 rounded-lg max-w-5xl w-full shadow-lg">
       <h3 class="text-2xl font-bold mb-6 text-gray-800">
-        {{ existingCompany ? "Update Risk" : "New Risk" }}
+        {{ existingEntry ? "Update" : "New" }}
       </h3>
-      <form @submit.prevent="submitForm" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <form @submit.prevent="submitForm" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6">
         <!-- Dynamic Form Fields -->
         <div v-for="field in formFields" :key="field.id" class="form-group flex flex-col">
           <label v-if="!field.hidden" :for="field.id" class="block text-sm font-medium text-gray-700 mb-1">
@@ -18,23 +18,23 @@
             <span v-if="field.required" class="text-red-500">*</span>
           </label> 
           <!-- Textarea -->
-          <textarea v-if="field.type === 'textarea' && !field.hidden" :id="field.id" v-model="newCompany[field.model]"
+          <textarea v-if="field.type === 'textarea' && !field.hidden" :id="field.id" v-model="newEntry[field.model]"
             :placeholder="field.placeholder" :required="field.required"
             class="form-input mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-300 focus:outline-none"></textarea>
 
           <!-- Text Input -->
-          <input v-else-if="field.type === 'text' && !field.hidden" :id="field.id" v-model="newCompany[field.model]"
+          <input v-else-if="field.type === 'text' && !field.hidden" :id="field.id" v-model="newEntry[field.model]"
             :type="field.type" :placeholder="field.placeholder" :required="field.required"
             :readonly="field['read-only']"
             class="form-input mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-300 focus:outline-none" />
 
           <!-- Date Input -->
-          <input v-else-if="field.type === 'date' && !field.hidden" :id="field.id" v-model="newCompany[field.model]"
+          <input v-else-if="field.type === 'date' && !field.hidden" :id="field.id" v-model="newEntry[field.model]"
             type="date" :placeholder="field.placeholder" :required="field.required"
             class="form-input mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-300 focus:outline-none" />
 
           <!-- Select Dropdown -->
-          <select v-else-if="field.type === 'select' && !field.hidden" :id="field.id" v-model="newCompany[field.model]"
+          <select v-else-if="field.type === 'select' && !field.hidden" :id="field.id" v-model="newEntry[field.model]"
             :required="field.required"
             class="form-input mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-300 focus:outline-none">
             <option v-for="option in field.options" :key="option.value" :value="option.value">
@@ -45,7 +45,7 @@
           <!-- Checkbox Group -->
           <div v-else-if="field.type === 'checkbox'" class="mt-2 space-y-2">
             <label v-for="option in field.options" :key="option.value" class="flex items-center space-x-2">
-              <input type="checkbox" :value="option.value" v-model="newCompany[field.model]"
+              <input type="checkbox" :value="option.value" v-model="newEntry[field.model]"
                 class="form-checkbox h-4 w-4 text-blue-500" />
               <span>{{ option.text }}</span>
             </label>
@@ -54,7 +54,7 @@
 
 
           <!-- Multiselect -->
-          <Multiselect v-else-if="field.type === 'multi'" v-model="newCompany[field.model]" :options="field.options"
+          <Multiselect v-else-if="field.type === 'multi'" v-model="newEntry[field.model]" :options="field.options"
             :multiple="field['multiple-select']" :close-on-select="!field['multiple-select']" :clear-on-select="false"
             :preserve-search="true" :hide-selected="true" placeholder="Select Options" label="label" track-by="value"
             class="w-full mt-1" />
@@ -111,9 +111,9 @@
 // import http from "@/helpers/http";
 // import { toast } from "vue3-toastify";
 import { createPinia } from "pinia";
-import { useCompanyManagement } from "@/stores/CompanyManagement";
+import { useSubscriptionManagement } from "@/stores/SubscriptionManagement";
 const pinia = createPinia();
-const createCompanyFields = useCompanyManagement(pinia);
+const createEntryFields = useSubscriptionManagement(pinia);
 import Multiselect from 'vue-multiselect';
 
 export default {
@@ -121,7 +121,7 @@ export default {
     Multiselect,
   },
   props: {
-    existingCompany: {
+    existingEntry: {
       type: Object,
       default: null,
     },
@@ -132,51 +132,54 @@ export default {
   },
   data() {
     return {
-      newCompany: {},
-      showCreateCompanyCategory: false,
-      companyCategoryList: null,
-      formFields: createCompanyFields.fields,
+      newEntry: {},
+      showCreateEntryCategory: false,
+      dataCategoryList: null,
+      formFields: createEntryFields.fields,
     };
   },
   watch: {
-    existingCompany: {
+    existingEntry: {
       immediate: true,
       handler(newVal) {
-        this.newCompany = this.initializeCompanyData(newVal);
+        this.newEntry = this.initializeEntryData(newVal);
       },
     },
   },
   methods: {
     logChange(model, event) {
       console.log(`Changed ${model}:`, event.target.value);
-      this.newCompany[model] = event.target.value;
+      this.newEntry[model] = event.target.value;
     },
-    initializeCompanyData(company = null) {
-      console.log("Initializing company data:", company);
-      return company
-        ? { ...company } // Use the existing company data
+    initializeEntryData(data = null) {
+      console.log("Initializing data data:", data);
+
+      if (data?.accessModule && typeof data.accessModule === "string") {
+        data.accessModule = JSON.parse(data.accessModule);
+      }
+
+      return data
+        ? { ...data } // Use the existing data data
         : {
-          name: "",
-          address: "",
-          email: "",
+           
         }; // Default empty values
     },
     submitForm() {
-      console.log("Submitted Data:", this.newCompany);
-      if (Object.values(this.newCompany).some((value) => value === "")) {
+      console.log("Submitted Data:", this.newEntry);
+      if (Object.values(this.newEntry).some((value) => value === "")) {
         alert("Please fill in all required fields.");
         return;
       }
 
-      this.callback({ ...this.newCompany });
+      this.callback({ ...this.newEntry });
       this.$emit("close");
     },
   },
   mounted() {
-    console.log("Existing Company:", this.companyCategoryList);
+    console.log("Existing Entry:", this.dataCategoryList);
 
-    this.newCompany = this.initializeCompanyData(this.existingCompany);
-    console.log("New Company Data:", this.newCompany);
+    this.newEntry = this.initializeEntryData(this.existingEntry);
+    console.log("New Entry Data:", this.newEntry);
   },
 };
 </script>

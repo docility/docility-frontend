@@ -16,37 +16,37 @@
       <form @submit.prevent="submitForm" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <!-- Dynamic Form Fields -->
         <div v-for="field in formFields" :key="field.id" class="form-group flex flex-col">
-          <label :for="field.id" class="block text-sm font-medium text-gray-700 mb-1">
+          <label v-if="!field.hidden" :for="field.id" class="block text-sm font-medium text-gray-700 mb-1">
             {{ field.label }}
             <span v-if="field.required" class="text-red-500">*</span>
           </label>
  
           <!-- Textarea -->
-          <textarea v-if="field.type === 'textarea'" :id="field.id" v-model="newCompany[field.model]"
+          <textarea v-if="field.type === 'textarea' && !field.hidden"  :id="field.id" v-model="newCompany[field.model]"
             :placeholder="field.placeholder" :required="field.required"
             class="form-input mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-300 focus:outline-none"></textarea>
 
           <!-- Text Input -->
-          <input v-else-if="field.type === 'text'" :id="field.id" v-model="newCompany[field.model]" :type="field.type"
+          <input v-else-if="field.type === 'text'  && !field.hidden"  :id="field.id" v-model="newCompany[field.model]" :type="field.type"
             :placeholder="field.placeholder" :required="field.required" :readonly="field['read-only']"
             class="form-input mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-300 focus:outline-none" />
 
           <!-- Date Input -->
-          <input v-else-if="field.type === 'date'" :id="field.id" v-model="newCompany[field.model]" type="date"
+          <input v-else-if="field.type === 'date'  && !field.hidden"  :id="field.id" v-model="newCompany[field.model]" type="date"
             :placeholder="field.placeholder" :required="field.required"
             class="form-input mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-300 focus:outline-none" />
 
           <!-- Select Dropdown -->
-          <select v-else-if="field.type === 'select'" :id="field.id" v-model="newCompany[field.model]"
+          <select v-else-if="field.type === 'select'  && !field.hidden"  :id="field.id" v-model="newCompany[field.model]"
             :required="field.required"
             class="form-input mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-300 focus:outline-none">
-            <option v-for="option in field.options" :key="option.value" :value="option.value">
+            <option v-for="option in field.options"  :key="option.value" :value="option.value">
               {{ option.text }}
             </option>
           </select>
 
           <!-- Checkbox Group -->
-          <div v-else-if="field.type === 'checkbox'" class="mt-2 space-y-2">
+          <div v-else-if="field.type === 'checkbox'  && !field.hidden" :hidden="field.hidden" class="mt-2 space-y-2">
             <label v-for="option in field.options" :key="option.value" class="flex items-center space-x-2">
               <input type="checkbox" :value="option.value" v-model="newCompany[field.model]"
                 class="form-checkbox h-4 w-4 text-blue-500" />
@@ -57,7 +57,7 @@
 
 
           <!-- Multiselect -->
-          <Multiselect v-else-if="field.type === 'multi'" v-model="newCompany[field.model]" :options="field.options"
+          <Multiselect v-else-if="field.type === 'multi'  && !field.hidden" v-model="newCompany[field.model]" :options="field.options"
             :multiple="field['multiple-select']" :close-on-select="!field['multiple-select']" :clear-on-select="false"
             :preserve-search="true" placeholder="Select Options" label="label" track-by="value" class="w-full mt-1" />
 
