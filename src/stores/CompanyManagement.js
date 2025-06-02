@@ -11,6 +11,14 @@ export const useCompanyManagement = defineStore("CompanyManagement", () => {
       placeholder: "Enter Organisation name",
     },
     {
+      id: "username",
+      label: "Username",
+      model: "username",
+      type: "text",
+      required: true,
+      placeholder: "Enter Username",
+    },
+    {
       id: "address",
       label: "Address",
       model: "address",
@@ -20,9 +28,9 @@ export const useCompanyManagement = defineStore("CompanyManagement", () => {
     },
 
     {
-      id: "busienessType",
+      id: "businessType",
       label: "Business Type",
-      model: "busienessType",
+      model: "businessType",
       type: "text",
       required: true,
       placeholder: "Enter Business Type",
@@ -137,30 +145,30 @@ export const useCompanyManagement = defineStore("CompanyManagement", () => {
     },
     {
       id: "subscriptionAllocated",
-      label: "Subscription Allocated",
+      label: "Subscription",
       model: "subscriptionAllocated",
        "type": "multi",
       "required": true,
       "multiple-select": false,
       "options": [
-        { label: 'Tier 1 - All Module', value: 'Tier 1' },
-        { label: 'Tier 2 - Basic + extra module', value: 'Tier 2' }, 
-        { label: 'Tier 3 - Basic module', value: 'Tier 3' }, 
+        // { label: 'Tier 1 - All Module', value: 'Tier 1' },
+        // { label: 'Tier 2 - Basic + extra module', value: 'Tier 2' }, 
+        // { label: 'Tier 3 - Basic module', value: 'Tier 3' }, 
       ]
     },
-    {
-      id: "moduleAssigned",
-      label: "Assign Module",
-      model: "moduleAssigned",
-      "type": "multi",
-      "required": true,
-      "multiple-select": true,
-      options: [
-        { value: "basic", label: "Basic" },
-        { value: "standard", label: "Standard" },
-        { value: "premium", label: "Premium" },
-      ],
-    },
+    // {
+    //   id: "moduleAssigned",
+    //   label: "Assign Module",
+    //   model: "moduleAssigned",
+    //   "type": "multi",
+    //   "required": true,
+    //   "multiple-select": true,
+    //   options: [
+    //     { value: "basic", label: "Basic" },
+    //     { value: "standard", label: "Standard" },
+    //     { value: "premium", label: "Premium" },
+    //   ],
+    // },
     {
       id: "organisationStructure",
       label: "Organisation Structure",

@@ -61,7 +61,7 @@ const UserAccess = [
     path: "/dashboard/risks",
     component: "CreateRisk2",
   },
-  { path: "supplier", name: "supplier", component: Supplier },
+  { path: "supplier", name: "supplier", component: "Supplier" },
   {
     path: "/dashboard/create-control",
     name: "Control Assessment",

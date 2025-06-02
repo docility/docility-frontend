@@ -32,7 +32,7 @@ export const useSubscriptionManagement = defineStore(
             label: "Supplier",
             value: JSON.stringify({
               path: "supplier",
-              name: "supplier",
+              name: "Supplier",
               component: "Supplier",
             }),
           },

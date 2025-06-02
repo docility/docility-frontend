@@ -153,7 +153,10 @@ export default {
       this.showAddModal = true;
       this.existingCompanyData = null;
     },
-    async addNewCompany(newCompany) {
+    async addNewCompany(newCompany, close) {
+
+      try {
+        
       
       console.log("adding new Company", newCompany);
       if (newCompany?.documentId) {
@@ -162,19 +165,34 @@ export default {
         delete newCompany.createdAt;
         delete newCompany.updatedAt;
         delete newCompany.documentId;
+        newCompany.accessModule = JSON.stringify(newCompany.accessModule);
+        newCompany.hasMultipleSites = JSON.stringify(newCompany.hasMultipleSites);
+        newCompany.subscriptionAllocated = JSON.stringify(newCompany.subscriptionAllocated);
+         newCompany.moduleAssigned = JSON.stringify(newCompany.moduleAssigned);
         http.put(`api/companies/${id}`, {
           data: newCompany,
         }).then((res) => {
           console.log(res);
           toast.success("Company added successfully");
           this.companyListKey++;
+        
         });
       } else { 
+        newCompany.accessModule = JSON.stringify(newCompany.accessModule);
+        newCompany.hasMultipleSites = JSON.stringify(newCompany.hasMultipleSites);
+        newCompany.subscriptionAllocated = JSON.stringify(newCompany.subscriptionAllocated);
+         newCompany.moduleAssigned = JSON.stringify(newCompany.moduleAssigned);
         await http.post("api/companies", { data: newCompany }).then((res) => {
           console.log(res); 
           toast.success("Company added successfully");
-          this.companyListKey++;
+          this.companyListKey++; 
         });   
+      }
+      } catch (error) { 
+          toast.error("Error parsing newCompany:", error);
+      } finally {
+        close();
+        this.showAddModal = false;
       }
     },
   },

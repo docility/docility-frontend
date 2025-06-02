@@ -8,7 +8,7 @@
     </div>
     <div v-else class="modal-content bg-white p-8 rounded-lg max-w-5xl w-full overflow-y-auto h-full shadow-lg">
       <h3 class="text-2xl font-bold mb-6 text-gray-800">
-        {{ existingCompany ? "Update Risk" : "New Risk" }}
+        {{ existingCompany ? "Update Company" : "New Company" }}
       </h3>
       <form @submit.prevent="submitForm" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <!-- Dynamic Form Fields -->
@@ -115,6 +115,7 @@ import { useCompanyManagement } from "@/stores/CompanyManagement";
 const pinia = createPinia();
 const createCompanyFields = useCompanyManagement(pinia);
 import Multiselect from 'vue-multiselect';
+import http from "@/helpers/http";
 
 export default {
   components: {
@@ -168,7 +169,38 @@ export default {
         return;
       }
 
-      this.callback({ ...this.newCompany });
+      this.callback({ ...this.newCompany }, this.closeModal);
+      // this.$emit("close");
+    },
+  async fetchSubscriptionAllocation() {
+  let subscriptionAllocations = [];
+  try {
+    const subscription = await http.get("/api/subscription-managements");
+    if (subscription?.data?.data.length > 0) {
+      subscription.data.data.forEach((item) => {
+        subscriptionAllocations.push({
+          label: `${item.name}`, // Display text
+          value: item.documentId, // Actual value
+        });
+      });
+    }
+  } catch (error) {
+    console.error("Error fetching categories:", error);
+  }
+
+  console.log("Subscription Allocations:", subscriptionAllocations);
+
+  // Update the options for the 'riskCategory' field
+  const subscriptionAllocation = this.formFields.find(
+  (field) => field.id === "subscriptionAllocated"
+  );
+
+  console.log("Subscription Allocation Field:", subscriptionAllocation);
+  if (subscriptionAllocation) {
+    subscriptionAllocation.options = subscriptionAllocations;
+  } 
+  },
+    closeModal() {
       this.$emit("close");
     },
   },
@@ -177,6 +209,7 @@ export default {
 
     this.newCompany = this.initializeCompanyData(this.existingCompany);
     console.log("New Company Data:", this.newCompany);
+    this.fetchSubscriptionAllocation()
   },
 };
 </script>
