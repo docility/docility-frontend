@@ -43,39 +43,15 @@ export const useSubscriptionManagement = defineStore(
               name: "Control Assessment",
               component: "CreateControl",
             }),
-          },
-          {
-            label: "New Control Assessment",
-            value: JSON.stringify({
-              path: "/dashboard/create-control-assessment",
-              name: "New Control Assessment",
-              component: "CreateControlAssessment",
-            }),
-          },
+          }, 
           {
             label: "Risk",
             value: JSON.stringify({
               path: "/dashboard/risks",
-              name: "New Risks",
+              name: "Risk Register",
               component: "CreateRisk2",
             }),
-          },
-          {
-            label: "New Assessment Checklist",
-            value: JSON.stringify({
-              path: "/dashboard/create-control/new-control",
-              name: "New Assessment Checklist",
-              component: "NewAssessmentChecklist",
-            }),
-          },
-          {
-            label: "Information Asset",
-            value: JSON.stringify({
-              path: "/dashboard/create-information-asset",
-              name: "Information Asset",
-              component: "CreateInformationAsset",
-            }),
-          },
+          },  
           {
             label: "Risk Category",
             value: JSON.stringify({
@@ -109,10 +85,10 @@ export const useSubscriptionManagement = defineStore(
             }),
           },
           {
-            label: "Risks List",
+            label: "Risks Register",
             value: JSON.stringify({
               path: "/dashboard/risk-register",
-              name: "Risks List",
+              name: "Risks Register",
               component: "RiskRegistered",
             }),
           },
@@ -120,7 +96,7 @@ export const useSubscriptionManagement = defineStore(
             label: "New Risk Category",
             value: JSON.stringify({
               path: "/dashboard/risk-category",
-              name: "New Risk Category",
+              name: "Risk Category",
               component: "RiskCategory",
             }),
           },
@@ -128,7 +104,7 @@ export const useSubscriptionManagement = defineStore(
             label: "New Asset Category",
             value: JSON.stringify({
               path: "/dashboard/asset-category",
-              name: "New Asset Category",
+              name: "Asset Category",
               component: "AssetCategory",
             }),
           },
@@ -136,7 +112,7 @@ export const useSubscriptionManagement = defineStore(
             label: "Customer management",
             value: JSON.stringify({
               path: "customer-management",
-              name: "Customer management",
+              name: "Customer",
               component: "CustomerManagement",
             }),
           },
@@ -144,7 +120,7 @@ export const useSubscriptionManagement = defineStore(
             label: "Record management",
             value: JSON.stringify({
               path: "record-management",
-              name: "Record management",
+              name: "Record",
               component: "recordManagement",
             }),
           },
@@ -152,7 +128,7 @@ export const useSubscriptionManagement = defineStore(
             label: "Company management",
             value: JSON.stringify({
               path: "company-management",
-              name: "Company management",
+              name: "Company",
               component: "CompanyManagement",
             }),
           },
@@ -160,7 +136,7 @@ export const useSubscriptionManagement = defineStore(
             label: "Questionnaire management",
             value: JSON.stringify({
               path: "questionnaire-management",
-              name: "Questionnaire management",
+              name: "Questionnaire",
               component: "QuestionnaireManagement",
             }),
           },
@@ -176,7 +152,7 @@ export const useSubscriptionManagement = defineStore(
             label: "Subscription management",
             value: JSON.stringify({
               path: "subscription-management",
-              name: "Subscription management",
+              name: "Subscription",
               component: "SubscriptionManagement",
             }),
           },

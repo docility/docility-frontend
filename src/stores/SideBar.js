@@ -7,6 +7,28 @@ export const useSidebarStore = defineStore('Sidebar', () => {
   const activeSubMenu = ref(null);
   const activeMenu = ref(null);
 
+// const allowedRouteNames = [
+//   "Control Assessment",
+//   "supplier",
+//   "New Control Assessment",
+//   "New Risks",
+//   "New Assessment Checklist",
+//   "Information Asset",
+//   "Risk Category",
+//   "Control Domain",
+//   "controlAssessment",
+//   "Risk Treatment",
+//   "Risk Register",
+//   "New Risk Category",
+//   "New Asset Category",
+//   "Questions",
+//   "Questionnaire management",
+//   "Company management",
+//   "Customer management"
+// ];
+
+  const allowedRouteNames = JSON.parse(sessionStorage.getItem('accessModule')).map(item => item.name) || [];
+
   const dashBoardMenu = [
     { name: 'Dashboard', to: '/dashboard/home', subMenu: [] },
     { name: 'Supplier', to: '/dashboard/supplier', subMenu: [] },
@@ -14,11 +36,11 @@ export const useSidebarStore = defineStore('Sidebar', () => {
       name: 'Risk Assessment',
       to: '',
       subMenu: [
-        { name: 'New Asset Category', to: '/dashboard/asset-category' },
-        { name: 'New Risk Category', to: '/dashboard/risk-category' },
+        { name: 'Asset Category', to: '/dashboard/asset-category' },
+        { name: 'Risk Category', to: '/dashboard/risk-category' },
         { name: 'Control Domain', to: '/dashboard/control-domain' },
         { name: 'Control Assessment', to: '/dashboard/control-assessment' },
-        { name: 'New Risk Treatment', to: '/dashboard/risk-treatment' }, 
+        { name: 'Risk Treatment', to: '/dashboard/risk-treatment' }, 
         { name: 'Risk Register', to: '/dashboard/risks'}, 
       ],
     },
@@ -33,11 +55,26 @@ export const useSidebarStore = defineStore('Sidebar', () => {
       ]
     },
     { name: 'Questionnaire', to: '/dashboard/questionnaire-management', subMenu: [] },
-  ];
+  ].filter(menu => {
+    // Always include Dashboard
+    if (menu.name === 'Dashboard') return true;
+    // If has subMenu, filter subMenu items
+    if (menu.subMenu && menu.subMenu.length) {
+      menu.subMenu = menu.subMenu.filter(sub => isAllowed(sub.name));
+      return menu.subMenu.length > 0;
+    }
+    // Otherwise, check main menu name
+    return isAllowed(menu.name);
+  });
 
   function toggleSidebar() {
     showSidebar.value = !showSidebar.value;
   }
+
+  function isAllowed(name) {
+  return allowedRouteNames.includes(name);
+}
+
 
   function handleLogout(router) {
     sessionStorage.clear();

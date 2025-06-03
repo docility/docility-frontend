@@ -55,114 +55,119 @@ const ControlRoutes = {
   SubscriptionManagement: SubscriptionManagement,
 };
 
-const UserAccess = [
-  {
-    name: "CreateRisk",
-    path: "/dashboard/risks",
-    component: "CreateRisk2",
-  },
-  { path: "supplier", name: "supplier", component: "Supplier" },
-  {
-    path: "/dashboard/create-control",
-    name: "Control Assessment",
-    component: "CreateControl",
-  },
-  {
-    path: "/dashboard/create-control-assessment",
-    name: "New Control Assessment",
-    component: "CreateControlAssessment",
-  },
-  {
-    path: "/dashboard/risks",
-    name: "New Risks",
-    component: "CreateRisk2",
-  },
-  {
-    path: "/dashboard/create-control/new-control",
-    name: "New Assessment Checklist",
-    component: "NewAssessmentChecklist",
-  },
-  {
-    path: "/dashboard/create-information-asset",
-    name: "Information Asset",
-    component: "CreateInformationAsset",
-  },
-  {
-    path: "/dashboard/risk",
-    name: "Risk",
-    component: "CreateRisk",
-  },
-  {
-    path: "/dashboard/create-risk-category",
-    name: "Risk Category",
-    component: "CreateRiskCategory",
-  },
-  {
-    path: "/dashboard/control-domain",
-    name: "Control Domain",
-    component: "controlDomain",
-  },
-  {
-    path: "/dashboard/control-assessment",
-    name: "Control Assessment",
-    component: "controlAssessment",
-  },
-  {
-    path: "/dashboard/create-risk-treatment",
-    name: "Risk Treatment",
-    component: "CreateTemplate",
-  },
-  {
-    path: "/dashboard/risk-register",
-    name: "Risks List",
-    component: "RiskRegistered",
-  },
-  {
-    path: "/dashboard/risk-category",
-    name: "New Risk Category",
-    component: "RiskCategory",
-  },
-  {
-    path: "/dashboard/asset-category",
-    name: "New Asset Category",
-    component: "AssetCategory",
-  },
-  {
-    path: "/dashboard/risk-treatment",
-    name: "New Risk Treatment",
-    component: "RiskTreatment",
-  },
-  {
-    path: "customer-management",
-    name: "Customer management",
-    component: "CustomerManagement",
-  },
-  {
-    path: "record-management",
-    name: "Record management",
-    component: "recordManagement",
-  },
-  {
-    path: "company-management",
-    name: "Company management",
-    component: "CompanyManagement",
-  },
-  {
-    path: "questionnaire-management",
-    name: "Questionnaire management",
-    component: "QuestionnaireManagement",
-  },
-  {
-    path: "questions-management",
-    name: "Questions",
-    component: "QuestionsManagement",
-  },
-  {
-    path: "subscription-management",
-    name: "Subscription management",
-    component: "SubscriptionManagement",
-  }
-];
+let UserAccess = JSON.parse(sessionStorage.getItem("accessModule"));
+// UserAccess = UserAccess
+//   .split('\n')                // split by line
+//   .map(line => JSON.parse(line));
+console.log(UserAccess)
+// const UserAccess1 = [
+//   {
+//     name: "CreateRisk",
+//     path: "/dashboard/risks",
+//     component: "CreateRisk2",
+//   },
+//   { path: "supplier", name: "supplier", component: "Supplier" },
+//   {
+//     path: "/dashboard/create-control",
+//     name: "Control Assessment",
+//     component: "CreateControl",
+//   },
+//   {
+//     path: "/dashboard/create-control-assessment",
+//     name: "New Control Assessment",
+//     component: "CreateControlAssessment",
+//   },
+//   {
+//     path: "/dashboard/risks",
+//     name: "New Risks",
+//     component: "CreateRisk2",
+//   },
+//   {
+//     path: "/dashboard/create-control/new-control",
+//     name: "New Assessment Checklist",
+//     component: "NewAssessmentChecklist",
+//   },
+//   {
+//     path: "/dashboard/create-information-asset",
+//     name: "Information Asset",
+//     component: "CreateInformationAsset",
+//   },
+//   {
+//     path: "/dashboard/risk",
+//     name: "Risk",
+//     component: "CreateRisk",
+//   },
+//   {
+//     path: "/dashboard/create-risk-category",
+//     name: "Risk Category",
+//     component: "CreateRiskCategory",
+//   },
+//   {
+//     path: "/dashboard/control-domain",
+//     name: "Control Domain",
+//     component: "controlDomain",
+//   },
+//   {
+//     path: "/dashboard/control-assessment",
+//     name: "Control Assessment",
+//     component: "controlAssessment",
+//   },
+//   {
+//     path: "/dashboard/create-risk-treatment",
+//     name: "Risk Treatment",
+//     component: "CreateTemplate",
+//   },
+//   {
+//     path: "/dashboard/risk-register",
+//     name: "Risks List",
+//     component: "RiskRegistered",
+//   },
+//   {
+//     path: "/dashboard/risk-category",
+//     name: "New Risk Category",
+//     component: "RiskCategory",
+//   },
+//   {
+//     path: "/dashboard/asset-category",
+//     name: "New Asset Category",
+//     component: "AssetCategory",
+//   },
+//   {
+//     path: "/dashboard/risk-treatment",
+//     name: "New Risk Treatment",
+//     component: "RiskTreatment",
+//   },
+//   {
+//     path: "customer-management",
+//     name: "Customer management",
+//     component: "CustomerManagement",
+//   },
+//   {
+//     path: "record-management",
+//     name: "Record management",
+//     component: "recordManagement",
+//   },
+//   {
+//     path: "company-management",
+//     name: "Company management",
+//     component: "CompanyManagement",
+//   },
+//   {
+//     path: "questionnaire-management",
+//     name: "Questionnaire management",
+//     component: "QuestionnaireManagement",
+//   },
+//   {
+//     path: "questions-management",
+//     name: "Questions",
+//     component: "QuestionsManagement",
+//   },
+//   {
+//     path: "subscription-management",
+//     name: "Subscription management",
+//     component: "SubscriptionManagement",
+//   }
+// ];
 
 const DashBoardControls = UserAccess.map((control) => {
   control.component = ControlRoutes[control.component];

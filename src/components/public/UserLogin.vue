@@ -132,13 +132,27 @@ export default {
           identifier: this.username,
           password: this.password,
         });
-
         const { jwt, user } = response.data;
-
+        
+        console.log(user.data);
         sessionStorage.setItem("jwt", jwt);
         sessionStorage.setItem("profile", JSON.stringify(user));
-        socket.connect();
-        this.$router.push("/dashboard");
+
+        if (jwt) { 
+        const userRes = await http.get(`/api/users/${user.id}?populate=*`)
+          console.log("user data", userRes)
+        
+
+          const accessModule  = JSON.parse(userRes.data.subscription_management.accessModule).map(item => JSON.parse(item.value));
+          console.log(typeof accessModule)
+          console.log(accessModule)
+        sessionStorage.setItem("accessModule", JSON.stringify(accessModule));
+       
+       sessionStorage.setItem("profile", JSON.stringify(userRes));
+          socket.connect();
+          this.$router.push("/dashboard");
+        }
+
       } catch (error) {
         this.errorMessage = "Login failed. Please try again.";
       } finally {
