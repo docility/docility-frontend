@@ -10,7 +10,7 @@ import CreateRisk from "@/components/private/riskAssessment/menu/create-risk.vue
 import CreateControl from "@/components/private/riskAssessment/menu/create-control.vue";
 import CreateInformationAsset from "@/components/private/riskAssessment/menu/create-information-asset.vue";
 import CreateRiskCategory from "@/components/private/riskAssessment/menu/create-risk-category.vue";
-import CreateTemplate from "@/components/private/riskAssessment/menu/create-template.vue";
+// import CreateTemplate from "@/components/private/riskAssessment/menu/create-template.vue";
 import RiskRegistered from "@/components/private/riskAssessment/menu/risks/risk-registered.vue";
 import NewAssessmentChecklist from "@/components/private/riskAssessment/menu/assessment-checklist/new-assessment-checklist.vue";
 import CustomerManagement from "@/components/private/customerManagement/customer-management.vue";
@@ -32,16 +32,16 @@ import SubscriptionManagement from "@/components/private/subscriptionManagement/
 const ControlRoutes = {
   QuestionsManagement: QuestionsManagement,
   CreateControl: CreateControl,
-  CreateRisk: CreateRisk,
+  "Risk Register": CreateRisk,
   CreateInformationAsset: CreateInformationAsset,
   CreateRiskCategory: CreateRiskCategory,
-  CreateTemplate: CreateTemplate,
+  // CreateTemplate: CreateTemplate,
   RiskRegistered: RiskRegistered,
   NewAssessmentChecklist: NewAssessmentChecklist,
   CreateControlAssessment: CreateControlAssessment,
   RiskCategory: RiskCategory,
   AssetCategory: AssetCategory,
-  RiskTreatment: RiskTreatment,
+  CreateTemplate: RiskTreatment,
 
   CreateRisk2: CreateRisk2,
   controlAssessment: controlAssessment,
@@ -49,13 +49,13 @@ const ControlRoutes = {
   recordManagement: recordManagement,
   CustomerManagement: CustomerManagement,
   CompanyManagement: CompanyManagement,
-  QuestionnaireManagement: QuestionnaireManagement,
+  QuestionnaireManagement: QuestionnaireManagement, 
   PrivacyPolicy: PrivacyPolicy,
   Supplier: Supplier,
   SubscriptionManagement: SubscriptionManagement,
 };
 
-let UserAccess = JSON.parse(sessionStorage.getItem("accessModule"));
+let UserAccess = JSON.parse(sessionStorage.getItem("accessModule")) || [];
 // UserAccess = UserAccess
 //   .split('\n')                // split by line
 //   .map(line => JSON.parse(line));
@@ -184,7 +184,6 @@ const routes = [
     name: "assessment",
     component: Assessment,
   },
-
   {
     path: "/dashboard",
     name: "dashboard",

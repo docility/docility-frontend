@@ -29,6 +29,7 @@ export const useSidebarStore = defineStore('Sidebar', () => {
 
   const allowedRouteNames = JSON.parse(sessionStorage.getItem('accessModule')).map(item => item.name) || [];
 
+  // allowedRouteNames.push('Subscription'); // Ensure Dashboard is always included
   const dashBoardMenu = [
     { name: 'Dashboard', to: '/dashboard/home', subMenu: [] },
     { name: 'Supplier', to: '/dashboard/supplier', subMenu: [] },
@@ -40,8 +41,8 @@ export const useSidebarStore = defineStore('Sidebar', () => {
         { name: 'Risk Category', to: '/dashboard/risk-category' },
         { name: 'Control Domain', to: '/dashboard/control-domain' },
         { name: 'Control Assessment', to: '/dashboard/control-assessment' },
-        { name: 'Risk Treatment', to: '/dashboard/risk-treatment' }, 
-        { name: 'Risk Register', to: '/dashboard/risks'}, 
+        { name: 'Risk Treatment', to: '/dashboard/create-risk-treatment' }, 
+        { name: 'Risks Register', to: '/dashboard/risks'}, 
       ],
     },
     {

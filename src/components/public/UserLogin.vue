@@ -135,6 +135,8 @@ export default {
         const { jwt, user } = response.data;
         
         console.log(user.data);
+        console.log("jwt", jwt);
+        console.log("user", user);
         sessionStorage.setItem("jwt", jwt);
         sessionStorage.setItem("profile", JSON.stringify(user));
 
@@ -142,7 +144,7 @@ export default {
         const userRes = await http.get(`/api/users/${user.id}?populate=*`)
           console.log("user data", userRes)
         
-
+       
           const accessModule  = JSON.parse(userRes.data.subscription_management.accessModule).map(item => JSON.parse(item.value));
           console.log(typeof accessModule)
           console.log(accessModule)
