@@ -180,7 +180,7 @@ export default {
       subscription.data.data.forEach((item) => {
         subscriptionAllocations.push({
           label: `${item.name}`, // Display text
-          value: item.documentId, // Actual value
+          value: item.name, // Actual value
         });
       });
     }

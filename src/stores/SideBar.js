@@ -6,31 +6,11 @@ export const useSidebarStore = defineStore('Sidebar', () => {
   const showLogoutModal = ref(false);
   const activeSubMenu = ref(null);
   const activeMenu = ref(null);
-
-// const allowedRouteNames = [
-//   "Control Assessment",
-//   "supplier",
-//   "New Control Assessment",
-//   "New Risks",
-//   "New Assessment Checklist",
-//   "Information Asset",
-//   "Risk Category",
-//   "Control Domain",
-//   "controlAssessment",
-//   "Risk Treatment",
-//   "Risk Register",
-//   "New Risk Category",
-//   "New Asset Category",
-//   "Questions",
-//   "Questionnaire management",
-//   "Company management",
-//   "Customer management"
-// ];
-
-  const allowedRouteNames = JSON.parse(sessionStorage.getItem('accessModule')).map(item => item.name) || [];
-
+  const allowedRouteNames = JSON.parse(sessionStorage.getItem('accessModule')).map(item => item.path) || [];
+  const dashBoardMenu = ref([]); // Use ref to make it reactive
+  function refreshMenu() {  
   // allowedRouteNames.push('Subscription'); // Ensure Dashboard is always included
-  const dashBoardMenu = [
+   dashBoardMenu.value = [
     { name: 'Dashboard', to: '/dashboard/home', subMenu: [] },
     { name: 'Supplier', to: '/dashboard/supplier', subMenu: [] },
     {
@@ -49,7 +29,7 @@ export const useSidebarStore = defineStore('Sidebar', () => {
       name: "Manage",
       to: '',
       subMenu: [
-        { name: 'Customer', to: '/dashboard/customer-management', subMenu: [] },
+        { name: 'Customer', to: 'customer-management', subMenu: [] },
         { name: 'Record', to: '/dashboard/record-management', subMenu: [] },
         { name: 'Company', to: '/dashboard/company-management', subMenu: [] },
         {name: 'Subscription', to: '/dashboard/subscription-management', subMenu: []},
@@ -58,29 +38,40 @@ export const useSidebarStore = defineStore('Sidebar', () => {
     { name: 'Questionnaire', to: '/dashboard/questionnaire-management', subMenu: [] },
   ].filter(menu => {
     // Always include Dashboard
-    if (menu.name === 'Dashboard') return true;
+    if (menu.to === '/dashboard') return true;
     // If has subMenu, filter subMenu items
     if (menu.subMenu && menu.subMenu.length) {
-      menu.subMenu = menu.subMenu.filter(sub => isAllowed(sub.name));
+      menu.subMenu = menu.subMenu.filter(sub => isAllowed(sub.to));
       return menu.subMenu.length > 0;
     }
     // Otherwise, check main menu name
-    return isAllowed(menu.name);
+    return isAllowed(menu.to);
   });
+    
+  return dashBoardMenu.value;
+  }
+
+  console.log('Dashboard Menu:', dashBoardMenu);
 
   function toggleSidebar() {
     showSidebar.value = !showSidebar.value;
   }
 
   function isAllowed(name) {
-  return allowedRouteNames.includes(name);
+  const isAllowed = allowedRouteNames.includes(name)
+  console.log('Checking if allowed:', name, isAllowed, allowedRouteNames);
+  return isAllowed;
 }
 
 
   function handleLogout(router) {
     sessionStorage.clear();
     showLogoutModal.value = false;
+    activeSubMenu.value = null;
+    activeMenu.value = null;
+    dashBoardMenu.value = [];
     router.push('/signin');
+    refreshMenu()
   }
 
   function handleMenuClick(index, item, router) {
@@ -90,9 +81,10 @@ export const useSidebarStore = defineStore('Sidebar', () => {
     } else {
       activeMenu.value = item.name;
       router.push(item.to);
+      refreshMenu()
     }
   }
-
+refreshMenu()
   return {
     showSidebar,
     showLogoutModal,
@@ -101,6 +93,7 @@ export const useSidebarStore = defineStore('Sidebar', () => {
     dashBoardMenu,
     toggleSidebar,
     handleLogout,
+    refreshMenu,
     handleMenuClick,
   };
 });

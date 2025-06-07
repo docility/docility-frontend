@@ -984,6 +984,12 @@ export default {
           return [];
         }
         const query = this.searchQuery.toLowerCase();
+        
+        if (this.supplierList.data.length === 0) {
+          return [];
+        }
+
+        console.log("Filtering suppliers with query:", this.supplyList.data, query);
         return this.supplierList.data.filter((supplier) => {
           let {
             supplier_name = "",

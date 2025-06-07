@@ -31,7 +31,7 @@ export const useSubscriptionManagement = defineStore(
           {
             label: "Supplier",
             value: JSON.stringify({
-              path: "supplier",
+              path: "/dashboard/supplier",
               name: "Supplier",
               component: "Supplier",
             }),

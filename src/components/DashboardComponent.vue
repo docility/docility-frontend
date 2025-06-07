@@ -8,14 +8,14 @@
         'fixed md:relative top-0 left-0 w-64 md:w-56 h-full z-50 md:z-0',
       ]"
     >
-      <div class="p-4">
+      <div :key="recordListKey" class="p-4">
         <div class="flex justify-center">
           <img src="@/assets/logo.png" alt="School Logo" class="h-16 w-auto" />
         </div>
         <ul class="mt-6 space-y-2">
           <li
-            v-for="(item, index) in sidebarStore.dashBoardMenu"
-            :key="item.name"
+            v-for="(item, index) in dashBoardMenu"
+            :key="item.index"
             class="relative"
             ref="menuRefs"
           >
@@ -115,7 +115,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, onMounted, onUnmounted, watch } from "vue";
 import { useSidebarStore } from "@/stores/SideBar";
 import { useRouter } from "vue-router";
 import BreadCrumb from "./reuseable/BreadCrumb.vue";
@@ -124,39 +124,56 @@ const sidebarStore = useSidebarStore();
 const router = useRouter();
 const activeSubMenu = ref(null);
 const menuRefs = ref([]);
+const dashBoardMenu = ref([]);
+const recordListKey = ref(0);
 
 // Handle menu click
 const handleMenuClick = (index, item) => {
   if (item.subMenu.length) {
     activeSubMenu.value = activeSubMenu.value === index ? null : index;
   } else {
-    sidebarStore.activeMenu = item.name; // Set active menu for main menu
-    router.push(item.to); // Redirect if no submenu
+    sidebarStore.activeMenu = item.name;
+    router.push(item.to);
   }
 };
 
-// Set active menu for submenus
 const setActiveMenu = (menuName) => {
-  sidebarStore.activeMenu = menuName; // Set active menu for submenus
-  activeSubMenu.value = null; // Close the submenu
+  sidebarStore.activeMenu = menuName;
+  activeSubMenu.value = null;
 };
 
-// Close submenu when clicking outside
 const closeSubMenu = (event) => {
   if (!menuRefs.value.some((menu) => menu?.contains(event.target))) {
     activeSubMenu.value = null;
   }
 };
 
-// Attach event listeners
 onMounted(() => {
+ 
   document.addEventListener("click", closeSubMenu);
+  recordListKey.value += 1;
+  dashBoardMenu.value = [];
+  dashBoardMenu.value = sidebarStore.refreshMenu();
 });
 
-// Remove event listeners
 onUnmounted(() => {
   document.removeEventListener("click", closeSubMenu);
+  dashBoardMenu.value = []; 
 });
+
+// Watch for logout and force rerender
+watch(
+  () => sidebarStore.showLogoutModal,
+  (val, oldVal) => {
+    if (oldVal && !val) {
+      console.log("Modal closed, refreshing menu");
+      // Modal just closed (after logout)
+      recordListKey.value += 1;
+      sidebarStore.refreshMenu()
+      dashBoardMenu.value = sidebarStore.dashBoardMenu;
+    }
+  }
+);
 </script>
 
 <style>

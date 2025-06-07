@@ -223,9 +223,9 @@ export default {
           `/api/supplier-managements?pagination[page]=${this.currentPage}&pagination[pageSize]=${this.pageSize}`
         );
 
-        console.log("Suppliers:", response.data.data);
-        this.suppliers = response.data.data;
-        this.totalPages = response.data.meta.pagination.pageCount;
+        console.log("Suppliers:", response.data);
+        this.suppliers = response.data?.data || response.data;
+        this.totalPages = response?.data?.meta?.pagination.pageCount;
       } catch (error) {
         console.error("Error fetching suppliers:", error);
       }
@@ -245,6 +245,9 @@ export default {
   },
   computed: {
     filteredSupplier() {
+      if (this.suppliers.length === 0 || !this.searchQuery) {
+        return this.suppliers;
+      }
       return this.suppliers.filter((supplier) =>
         JSON.stringify(supplier)
           .toLowerCase()

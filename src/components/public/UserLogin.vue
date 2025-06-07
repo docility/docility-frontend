@@ -110,7 +110,10 @@
 import http from "@/helpers/http";
 import socket from "@/helpers/socket";
 import PrivacyPolicy from "./PrivacyPolicy.vue";
-
+import { createPinia } from "pinia";
+const pinia = createPinia();
+import { useSidebarStore } from "@/stores/SideBar";
+const sidebarStore = useSidebarStore(pinia);
 export default {
   components: {
     PrivacyPolicy,
@@ -141,6 +144,7 @@ export default {
         sessionStorage.setItem("profile", JSON.stringify(user));
 
         if (jwt) { 
+          
         const userRes = await http.get(`/api/users/${user.id}?populate=*`)
           console.log("user data", userRes)
         
@@ -148,14 +152,20 @@ export default {
           const accessModule  = JSON.parse(userRes.data.subscription_management.accessModule).map(item => JSON.parse(item.value));
           console.log(typeof accessModule)
           console.log(accessModule)
-        sessionStorage.setItem("accessModule", JSON.stringify(accessModule));
-       
-       sessionStorage.setItem("profile", JSON.stringify(userRes));
+          sessionStorage.setItem("accessModule", JSON.stringify(accessModule));
+        
+          sessionStorage.setItem("profile", JSON.stringify(userRes));
+      
           socket.connect();
-          this.$router.push("/dashboard");
+          
+          sidebarStore.refreshMenu();
+            this.$router.push("/dashboard").then(() => {
+            window.location.reload();
+          });
         }
 
       } catch (error) {
+        console.error("Login error:", error);
         this.errorMessage = "Login failed. Please try again.";
       } finally {
         this.isSubmitting = false;
