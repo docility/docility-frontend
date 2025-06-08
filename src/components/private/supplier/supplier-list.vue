@@ -138,6 +138,7 @@ export default {
         supplier_id: "Supplier Id",
         supplier_name: "Supplier Name",
         supplier_trading_as: "Supplier Trading As",
+        createBy: "Created By",
         abn_no: "ABN No.",
         acn_no: "ACN No.",
         website: "Website",

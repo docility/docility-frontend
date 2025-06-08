@@ -48,6 +48,7 @@
               <input type="checkbox" :checked="allSelected" @change="toggleSelectAll" />
             </th>
             <th class="p-4">Actions</th>
+            <th class="p-4">Company Id</th>
             <th class="p-4">Company Name</th>
             <th class="p-4">Username</th>
             <th class="p-4">Address</th>
@@ -85,6 +86,7 @@
                 Delete
               </button>
             </td>
+            <td class="p-4">{{ customer.documentId }}</td>
             <td class="p-4">{{ customer.name }}</td>
             <td class="p-4">{{ customer.username }}</td>
             <td class="p-4">{{ customer.address }}</td>
