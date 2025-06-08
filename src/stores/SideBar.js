@@ -6,9 +6,10 @@ export const useSidebarStore = defineStore('Sidebar', () => {
   const showLogoutModal = ref(false);
   const activeSubMenu = ref(null);
   const activeMenu = ref(null);
-  const allowedRouteNames = JSON.parse(sessionStorage.getItem('accessModule')).map(item => item.path) || [];
+  var allowedRouteNames =  [];
   const dashBoardMenu = ref([]); // Use ref to make it reactive
   function refreshMenu() {  
+    allowedRouteNames =  sessionStorage.getItem('accessModule') ? JSON.parse(sessionStorage.getItem('accessModule')).map(item => item.path) || [] : [];
   // allowedRouteNames.push('Subscription'); // Ensure Dashboard is always included
    dashBoardMenu.value = [
     { name: 'Dashboard', to: '/dashboard/home', subMenu: [] },

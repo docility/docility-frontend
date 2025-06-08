@@ -26,11 +26,13 @@
           <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
         </svg>
       </div>
+
+      
     </div>
     <!-- Bulk Actions -->
-    <div class="flex items-center mb-4 space-x-2">
+    <div class="flex justify-end items-center mb-4 space-x-2 z-0 ">
       <button @click="bulkDelete" :disabled="selectedIds.length === 0"
-        class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50">
+        class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50 ">
         Delete Selected
       </button>
       <span v-if="selectedIds.length" class="text-sm text-gray-600">

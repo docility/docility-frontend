@@ -1,5 +1,5 @@
 <template>
-  <nav class="m-5" aria-label="breadcrumb">
+  <nav class="m-5 flex" aria-label="breadcrumb">
     <ol class="flex space-x-2">
       <li v-for="(breadcrumb, index) in breadcrumbs" :key="index">
         <router-link
@@ -12,11 +12,29 @@
         <span v-else class="text-gray-500">{{ breadcrumb.name }}</span>
       </li>
     </ol>
+    <div class="ml-auto text-sm justify-end">
+      <span class="text-gray-500">{{ accountType }}</span>
+    </div>
   </nav>
 </template>
 
 <script>
 export default {
+  data() {
+    return {
+      accountType: ""
+    };
+  },
+  methods: {
+    setAccountType() {
+      this.accountType = JSON.parse(sessionStorage.getItem("profile")).data.role.name +": "+
+        (JSON.parse(sessionStorage.getItem("profile")).data.username).toUpperCase();
+      console.log("Account Type:", this.accountType);
+    },
+  },
+  mounted() {
+    this.setAccountType();
+  },
   computed: {
     breadcrumbs() {
       let pathArray = this.$route.path.split("/");

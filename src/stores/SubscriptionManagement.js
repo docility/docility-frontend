@@ -36,14 +36,14 @@ export const useSubscriptionManagement = defineStore(
               component: "Supplier",
             }),
           },
-          {
-            label: "Control Assessment",
-            value: JSON.stringify({
-              path: "/dashboard/create-control",
-              name: "Control Assessment",
-              component: "CreateControl",
-            }),
-          }, 
+          // {
+          //   label: "Control Assessment",
+          //   value: JSON.stringify({
+          //     path: "/dashboard/create-control",
+          //     name: "Control Assessment",
+          //     component: "CreateControl",
+          //   }),
+          // }, 
           {
             label: "Risk",
             value: JSON.stringify({
@@ -52,14 +52,14 @@ export const useSubscriptionManagement = defineStore(
               component: "CreateRisk2",
             }),
           },  
-          {
-            label: "Risk Category",
-            value: JSON.stringify({
-              path: "/dashboard/create-risk-category",
-              name: "Risk Category",
-              component: "CreateRiskCategory",
-            }),
-          },
+          // {
+          //   label: "Risk Category",
+          //   value: JSON.stringify({
+          //     path: "/dashboard/create-risk-category",
+          //     name: "Risk Category",
+          //     component: "CreateRiskCategory",
+          //   }),
+          // },
           {
             label: "Control Domain",
             value: JSON.stringify({
@@ -84,16 +84,16 @@ export const useSubscriptionManagement = defineStore(
               component: "CreateTemplate",
             }),
           },
+          // {
+          //   label: "Risks Register",
+          //   value: JSON.stringify({
+          //     path: "/dashboard/risks",
+          //     name: "Risks Register",
+          //     component: "RiskRegistered",
+          //   }),
+          // },
           {
-            label: "Risks Register",
-            value: JSON.stringify({
-              path: "/dashboard/risk-register",
-              name: "Risks Register",
-              component: "RiskRegistered",
-            }),
-          },
-          {
-            label: "New Risk Category",
+            label: "Risk Category",
             value: JSON.stringify({
               path: "/dashboard/risk-category",
               name: "Risk Category",
@@ -101,7 +101,7 @@ export const useSubscriptionManagement = defineStore(
             }),
           },
           {
-            label: "New Asset Category",
+            label: "Asset Category",
             value: JSON.stringify({
               path: "/dashboard/asset-category",
               name: "Asset Category",
